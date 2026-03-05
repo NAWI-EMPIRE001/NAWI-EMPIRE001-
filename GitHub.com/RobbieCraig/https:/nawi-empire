@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWI EMPIRE | Official Sovereign Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap');
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .imperial-font { font-family: 'Syncopate', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.15); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center pb-32">
+
+    <header class="w-full max-w-md p-6 pt-10 flex justify-between items-center">
+        <div>
+            <h1 class="imperial-font text-xl tracking-tighter italic font-bold">NAWI EMPIRE</h1>
+            <div class="flex items-center gap-2 mt-1">
+                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <p class="text-[7px] font-black text-amber-500 uppercase tracking-[0.4em]">Sovereign Node Active</p>
+            </div>
+        </div>
+        <div class="w-12 h-12 glass rounded-2xl flex items-center justify-center gold-glow">
+            <i data-lucide="shield-check" class="text-amber-500 w-6 h-6"></i>
+        </div>
+    </header>
+
+    <main class="w-full max-w-md px-6 space-y-6">
+        <div class="glass rounded-[3rem] p-8 relative overflow-hidden gold-glow border-amber-500/20">
+            <div class="relative z-10">
+                <p class="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-2">Central Diamond Reserve</p>
+                <h2 id="balance-display" class="text-5xl font-black italic tracking-tighter mb-8">25,000,000</h2>
+                <div class="flex gap-3">
+                    <button class="flex-1 bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Acquire DB</button>
+                    <button class="flex-1 glass py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Stake 5%</button>
+                </div>
+            </div>
+            <i data-lucide="gem" class="absolute -bottom-10 -right-10 w-40 h-40 text-white opacity-5 rotate-12"></i>
+        </div>
+
+        <div class="glass rounded-[2rem] p-6 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
+                <i data-lucide="user-check" class="text-blue-500 w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-[7px] font-black text-zinc-500 uppercase">Verified Founder</p>
+                <p class="text-[10px] font-black uppercase italic">His Excellency Nsikak A. Warri</p>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="flex items-center gap-2 px-2">
+                <i data-lucide="radio" class="w-3 h-3 text-amber-500"></i>
+                <h3 class="text-[8px] font-black uppercase tracking-widest text-zinc-500">Imperial Broadcast</h3>
+            </div>
+            <div class="glass p-6 rounded-[2.5rem]">
+                <p class="text-xs font-bold leading-relaxed text-zinc-400 italic">
+                    "The NAWI Empire is online. We are moving from local nodes to global sovereignty. Welcome to the future of wealth."
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <nav class="fixed bottom-8 w-[90%] max-w-xs glass p-2 rounded-[2.5rem] flex gap-2 shadow-2xl z-50">
+        <button class="flex-1 py-5 flex justify-center text-white bg-white/10 rounded-[2rem] shadow-inner"><i data-lucide="layout-grid"></i></button>
+        <button class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="landmark"></i></button>
+        <button class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="shopping-cart"></i></button>
+        <button class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="fingerprint"></i></button>
+    </nav>
+
+    <script>
+        lucide.createIcons();
+        const firebaseConfig = {
+            apiKey: "AIzaSyCfopu75f08ioKJTBJgGmQu7LgJH2I4M8A",
+            authDomain: "nawi-empire.firebaseapp.com",
+            projectId: "nawi-empire",
+            storageBucket: "nawi-empire.firebasestorage.app",
+            messagingSenderId: "647688594230",
+            appId: "1:647688594230:web:ce034f0a595a342460875e39c997"
+        };
+        firebase.initializeApp(firebaseConfig);
+        window.onload = () => {
+            document.getElementById('balance-display').innerText = (25000000).toLocaleString();
+        };
+    </script>
+</body>51
+</html>nawi-empire.com
+              
