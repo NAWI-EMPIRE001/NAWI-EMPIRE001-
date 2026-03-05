@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI EMPIRE | Official Sovereign Portal</title>
+    <title>NAWI EMPIRE | Sovereign Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap');
         body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .imperial-font { font-family: 'Syncopate', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.15); }
+        .founder-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; color: white; width: 100%; margin-top: 8px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pb-32">
@@ -38,21 +36,27 @@
                 <p class="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-2">Central Diamond Reserve</p>
                 <h2 id="balance-display" class="text-5xl font-black italic tracking-tighter mb-8">25,000,000</h2>
                 <div class="flex gap-3">
-                    <button class="flex-1 bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Acquire DB</button>
-                    <button class="flex-1 glass py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Stake 5%</button>
+                    <button onclick="alert('System Initializing... Connection to Ledger Pending')" class="flex-1 bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Acquire DB</button>
+                    <button onclick="alert('Staking Pool Opening Soon')" class="flex-1 glass py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95 transition-all">Stake 5%</button>
                 </div>
             </div>
             <i data-lucide="gem" class="absolute -bottom-10 -right-10 w-40 h-40 text-white opacity-5 rotate-12"></i>
         </div>
 
-        <div class="glass rounded-[2rem] p-6 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
-                <i data-lucide="user-check" class="text-blue-500 w-5 h-5"></i>
+        <div class="glass rounded-[2rem] p-6 space-y-4 border-l-2 border-amber-500">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
+                    <i data-lucide="message-square" class="text-amber-500 w-5 h-5"></i>
+                </div>
+                <h3 class="text-[10px] font-black uppercase tracking-widest text-white">Founder Help-Desk</h3>
             </div>
-            <div>
-                <p class="text-[7px] font-black text-zinc-500 uppercase">Verified Founder</p>
-                <p class="text-[10px] font-black uppercase italic">His Excellency Nsikak A. Warri</p>
+            
+            <div id="help-desk-form" class="space-y-3">
+                <input type="text" id="founder-id" placeholder="Enter Founder ID" class="founder-input text-xs">
+                <textarea id="founder-msg" placeholder="Your Message to the Empire..." class="founder-input text-xs h-24"></textarea>
+                <button onclick="sendMessage()" class="w-full bg-amber-500 text-black py-3 rounded-xl font-black uppercase text-[9px] tracking-[0.2em] active:scale-95 transition-all">Send Transmission</button>
             </div>
+            <p id="status-msg" class="text-[8px] text-zinc-500 italic text-center hidden">Transmission Encrypted & Sent.</p>
         </div>
 
         <div class="space-y-4">
@@ -62,7 +66,7 @@
             </div>
             <div class="glass p-6 rounded-[2.5rem]">
                 <p class="text-xs font-bold leading-relaxed text-zinc-400 italic">
-                    "The NAWI Empire is online. We are moving from local nodes to global sovereignty. Welcome to the future of wealth."
+                    "Phase 2 Active. The Help-Desk bridge is now open for all 100 Founders. Your voice builds the Empire."
                 </p>
             </div>
         </div>
@@ -77,19 +81,20 @@
 
     <script>
         lucide.createIcons();
-        const firebaseConfig = {
-            apiKey: "AIzaSyCfopu75f08ioKJTBJgGmQu7LgJH2I4M8A",
-            authDomain: "nawi-empire.firebaseapp.com",
-            projectId: "nawi-empire",
-            storageBucket: "nawi-empire.firebasestorage.app",
-            messagingSenderId: "647688594230",
-            appId: "1:647688594230:web:ce034f0a595a342460875e39c997"
-        };
-        firebase.initializeApp(firebaseConfig);
-        window.onload = () => {
-            document.getElementById('balance-display').innerText = (25000000).toLocaleString();
-        };
+        
+        function sendMessage() {
+            const id = document.getElementById('founder-id').value;
+            const msg = document.getElementById('founder-msg').value;
+            
+            if(id && msg) {
+                // Logic for Phase 3 will connect this to a database
+                document.getElementById('help-desk-form').classList.add('hidden');
+                document.getElementById('status-msg').classList.remove('hidden');
+                console.log("Imperial Transmission:", {id, msg});
+            } else {
+                alert("Founder ID and Message Required.");
+            }
+        }
     </script>
 </body>
-  </html>
-  
+</html>
