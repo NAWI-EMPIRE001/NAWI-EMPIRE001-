@@ -3,67 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 PILLARS | NAWI-EMPIRE</title>
+    <title>7 PILLARS | NAWI-EMPIRE FULL NODE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { background: #000; color: white; font-family: sans-serif; }
-        .gold { color: #f59e0b; text-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
-        .panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+        .gold { color: #f59e0b; text-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+        .panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; }
         .hidden { display: none !important; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
+<body class="p-6">
 
-    <div id="gate" class="text-center">
-        <h1 class="text-amber-500 font-bold tracking-[5px] mb-8 uppercase">7 PILLARS SECURITY</h1>
-        <button onclick="unlock()" class="bg-amber-600 text-black font-black px-12 py-5 rounded-full uppercase tracking-widest text-xs">Access Platform</button>
+    <div class="text-center mb-8">
+        <h1 class="text-[8px] tracking-[6px] text-zinc-500 uppercase mb-2">Sovereign Reserve</h1>
+        <h2 id="amt" class="text-5xl font-black gold italic">35,000,000</h2>
+        <p class="text-[7px] text-amber-500 mt-2 tracking-[4px]">7 PILLARS OFFICIAL NODE</p>
     </div>
 
-    <div id="main" class="hidden w-full max-w-sm text-center">
-        <p class="text-[8px] tracking-[6px] text-zinc-500 uppercase mb-2">Sovereign Reserve</p>
-        <h2 id="amt" class="text-5xl font-black gold italic mb-10">35,000,000</h2>
-
-        <div class="panel p-10 mb-8">
-            <p class="text-[10px] uppercase text-zinc-500 mb-2">Authority</p>
-            <p class="text-2xl font-black italic tracking-widest text-white uppercase">7 PILLARS</p>
-            <p class="text-[7px] text-amber-500 mt-3 tracking-[4px] font-bold">NAWI-EMPIRE OFFICIAL NODE</p>
+    <div class="grid grid-cols-2 gap-3 mb-8">
+        <button onclick="alert('P2P Portal: Contact Director for Node Address')" class="panel p-4 flex flex-col items-center">
+            <i data-lucide="arrow-down-to-line" class="text-emerald-500 mb-2"></i>
+            <span class="text-[9px] font-bold uppercase">Deposit</span>
+        </button>
+        <button onclick="alert('Withdrawal Request Sent to Queue')" class="panel p-4 flex flex-col items-center">
+            <i data-lucide="arrow-up-from-line" class="text-zinc-500 mb-2"></i>
+            <span class="text-[9px] font-bold uppercase tracking-tighter">Withdraw</span>
+        </button>
+        <button onclick="alert('10/10 Slots Reserved')" class="panel p-4 flex flex-col items-center col-span-2">
+            <i data-lucide="users" class="text-amber-500 mb-2"></i>
+            <span class="text-[9px] font-bold uppercase">Founders Registry (10)</span>
+        </button>
+        <div class="panel p-4 flex flex-col items-center">
+            <i data-lucide="trending-up" class="text-blue-500 mb-2"></i>
+            <span class="text-[9px] font-bold uppercase">Growth: +12%</span>
         </div>
+        <button onclick="alert('No recent transactions')" class="panel p-4 flex flex-col items-center">
+            <i data-lucide="list" class="text-zinc-400 mb-2"></i>
+            <span class="text-[9px] font-bold uppercase">History</span>
+        </button>
+        <button onclick="alert('Opening Encrypted Channel...')" class="panel p-4 flex flex-col items-center">
+            <i data-lucide="message-square" class="text-purple-500 mb-2"></i>
+            <span class="text-[9px] font-bold uppercase">Director Chat</span>
+        </button>
+        <button onclick="alert('Voting Closed')" class="panel p-4 flex flex-col items-center">
+            <i data-lucide="gavel" class="text-red-500 mb-2"></i>
+            <span class="text-[9px] font-bold uppercase">Governance</span>
+        </button>
+    </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-10">
-            <div class="panel py-4 text-[9px] font-bold uppercase text-emerald-500">Deposit Active</div>
-            <div class="panel py-4 text-[9px] font-bold uppercase text-zinc-500">Withdraw Restricted</div>
-        </div>
-
-        <button onclick="admin()" class="opacity-5 text-[7px] uppercase tracking-[4px]">Admin Vault</button>
+    <div class="panel p-6 text-center border-amber-600/30">
+        <p class="text-[8px] uppercase text-zinc-500 mb-1">Directorate Authority</p>
+        <p class="text-lg font-black italic tracking-widest uppercase">7 PILLARS</p>
     </div>
 
     <script>
-        function unlock() {
-            let k = prompt("ENTER ACCESS KEY:");
-            if(k === "7-PILLARS-2026") {
-                document.getElementById('gate').classList.add('hidden');
-                document.getElementById('main').classList.remove('hidden');
-            } else { alert("DENIED"); }
-        }
-
-        function admin() {
-            let p = prompt("AUTHORITY KEY:");
-            if(p === "NAWI-ALPHA-01") {
-                let n = prompt("NEW AMOUNT:");
-                if(n) {
-                    localStorage.setItem('nawi_v2', n);
-                    render(n);
-                }
-            }
-        }
-
-        function render(v) {
-            document.getElementById('amt').innerText = Number(v).toLocaleString();
-        }
-
+        lucide.createIcons();
         window.onload = function() {
             const s = localStorage.getItem('nawi_v2');
-            if(s) render(s);
+            if(s) document.getElementById('amt').innerText = Number(s).toLocaleString();
         };
     </script>
 </body>
