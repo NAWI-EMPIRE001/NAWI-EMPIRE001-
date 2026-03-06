@@ -3,107 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 PILLARS | SOVEREIGN HUB</title>
+    <title>7 PILLARS | NAWI EMPIRE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { background: #000; color: white; font-family: sans-serif; overflow: hidden; }
         .gold { color: #f59e0b; }
-        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; }
-        .socket-active { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
-        .live-theater { width: 100%; height: 380px; background: #050505; border-radius: 35px; position: relative; border: 1px solid #111; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        /* Professional TikTok-style scroll */
-        .feed-container { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
-        .section { height: 100vh; scroll-snap-align: start; padding: 20px; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; }
+        /* Professional Sliding Drawer */
+        #drawer { transform: translateY(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        #drawer.open { transform: translateY(0); }
+        .live-window { width: 100%; height: 400px; background: #050505; border-radius: 40px; border: 1px solid #1a1a1a; overflow: hidden; position: relative; }
     </style>
 </head>
-<body>
+<body class="p-4">
 
-    <div class="feed-container">
-        
-        <section class="section flex flex-col justify-center">
-            <div class="flex justify-between items-center mb-6 px-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></div>
-                    <span class="text-[9px] font-bold socket-active tracking-[3px]">SOCKET CONNECTED</span>
-                </div>
-                <i data-lucide="settings" class="text-zinc-600 w-5 h-5"></i>
-            </div>
-
-            <div class="live-theater overflow-hidden mb-6">
-                <div class="absolute top-6 left-6 z-10 bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10">
-                    <p class="text-[10px] gold font-black italic">7 PILLARS TV</p>
-                    <p class="text-[7px] text-zinc-400">12.4K WATCHING</p>
-                </div>
-                <iframe src="http://googleusercontent.com/youtube.com/5" class="w-full h-full" allow="autoplay; encrypted-media"></iframe>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 px-2">
-                <button onclick="triggerSocket('Battlefield')" class="glass p-6 flex flex-col items-center gap-2">
-                    <i data-lucide="swords" class="text-red-500 w-6 h-6"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest">Battlefield</span>
-                </button>
-                <button onclick="triggerSocket('Market')" class="glass p-6 flex flex-col items-center gap-2">
-                    <i data-lucide="shopping-bag" class="text-blue-500 w-6 h-6"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest">The Market</span>
-                </button>
-                <button onclick="triggerSocket('Wallet')" class="glass p-6 flex flex-col items-center gap-2">
-                    <i data-lucide="wallet" class="text-emerald-500 w-6 h-6"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest">₦ Wallet</span>
-                </button>
-                <button onclick="triggerSocket('Gifting')" class="glass p-6 flex flex-col items-center gap-2 border-amber-600/30">
-                    <i data-lucide="gift" class="text-amber-500 w-6 h-6"></i>
-                    <span class="text-[9px] font-black uppercase tracking-widest">Gift Hub</span>
-                </button>
-            </div>
-        </section>
-
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-2">
+            <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
+            <span class="text-[8px] font-black gold tracking-[3px]">NODE ACTIVE</span>
+        </div>
+        <i data-lucide="settings" class="text-zinc-600"></i>
     </div>
 
-    <div class="fixed bottom-0 w-full bg-black/90 backdrop-blur-2xl border-t border-white/5 px-10 py-6 flex justify-between items-center z-50">
-        <i data-lucide="home" class="gold w-6 h-6"></i>
-        <i data-lucide="search" class="text-zinc-600 w-6 h-6"></i>
-        <div onclick="vault()" class="bg-zinc-900 border border-white/10 w-14 h-14 rounded-full flex items-center justify-center -mt-12 shadow-2xl">
-            <span class="gold font-black text-2xl italic">7</span>
-        </div>
-        <i data-lucide="bell" class="text-zinc-600 w-6 h-6"></i>
-        <i data-lucide="user" class="text-zinc-600 w-6 h-6"></i>
+    <div class="live-window mb-8">
+        <div class="absolute top-6 left-6 z-10 bg-red-600 px-3 py-1 rounded-full text-[9px] font-black uppercase italic">Live Stream</div>
+        <iframe src="https://www.youtube.com/embed/live_stream?channel=UC4R8DWoMoI7CAwX8_UzQW7w" class="w-full h-full" allow="autoplay; encrypted-media"></iframe>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="openDrawer('BATTLEFIELD')" class="glass p-8 flex flex-col items-center gap-3 active:scale-95 transition">
+            <div class="bg-red-500/10 p-4 rounded-2xl"><i data-lucide="swords" class="text-red-500 w-8 h-8"></i></div>
+            <span class="text-[10px] font-black uppercase tracking-widest">Battlefield</span>
+        </button>
+        <button onclick="openDrawer('MARKET')" class="glass p-8 flex flex-col items-center gap-3 active:scale-95 transition">
+            <div class="bg-blue-500/10 p-4 rounded-2xl"><i data-lucide="shopping-bag" class="text-blue-500 w-8 h-8"></i></div>
+            <span class="text-[10px] font-black uppercase tracking-widest">The Market</span>
+        </button>
+        <button onclick="openDrawer('WALLET')" class="glass p-8 flex flex-col items-center gap-3 active:scale-95 transition">
+            <div class="bg-emerald-500/10 p-4 rounded-2xl"><i data-lucide="wallet" class="text-emerald-500 w-8 h-8"></i></div>
+            <span class="text-[10px] font-black uppercase tracking-widest">₦ Wallet</span>
+        </button>
+        <button onclick="openDrawer('GIFT')" class="glass p-8 flex flex-col items-center gap-3 active:scale-95 transition">
+            <div class="bg-amber-500/10 p-4 rounded-2xl"><i data-lucide="gift" class="text-amber-500 w-8 h-8"></i></div>
+            <span class="text-[10px] font-black uppercase tracking-widest">Gift Hub</span>
+        </button>
+    </div>
+
+    <div id="drawer" class="fixed bottom-0 left-0 w-full h-[60vh] glass bg-zinc-950/95 z-50 p-8 rounded-t-[50px] border-t border-white/10">
+        <div class="w-12 h-1 bg-zinc-800 rounded-full mx-auto mb-8" onclick="closeDrawer()"></div>
+        <h2 id="drawerTitle" class="text-xl font-black gold italic mb-6 uppercase tracking-widest text-center"></h2>
+        
+        <div id="drawerContent" class="space-y-4">
+            </div>
+    </div>
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] glass px-8 py-4 flex justify-between items-center bg-black/50">
+        <i data-lucide="home" class="gold"></i>
+        <i data-lucide="search" class="text-zinc-600"></i>
+        <div class="w-12 h-12 bg-zinc-900 border border-white/10 rounded-full flex items-center justify-center font-black gold italic">7</div>
+        <i data-lucide="bell" class="text-zinc-600"></i>
+        <i data-lucide="user" class="text-zinc-600"></i>
     </div>
 
     <script>
         lucide.createIcons();
+        const drawer = document.getElementById('drawer');
+        const title = document.getElementById('drawerTitle');
+        const content = document.getElementById('drawerContent');
 
-        // THE SOCKET ENGINE
-        function triggerSocket(pillar) {
-            console.log("Socket Pulse: Connecting to " + pillar);
+        function openDrawer(type) {
+            title.innerText = type;
+            content.innerHTML = '';
             
-            if(pillar === 'Battlefield') {
-                let g = prompt("BATTLEFIELD SOCKET ACTIVE:\n1. COD\n2. PUBG\n3. FREE FIRE");
-                if(g == '1') window.location.href='https://www.callofduty.com/mobile';
-                if(g == '2') window.location.href='https://www.pubgmobile.com';
-                if(g == '3') window.location.href='https://ff.garena.com';
+            if(type === 'BATTLEFIELD') {
+                content.innerHTML = `
+                    <button onclick="location.href='https://www.callofduty.com/mobile'" class="w-full p-6 glass flex items-center gap-4"><i data-lucide="target" class="text-red-500"></i> CALL OF DUTY MOBILE</button>
+                    <button onclick="location.href='https://www.pubgmobile.com'" class="w-full p-6 glass flex items-center gap-4"><i data-lucide="crosshair" class="text-emerald-500"></i> PUBG MOBILE</button>
+                    <button onclick="location.href='https://ff.garena.com'" class="w-full p-6 glass flex items-center gap-4"><i data-lucide="flame" class="text-orange-500"></i> FREE FIRE</button>
+                `;
             }
-            
-            if(pillar === 'Market') {
-                alert("MARKET SOCKET ACTIVE:\n- Kitchen Menu Synced\n- Merch Store Verified\n- Asset Marketplace Live");
+            if(type === 'MARKET') {
+                content.innerHTML = `
+                    <button class="w-full p-6 glass flex items-center gap-4"><i data-lucide="utensils" class="text-orange-400"></i> EMPIRE KITCHEN (ORDER)</button>
+                    <button class="w-full p-6 glass flex items-center gap-4"><i data-lucide="shopping-cart" class="text-pink-400"></i> THE SHOP (MERCH)</button>
+                `;
+            }
+            if(type === 'WALLET') {
+                content.innerHTML = `<div class="p-8 text-center"><p class="text-zinc-400">Current Balance</p><h1 class="text-4xl font-black gold">₦3,000,000</h1></div>`;
             }
 
-            if(pillar === 'Wallet') {
-                alert("WALLET SOCKET ACTIVE:\nCurrent Balance: ₦3,000,000.00\nNode: Sovereign Alpha");
-            }
-
-            if(pillar === 'Gifting') {
-                let n = prompt("GIFT SOCKET ACTIVE:\nEnter Naira Amount (₦):");
-                if(n) alert("₦" + n + " GIFT SENT!\nNotifying Director via Secure Channel...");
-            }
+            drawer.classList.add('open');
+            lucide.createIcons();
         }
 
-        function vault() {
-            let p = prompt("AUTHORITY KEY:");
-            if(p === "NAWI-ALPHA-01") {
-                alert("PRIVATE LEDGER: 35,000,000.00 USD\n\nSTATUS: TOTAL SOVEREIGNTY\nDIRECTOR: [ENCRYPTED]");
-            }
-        }
+        function closeDrawer() { drawer.classList.remove('open'); }
     </script>
 </body>
 </html>
