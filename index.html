@@ -3,44 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI EMPIRE | SOVEREIGN NODE</title>
+    <title>7 PILLARS | NAWI-EMPIRE</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { background: #000000; color: white; font-family: 'Inter', sans-serif; }
-        .gold-glow { color: #f59e0b; text-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
-        .glass-panel { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; }
+        body { background: #000; color: white; font-family: sans-serif; }
+        .gold { color: #f59e0b; text-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+        .panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+        .hidden { display: none !important; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-6 text-center">
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
 
-    <div class="mb-12">
-        <h1 class="text-[10px] tracking-[8px] text-zinc-500 uppercase mb-4">Sovereign Reserve Asset</h1>
-        <h2 id="main-display" class="text-7xl font-black italic gold-glow">35.0M</h2>
-        <p class="text-[8px] text-zinc-600 mt-4 tracking-[4px]">7 PILLARS VERIFIED</p>
+    <div id="gate" class="text-center">
+        <h1 class="text-amber-500 font-bold tracking-[5px] mb-8 uppercase">7 PILLARS SECURITY</h1>
+        <button onclick="unlock()" class="bg-amber-600 text-black font-black px-12 py-5 rounded-full uppercase tracking-widest text-xs">Access Platform</button>
     </div>
 
-    <div class="glass-panel p-8 w-full max-w-sm mb-20">
-        <p class="text-[9px] uppercase text-zinc-500 mb-2">Directorate</p>
-        <p class="text-lg font-black italic tracking-tight">H.E. NSIKAK AKPAN WARRI</p>
-        <div class="flex justify-center gap-2 mt-4">
-            <span class="bg-emerald-500/10 text-emerald-500 text-[7px] font-black px-3 py-1 rounded-full border border-emerald-500/20">ACTIVE NODE</span>
-            <span class="bg-amber-500/10 text-amber-500 text-[7px] font-black px-3 py-1 rounded-full border border-amber-500/20">OWNER</span>
+    <div id="main" class="hidden w-full max-w-sm text-center">
+        <p class="text-[8px] tracking-[6px] text-zinc-500 uppercase mb-2">Sovereign Reserve</p>
+        <h2 id="amt" class="text-5xl font-black gold italic mb-10">35,000,000</h2>
+
+        <div class="panel p-10 mb-8">
+            <p class="text-[10px] uppercase text-zinc-500 mb-2">Authority</p>
+            <p class="text-2xl font-black italic tracking-widest text-white uppercase">7 PILLARS</p>
+            <p class="text-[7px] text-amber-500 mt-3 tracking-[4px] font-bold">NAWI-EMPIRE OFFICIAL NODE</p>
         </div>
-    </div>
 
-    <div class="fixed bottom-10 w-full px-10 flex justify-between items-center opacity-30">
-        <p class="text-[7px] font-black uppercase tracking-widest">Unity & Integrity</p>
-        <i data-lucide="shield-check" class="w-4 h-4"></i>
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <div class="panel py-4 text-[9px] font-bold uppercase text-emerald-500">Deposit Active</div>
+            <div class="panel py-4 text-[9px] font-bold uppercase text-zinc-500">Withdraw Restricted</div>
+        </div>
+
+        <button onclick="admin()" class="opacity-5 text-[7px] uppercase tracking-[4px]">Admin Vault</button>
     </div>
 
     <script>
-        lucide.createIcons();
-        // This script ensures the number stays 35.0M even if the browser tries to reset
+        function unlock() {
+            let k = prompt("ENTER ACCESS KEY:");
+            if(k === "7-PILLARS-2026") {
+                document.getElementById('gate').classList.add('hidden');
+                document.getElementById('main').classList.remove('hidden');
+            } else { alert("DENIED"); }
+        }
+
+        function admin() {
+            let p = prompt("AUTHORITY KEY:");
+            if(p === "NAWI-ALPHA-01") {
+                let n = prompt("NEW AMOUNT:");
+                if(n) {
+                    localStorage.setItem('nawi_v2', n);
+                    render(n);
+                }
+            }
+        }
+
+        function render(v) {
+            document.getElementById('amt').innerText = Number(v).toLocaleString();
+        }
+
         window.onload = function() {
-            console.log("7 Pillars Active. Reserve set to 35.0M.");
+            const s = localStorage.getItem('nawi_v2');
+            if(s) render(s);
         };
     </script>
 </body>
 </html>
-
