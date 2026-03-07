@@ -1,0 +1,47 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors'); // Allows your app to talk to the server
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+
+// AUTHORITY CONNECTION TO DATABASE
+// Replace 'YOUR_MONGODB_URI_HERE' with your real connection string from MongoDB Atlas
+mongoose.connect('YOUR_MONGODB_URI_HERE')
+    .then(() => console.log('7 PILLARS: Database Socket Connected'))
+    .catch(err => console.error('Database Connection Failed', err));
+
+// THE WALLET SCHEMA
+const UserSchema = new mongoose.Schema({
+    username: String,
+    nairaBalance: { type: Number, default: 3000000 },
+    authorityKey: String
+});
+const User = mongoose.model('User', UserSchema);
+
+// API: FETCH LIVE BALANCE
+app.get('/api/wallet/balance/:userId', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.userId);
+        res.json({ balance: user ? user.nairaBalance : 0 });
+    } catch (err) { res.status(500).send(err); }
+});
+
+// API: PROCESS GIFT
+app.post('/api/gift/send', async (req, res) => {
+    const { userId, amount } = req.body;
+    try {
+        const user = await User.findById(userId);
+        if (user && user.nairaBalance >= amount) {
+            user.nairaBalance -= amount;
+            await user.save();
+            res.json({ success: true, message: "Gift Processed to Reserve" });
+        } else {
+            res.status(400).json({ error: "Insufficient Funds" });
+        }
+    } catch (err) { res.status(500).send(err); }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`NAWI EMPIRE Engine Live on Port ${PORT}`));
