@@ -1,0 +1,31 @@
+body {
+    background-color: #050505; /* Pure Black */
+    color: white;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.hero {
+    text-align: center;
+    border: 2px solid #D4AF37; /* Gold Border */
+    padding: 50px;
+    border-radius: 15px;
+}
+
+h1 {
+    color: #D4AF37; /* Royal Gold */
+    letter-spacing: 4px;
+}
+
+.gold-btn {
+    background-color: #D4AF37;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-top: 20px;
+}
