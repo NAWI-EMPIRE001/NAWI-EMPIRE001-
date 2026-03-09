@@ -5,23 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAWI EMPIRE</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; }
-        .app-header { padding: 40px 20px 20px; background: linear-gradient(to bottom, #1a1a1a, #000); }
-        .app-header h1 { font-size: 24px; margin: 0; color: #ffd700; }
-        
-        /* THE SECRET REWARDS CARD */
-        .wallet-card { background: linear-gradient(135, #ffd700, #b8860b); color: #000; margin: 0 20px 20px; padding: 20px; border-radius: 20px; }
-        .wallet-card small { font-size: 10px; font-weight: bold; }
-        .wallet-card h2 { margin: 5px 0; font-size: 28px; }
-
-        /* THE TASK GRID */
-        .app-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
-        .app-icon { background: #111; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid #222; }
-        .app-icon i { font-size: 30px; display: block; margin-bottom: 10px; }
-        .app-icon span { font-size: 13px; color: #ccc; }
-
-        /* BOTTOM NAVIGATION */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #0a0a0a; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding-bottom: 80px; }
+        .app-header { padding: 30px 20px; background: #111; border-bottom: 1px solid #ffd700; text-align: center; }
+        .app-header h1 { color: #ffd700; margin: 0; font-size: 22px; }
+        .wallet-card { background: linear-gradient(135, #ffd700, #b8860b); color: #000; margin: 20px; padding: 20px; border-radius: 15px; }
+        .app-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 15px; }
+        .app-icon { background: #1a1a1a; border-radius: 12px; padding: 15px 5px; text-align: center; border: 1px solid #333; cursor: pointer; }
+        .app-icon i { font-size: 24px; display: block; margin-bottom: 5px; }
+        .app-icon span { font-size: 10px; color: #ccc; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #111; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; }
         .nav-item { color: #888; font-size: 10px; text-align: center; text-decoration: none; }
     </style>
 </head>
@@ -29,41 +21,34 @@
 
     <div class="app-header">
         <h1>NAWI EMPIRE</h1>
-        <p>Diamond Black Edition</p>
     </div>
 
     <div class="wallet-card">
-        <small>ACTIVE REWARDS</small>
+        <small>REWARDS POINTS</small>
         <h2>0.00 pts</h2>
-        <div style="font-size: 10px; margin-top: 10px;">ACTIVITY: <span style="color: #004d00;">● ANALYZING</span></div>
     </div>
 
     <div class="app-grid">
-        <div class="app-icon" onclick="alert('Task Center Opening...')">
-            <i>📝</i>
-            <span>Daily Tasks</span>
-        </div>
-        <div class="app-icon" onclick="location.href='games.html'">
-            <i>🎮</i>
-            <span>Play & Earn</span>
-        </div>
-        <div class="app-icon" onclick="alert('Digital Kitchen Loading...')">
-            <i>🍽️</i>
-            <span>Kitchen</span>
-        </div>
-        <div class="app-icon" onclick="alert('Connecting to Invite System...')">
-            <i>🤝</i>
-            <span>Invite Team</span>
-        </div>
+        <div class="app-icon" onclick="goTo('live.html')"><i>🎥</i><span>Live</span></div>
+        <div class="app-icon" onclick="goTo('market.html')"><i>🛒</i><span>Market</span></div>
+        <div class="app-icon" onclick="goTo('ads.html')"><i>📈</i><span>Ads Tool</span></div>
+        <div class="app-icon" onclick="goTo('games.html')"><i>🎮</i><span>Games</span></div>
+        <div class="app-icon" onclick="goTo('kitchen.html')"><i>🍽️</i><span>Kitchen</span></div>
+        <div class="app-icon" onclick="goTo('design.html')"><i>🎨</i><span>Studio</span></div>
     </div>
 
     <div class="bottom-nav">
-        <a href="#" class="nav-item" style="color:#ffd700;">🏠<br>Home</a>
-        <a href="#" class="nav-item">💳<br>Wallet</a>
-        <a href="#" class="nav-item">💸<br>Withdraw</a>
-        <a href="#" class="nav-item">👤<br>Account</a>
+        <a href="index.html" class="nav-item" style="color:#ffd700;">🏠<br>Home</a>
+        <a href="wallet.html" class="nav-item">💳<br>Wallet</a>
+        <a href="withdraw.html" class="nav-item">💸<br>Payout</a>
     </div>
+
+    <script>
+        function goTo(page) {
+            console.log("Navigating to: " + page);
+            window.location.href = "./" + page;
+        }
+    </script>
 
 </body>
 </html>
-
