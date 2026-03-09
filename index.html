@@ -5,68 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAWI EMPIRE</title>
     <style>
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow: hidden; }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; }
+        .app-header { padding: 40px 20px 20px; background: linear-gradient(to bottom, #1a1a1a, #000); }
+        .app-header h1 { font-size: 24px; margin: 0; color: #ffd700; }
         
-        /* APP HEADER */
-        .app-header { padding: 40px 20px 20px; text-align: left; background: linear-gradient(to bottom, #1a1a1a, #000); }
-        .app-header h1 { font-size: 24px; margin: 0; color: #ffd700; letter-spacing: 1px; }
-        .app-header p { font-size: 12px; color: #888; margin: 5px 0 0; }
-
-        /* WALLET CARD - SLEEK APP LOOK */
-        .wallet-card { background: linear-gradient(135, #ffd700, #b8860b); color: #000; margin: 0 20px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2); }
-        .wallet-card small { font-size: 10px; font-weight: bold; opacity: 0.7; }
+        /* THE SECRET REWARDS CARD */
+        .wallet-card { background: linear-gradient(135, #ffd700, #b8860b); color: #000; margin: 0 20px 20px; padding: 20px; border-radius: 20px; }
+        .wallet-card small { font-size: 10px; font-weight: bold; }
         .wallet-card h2 { margin: 5px 0; font-size: 28px; }
 
-        /* APP GRID LAYOUT */
+        /* THE TASK GRID */
         .app-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
-        .app-icon { background: #111; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid #222; transition: 0.2s; }
-        .app-icon:active { transform: scale(0.95); background: #222; }
+        .app-icon { background: #111; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid #222; }
         .app-icon i { font-size: 30px; display: block; margin-bottom: 10px; }
-        .app-icon span { font-size: 13px; font-weight: 500; color: #ccc; }
+        .app-icon span { font-size: 13px; color: #ccc; }
 
-        /* BOTTOM NAV BAR */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(10, 10, 10, 0.9); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; backdrop-filter: blur(10px); }
+        /* BOTTOM NAVIGATION */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: #0a0a0a; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; }
         .nav-item { color: #888; font-size: 10px; text-align: center; text-decoration: none; }
-        .nav-item.active { color: #ffd700; }
     </style>
 </head>
 <body>
 
     <div class="app-header">
         <h1>NAWI EMPIRE</h1>
-        <p>Welcome, Diamond Black</p>
+        <p>Diamond Black Edition</p>
     </div>
 
-    <div class="wallet-card" onclick="location.href='wallet.html'">
-        <small>AVAILABLE LIQUIDITY</small>
-        <h2>₦3,000,000.00</h2>
-        <div style="font-size: 10px; margin-top: 10px;">P2P STATUS: <span style="color: #004d00;">● ONLINE</span></div>
+    <div class="wallet-card">
+        <small>ACTIVE REWARDS</small>
+        <h2>0.00 pts</h2>
+        <div style="font-size: 10px; margin-top: 10px;">ACTIVITY: <span style="color: #004d00;">● ANALYZING</span></div>
     </div>
 
     <div class="app-grid">
+        <div class="app-icon" onclick="alert('Task Center Opening...')">
+            <i>📝</i>
+            <span>Daily Tasks</span>
+        </div>
         <div class="app-icon" onclick="location.href='games.html'">
             <i>🎮</i>
-            <span>Gaming Arena</span>
+            <span>Play & Earn</span>
         </div>
-        <div class="app-icon" onclick="location.href='kitchen.html'">
+        <div class="app-icon" onclick="alert('Digital Kitchen Loading...')">
             <i>🍽️</i>
-            <span>Digital Kitchen</span>
+            <span>Kitchen</span>
         </div>
-        <div class="app-icon" onclick="location.href='design.html'">
-            <i>🎨</i>
-            <span>Design Studio</span>
-        </div>
-        <div class="app-icon" onclick="location.href='deposit.html'">
-            <i>📥</i>
-            <span>P2P Deposit</span>
+        <div class="app-icon" onclick="alert('Connecting to Invite System...')">
+            <i>🤝</i>
+            <span>Invite Team</span>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="#" class="nav-item active">🏠<br>Home</a>
-        <a href="wallet.html" class="nav-item">💳<br>Wallet</a>
-        <a href="withdraw.html" class="nav-item">💸<br>Withdraw</a>
-        <a href="profile.html" class="nav-item">👤<br>Account</a>
+        <a href="#" class="nav-item" style="color:#ffd700;">🏠<br>Home</a>
+        <a href="#" class="nav-item">💳<br>Wallet</a>
+        <a href="#" class="nav-item">💸<br>Withdraw</a>
+        <a href="#" class="nav-item">👤<br>Account</a>
     </div>
 
 </body>
