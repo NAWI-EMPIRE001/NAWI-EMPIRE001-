@@ -2,74 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI EMPIRE | Digital Mall</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NAWI EMPIRE</title>
     <style>
-        /* LUXURY THEME */
-        body { background: #050505; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; }
-        header { background: linear-gradient(145, #1a1a1a, #000); padding: 30px; border-bottom: 2px solid #ffd700; }
-        .logo { font-size: 2.5rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
-        .status-bar { background: #000; color: #00ff00; font-size: 0.8rem; padding: 5px; letter-spacing: 2px; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow: hidden; }
         
-        /* THE MALL GRID */
-        .mall-container { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 20px; max-width: 600px; margin: auto; }
-        .mall-card { background: #111; border: 1px solid #333; border-radius: 15px; padding: 20px; transition: 0.3s; position: relative; overflow: hidden; }
-        .mall-card:hover { border-color: #ffd700; transform: translateY(-5px); }
-        .mall-card h3 { color: #ffd700; margin-top: 0; }
-        
-        /* BUTTONS */
-        button { width: 100%; background: #ffd700; color: #000; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; }
-        .p2p-btn { background: #00ff00; margin-top: 10px; }
-        
-        /* WALLET HIGHLIGHT */
-        .highlighted { border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
-        .balance-text { font-size: 1.8rem; font-weight: bold; margin: 10px 0; }
+        /* APP HEADER */
+        .app-header { padding: 40px 20px 20px; text-align: left; background: linear-gradient(to bottom, #1a1a1a, #000); }
+        .app-header h1 { font-size: 24px; margin: 0; color: #ffd700; letter-spacing: 1px; }
+        .app-header p { font-size: 12px; color: #888; margin: 5px 0 0; }
+
+        /* WALLET CARD - SLEEK APP LOOK */
+        .wallet-card { background: linear-gradient(135, #ffd700, #b8860b); color: #000; margin: 0 20px 20px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2); }
+        .wallet-card small { font-size: 10px; font-weight: bold; opacity: 0.7; }
+        .wallet-card h2 { margin: 5px 0; font-size: 28px; }
+
+        /* APP GRID LAYOUT */
+        .app-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px; }
+        .app-icon { background: #111; border-radius: 20px; padding: 20px; text-align: center; border: 1px solid #222; transition: 0.2s; }
+        .app-icon:active { transform: scale(0.95); background: #222; }
+        .app-icon i { font-size: 30px; display: block; margin-bottom: 10px; }
+        .app-icon span { font-size: 13px; font-weight: 500; color: #ccc; }
+
+        /* BOTTOM NAV BAR */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: rgba(10, 10, 10, 0.9); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; backdrop-filter: blur(10px); }
+        .nav-item { color: #888; font-size: 10px; text-align: center; text-decoration: none; }
+        .nav-item.active { color: #ffd700; }
     </style>
 </head>
 <body>
 
-    <div class="status-bar">● SOCKET: ACTIVE | VAULT: CONNECTED</div>
-
-    <header>
-        <div class="logo">NAWI EMPIRE</div>
-        <p>Managed by Diamond Black</p>
-    </header>
-
-    <div class="mall-container">
-        
-        <div class="mall-card highlighted">
-            <h3>💰 N-WALLET</h3>
-            <p>Platform Liquidity (35M Ledger)</p>
-            <div class="balance-text">₦3,000,000.00</div>
-            <button class="p2p-btn" onclick="p2pAction('Deposit')">P2P DEPOSIT</button>
-            <button style="background:#555; color:#fff; margin-top:5px;" onclick="p2pAction('Withdraw')">WITHDRAW</button>
-        </div>
-
-        <div class="mall-card">
-            <h3>🎮 GAMING ARENA</h3>
-            <p>Play & Multiply Your Credits</p>
-            <button onclick="window.location.href='games.html'">ENTER ARENA</button>
-        </div>
-
-        <div class="mall-card">
-            <h3>🍽️ DIGITAL KITCHEN</h3>
-            <p>Order Premium Meals (P2P Escrow)</p>
-            <button onclick="alert('Kitchen Menu Loading...')">OPEN KITCHEN</button>
-        </div>
-
-        <div class="mall-card">
-            <h3>🎨 DESIGN STUDIO</h3>
-            <p>Professional Graphics & Branding</p>
-            <button onclick="alert('Studio Portfolio Opening...')">ACCESS SERVICE</button>
-        </div>
-
+    <div class="app-header">
+        <h1>NAWI EMPIRE</h1>
+        <p>Welcome, Diamond Black</p>
     </div>
 
-    <script>
-        function p2pAction(type) {
-            alert("Excellency, the " + type + " Gate is connecting to the MongoDB Vault... Please wait for peer matching.");
-        }
-    </script>
+    <div class="wallet-card" onclick="location.href='wallet.html'">
+        <small>AVAILABLE LIQUIDITY</small>
+        <h2>₦3,000,000.00</h2>
+        <div style="font-size: 10px; margin-top: 10px;">P2P STATUS: <span style="color: #004d00;">● ONLINE</span></div>
+    </div>
+
+    <div class="app-grid">
+        <div class="app-icon" onclick="location.href='games.html'">
+            <i>🎮</i>
+            <span>Gaming Arena</span>
+        </div>
+        <div class="app-icon" onclick="location.href='kitchen.html'">
+            <i>🍽️</i>
+            <span>Digital Kitchen</span>
+        </div>
+        <div class="app-icon" onclick="location.href='design.html'">
+            <i>🎨</i>
+            <span>Design Studio</span>
+        </div>
+        <div class="app-icon" onclick="location.href='deposit.html'">
+            <i>📥</i>
+            <span>P2P Deposit</span>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">🏠<br>Home</a>
+        <a href="wallet.html" class="nav-item">💳<br>Wallet</a>
+        <a href="withdraw.html" class="nav-item">💸<br>Withdraw</a>
+        <a href="profile.html" class="nav-item">👤<br>Account</a>
+    </div>
 
 </body>
 </html>
+
