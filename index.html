@@ -1,31 +1,75 @@
-<section id="mall-floors">
-    <div class="mall-card">
-        <h3>🍽️ NAWI KITCHEN</h3>
-        <p>Order Premium Meals - P2P Escrow Protected</p>
-        <button onclick="openKitchen()">ENTER KITCHEN</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWI EMPIRE | Digital Mall</title>
+    <style>
+        /* LUXURY THEME */
+        body { background: #050505; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center; }
+        header { background: linear-gradient(145, #1a1a1a, #000); padding: 30px; border-bottom: 2px solid #ffd700; }
+        .logo { font-size: 2.5rem; font-weight: bold; color: #ffd700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+        .status-bar { background: #000; color: #00ff00; font-size: 0.8rem; padding: 5px; letter-spacing: 2px; }
+        
+        /* THE MALL GRID */
+        .mall-container { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 20px; max-width: 600px; margin: auto; }
+        .mall-card { background: #111; border: 1px solid #333; border-radius: 15px; padding: 20px; transition: 0.3s; position: relative; overflow: hidden; }
+        .mall-card:hover { border-color: #ffd700; transform: translateY(-5px); }
+        .mall-card h3 { color: #ffd700; margin-top: 0; }
+        
+        /* BUTTONS */
+        button { width: 100%; background: #ffd700; color: #000; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; }
+        .p2p-btn { background: #00ff00; margin-top: 10px; }
+        
+        /* WALLET HIGHLIGHT */
+        .highlighted { border: 2px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+        .balance-text { font-size: 1.8rem; font-weight: bold; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="status-bar">● SOCKET: ACTIVE | VAULT: CONNECTED</div>
+
+    <header>
+        <div class="logo">NAWI EMPIRE</div>
+        <p>Managed by Diamond Black</p>
+    </header>
+
+    <div class="mall-container">
+        
+        <div class="mall-card highlighted">
+            <h3>💰 N-WALLET</h3>
+            <p>Platform Liquidity (35M Ledger)</p>
+            <div class="balance-text">₦3,000,000.00</div>
+            <button class="p2p-btn" onclick="p2pAction('Deposit')">P2P DEPOSIT</button>
+            <button style="background:#555; color:#fff; margin-top:5px;" onclick="p2pAction('Withdraw')">WITHDRAW</button>
+        </div>
+
+        <div class="mall-card">
+            <h3>🎮 GAMING ARENA</h3>
+            <p>Play & Multiply Your Credits</p>
+            <button onclick="window.location.href='games.html'">ENTER ARENA</button>
+        </div>
+
+        <div class="mall-card">
+            <h3>🍽️ DIGITAL KITCHEN</h3>
+            <p>Order Premium Meals (P2P Escrow)</p>
+            <button onclick="alert('Kitchen Menu Loading...')">OPEN KITCHEN</button>
+        </div>
+
+        <div class="mall-card">
+            <h3>🎨 DESIGN STUDIO</h3>
+            <p>Professional Graphics & Branding</p>
+            <button onclick="alert('Studio Portfolio Opening...')">ACCESS SERVICE</button>
+        </div>
+
     </div>
 
-    <div class="mall-card">
-        <h3>🎮 EMPIRE GAMES</h3>
-        <p>Play & Multiply Your Credits</p>
-        <button onclick="openGames()">START PLAYING</button>
-    </div>
+    <script>
+        function p2pAction(type) {
+            alert("Excellency, the " + type + " Gate is connecting to the MongoDB Vault... Please wait for peer matching.");
+        }
+    </script>
 
-    <div class="mall-card highlighted">
-        <h3>💰 N-WALLET</h3>
-        <p>Current Liquidity: ₦3,000,000</p>
-        <button class="p2p-btn" onclick="p2pDeposit()">P2P DEPOSIT</button>
-    </div>
-</section>
-
-<script>
-function p2pDeposit() {
-    alert("Excellency, the P2P Gate is opening... Connecting to Peer...");
-}
-function openKitchen() {
-    alert("Kitchen Menu Loading from 35M Ledger...");
-}
-function openGames() {
-    alert("Gaming Arena Connecting to Database...");
-}
-</script>
+</body>
+</html>
