@@ -3,28 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI LIVE | Broadcast</title>
+    <title>NAWI LIVE</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; }
-        .live-window { width: 100%; height: 70vh; background: #111; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #ffd700; }
-        .live-tag { position: absolute; top: 20px; left: 20px; background: red; padding: 5px 10px; border-radius: 5px; font-weight: bold; }
-        .chat-area { padding: 20px; height: 20vh; overflow-y: scroll; font-size: 14px; color: #888; }
-        .footer { padding: 10px; border-top: 1px solid #222; display: flex; gap: 10px; }
-        input { flex: 1; background: #222; border: none; padding: 10px; color: #fff; border-radius: 5px; }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; text-align: center; }
+        .video-box { width: 100%; height: 60vh; background: #111; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #ffd700; }
+        .live-tag { background: red; padding: 5px 10px; border-radius: 5px; position: absolute; top: 10px; left: 10px; font-weight: bold; }
+        .btn-back { background: #333; color: #fff; padding: 10px 20px; border: none; margin-top: 20px; border-radius: 5px; }
     </style>
 </head>
 <body>
     <div class="live-tag">● LIVE</div>
-    <div class="live-window">
-        <p>Connecting to Camera...</p>
-    </div>
-    <div class="chat-area">
-        <p><b>System:</b> Welcome to NAWI Live Stream.</p>
-        <p><b>User122:</b> This is premium!</p>
-    </div>
-    <div class="footer">
-        <input type="text" placeholder="Say something...">
-        <button style="background:#ffd700; border:none; padding:10px; border-radius:5px;">SEND</button>
-    </div>
+    <div class="video-box">Connecting to NAWI Broadcast...</div>
+    <h2>EMPIRE LIVE STREAM</h2>
+    <button class="btn-back" onclick="location.href='index.html'">EXIT TO MALL</button>
 </body>
 </html>
