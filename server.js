@@ -1,25 +1,31 @@
+const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-// This is your direct connection string with the password included
-const uri = "mongodb+srv://NAWI-EMPIRE:NAWI-EMPIRE01@nawi-empire01.xhjz2iu.mongodb.net/nawi_database?retryWrites=true&w=majority";
+// The Golden Key: Reading the link you saved in Render
+const dbURI = process.env.MONGODB_URI;
 
-// Connect to the NAWI-EMPIRE Database
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  console.log("✅ NAWI-EMPIRE Database don connect successfully!");
-  console.log("Platform is now MOVING 🚀");
-})
-.catch((err) => {
-  console.error("❌ Still getting error:", err.message);
-  console.log("Check if your IP address is whitelisted for MongoDB Atlas.");
+mongoose.connect(dbURI)
+    .then(() => console.log("✅ NAWI EMPIRE: DATABASE CONNECTED SUCCESSFULLY"))
+    .catch((err) => console.log("❌ DATABASE CONNECTION ERROR:", err));
+
+app.use(express.static(__dirname));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// This part makes sure your connection doesn't drop
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  // We are live!
+// Automatically finds your pages (market.html, live.html, etc.)
+app.get('*', (req, res) => {
+    let page = req.params[0].replace('/', '');
+    if (!page.includes('.')) page += '.html';
+    res.sendFile(path.join(__dirname, page), (err) => {
+        if (err) res.redirect('/');
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`EMPIRE ENGINE ONLINE ON PORT ${PORT}`);
 });
