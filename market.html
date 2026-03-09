@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI Marketplace</title>
+    <title>NAWI MARKET</title>
     <style>
-        body { background: #0a0a0a; color: #fff; font-family: sans-serif; padding: 20px; }
-        .item-card { background: #1a1a1a; border: 1px solid #ffd700; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
-        .price { color: #ffd700; font-size: 1.2rem; font-weight: bold; }
+        body { background: #050505; color: #fff; font-family: sans-serif; padding: 20px; }
+        .header { color: #ffd700; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .product { background: #111; border: 1px solid #ffd700; padding: 15px; border-radius: 10px; margin-top: 20px; }
+        .price { color: #ffd700; font-size: 1.5rem; display: block; margin: 10px 0; }
+        button { background: #ffd700; color: #000; width: 100%; padding: 15px; border: none; font-weight: bold; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <h2>🛒 EMPIRE MARKET</h2>
-    <div class="item-card">
-        <h3>Premium Logo Design</h3>
-        <p>Custom 3D Luxury Branding</p>
-        <div class="price">₦25,000</div>
-        <button style="width:100%; margin-top:10px; padding:10px; background:#ffd700; border:none; font-weight:bold;">BUY NOW</button>
+    <h1 class="header">🛒 EMPIRE MARKET</h1>
+    <div class="product">
+        <h3>Luxury 3D Logo Branding</h3>
+        <p>Professional identity for your business.</p>
+        <span class="price">₦25,000.00</span>
+        <button onclick="alert('Order sent to Diamond Black!')">PURCHASE NOW</button>
     </div>
+    <button style="background:none; color:#888; margin-top:20px;" onclick="location.href='index.html'">← BACK TO HOME</button>
 </body>
 </html>
