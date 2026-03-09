@@ -1,28 +1,26 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
-const app = express();
 
-// This connects to the variable you just saved in Render
-const dbURI = process.env.MONGODB_URI;
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://NAWI-EMPIRE:<db_password>@nawi-empire01.xhjz2iu.mongodb.net/?appName=NAWI-EMPIRE01";
 
-mongoose.connect(dbURI)
-    .then(() => console.log("✅ NAWI EMPIRE: VAULT CONNECTED"))
-    .catch((err) => console.log("❌ CONNECTION ERROR:", err));
-
-app.use(express.static(__dirname));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 });
 
-// Auto-finds pages like market.html or live.html
-app.get('*', (req, res) => {
-    let page = req.params[0].replace('/', '');
-    if (!page.includes('.')) page += '.html';
-    res.sendFile(path.join(__dirname, page), (err) => {
-        if (err) res.redirect('/');
-    });
-});
-
-app.listen(process.env.PORT || 3000);
+async function run() {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
