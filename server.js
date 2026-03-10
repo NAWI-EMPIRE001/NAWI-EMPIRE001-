@@ -1,6 +1,5 @@
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://NAWI-EMPIRE:<db_password>@nawi-empire01.xhjz2iu.mongodb.net/?appName=NAWI-EMPIRE01";
+Const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://akpanvictor848_db_user:NAWI-EMPIRE@nawi-empire.3qj9wnj.mongodb.net/?appName=NAWI-EMPIRE";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -24,3 +23,9 @@ async function run() {
   }
 }
 run().catch(console.dir);
+
+
+
+
+This is the password: NAWI-EMPIRE 
+That's my mangodb code please check it well before we paste it on the Javajs
