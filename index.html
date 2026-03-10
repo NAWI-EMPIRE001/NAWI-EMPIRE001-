@@ -3,148 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI EMPIRE</title>
+    <title>NAWI EMPIRE | MAIN</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; }
-        body, html { margin: 0; padding: 0; background: #000; color: white; font-family: sans-serif; height: 100vh; overflow: hidden; }
+        :root { --gold: #D4AF37; --white: #ffffff; --dark: #000000; }
+        body, html { margin: 0; padding: 0; background: var(--dark); color: white; font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
 
-        /* VIDEO SCROLL CONTAINER */
-        .video-container {
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-            scrollbar-width: none; /* Hide scrollbar for clean look */
-        }
-        .video-container::-webkit-scrollbar { display: none; }
+        /* TOP NAVIGATION: TIKTOK STYLE */
+        .top-nav { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: center; z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); }
+        .nav-tabs { display: flex; gap: 25px; font-weight: bold; font-size: 17px; }
+        .nav-tabs span { color: rgba(255,255,255,0.6); cursor: pointer; }
+        .nav-tabs .active { color: white; border-bottom: 2px solid white; padding-bottom: 5px; }
 
-        .video-section {
-            height: 100vh;
-            width: 100vw;
-            scroll-snap-align: start;
-            position: relative;
-            background: #111;
-        }
+        /* CONTENT VIEWPORT (VERTICAL SCROLL) */
+        .main-feed { height: 100vh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; }
+        .video-post { height: 100vh; width: 100%; scroll-snap-align: start; position: relative; background: #111; border-bottom: 1px solid #222; }
 
-        /* REAL VIDEO ELEMENT */
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        /* SIDE ACTIONS (FOLLOW, LIKE, COMMENT, SHARE) */
+        .side-actions { position: absolute; right: 12px; bottom: 120px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
+        .user-circle { width: 50px; height: 50px; border-radius: 50%; border: 2px solid white; background: #333; position: relative; margin-bottom: 10px; }
+        .follow-plus { position: absolute; bottom: -8px; left: 17px; background: #ff0050; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; }
+        .action-item { text-align: center; }
+        .action-item i { font-size: 30px; display: block; margin-bottom: 4px; }
+        .action-item span { font-size: 12px; font-weight: bold; }
 
-        /* SIDE INTERACTION BUTTONS */
-        .side-icons {
-            position: absolute;
-            right: 15px;
-            bottom: 120px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            z-index: 10;
-        }
-        .icon-group { text-align: center; cursor: pointer; }
-        .icon-group i { font-size: 30px; display: block; filter: drop-shadow(0 0 5px rgba(0,0,0,0.8)); }
-        .icon-group span { font-size: 12px; font-weight: bold; }
+        /* CAPTION AREA */
+        .post-caption { position: absolute; left: 15px; bottom: 95px; max-width: 75%; z-index: 10; }
+        .post-caption h4 { margin: 0 0 8px 0; font-size: 16px; }
+        .post-caption p { margin: 0; font-size: 14px; line-height: 1.4; color: #efefef; }
 
-        /* USER INFO & CAPTION */
-        .post-data {
-            position: absolute;
-            left: 15px;
-            bottom: 100px;
-            z-index: 10;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
-        }
-        .post-data h3 { margin: 0 0 5px 0; color: var(--gold); }
-        .post-data p { margin: 0; font-size: 14px; }
+        /* BOTTOM NAVIGATION BAR (Your Order) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #222; z-index: 1000; }
+        .nav-item { color: #888; font-size: 10px; text-align: center; text-decoration: none; transition: 0.3s; }
+        .nav-item.active { color: white; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        
+        /* THE PLUS BUTTON (+) */
+        .plus-button { width: 45px; height: 30px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: black; position: relative; cursor: pointer; }
+        .plus-button::before { content: ''; position: absolute; left: -5px; width: 10px; height: 100%; background: #69C9D0; border-radius: 4px; z-index: -1; }
+        .plus-button::after { content: ''; position: absolute; right: -5px; width: 10px; height: 100%; background: #EE1D52; border-radius: 4px; z-index: -1; }
 
-        /* BOTTOM NAV BAR */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 70px;
-            background: #000;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid #222;
-            z-index: 100;
-        }
-        .nav-link { color: #888; text-decoration: none; font-size: 10px; text-align: center; }
-        .nav-link.active { color: #fff; }
-        .nav-link i { font-size: 24px; display: block; margin-bottom: 2px; }
-
-        /* THE PLUS BUTTON */
-        .plus-btn {
-            width: 45px;
-            height: 30px;
-            background: #fff;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #000;
-            position: relative;
-        }
-        .plus-btn::before { content: ''; position: absolute; left: -5px; width: 10px; height: 100%; background: #69C9D0; border-radius: 4px; z-index: -1; }
-        .plus-btn::after { content: ''; position: absolute; right: -5px; width: 10px; height: 100%; background: #EE1D52; border-radius: 4px; z-index: -1; }
+        /* STUDIO OVERLAY (FOR + CLICK) */
+        #studio-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .studio-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; text-align: center; }
+        .studio-box { background: #1a1a1a; padding: 30px; border-radius: 20px; border: 1px solid var(--gold); text-decoration: none; color: white; }
+        .studio-box i { font-size: 40px; color: var(--gold); display: block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="video-container">
-        <div class="video-section">
-            <video loop autoplay muted playsinline>
-                <source src="https://v.ftcdn.net/05/22/01/71/700_F_522017124_pG2f7P0M20kGvWz6L2I3YI9z5S2hJt8L_ST.mp4" type="video/mp4">
-            </video>
+    <div class="top-nav">
+        <div class="nav-tabs">
+            <span>Following</span>
+            <span class="active">For You</span>
+        </div>
+    </div>
 
-            <div class="side-icons">
-                <div class="icon-group" onclick="this.style.color='red'"><i class="fa-solid fa-heart"></i><span>1.2M</span></div>
-                <div class="icon-group"><i class="fa-solid fa-comment-dots"></i><span>45K</span></div>
-                <div class="icon-group"><i class="fa-solid fa-share"></i><span>12K</span></div>
+    <div class="main-feed">
+        <div class="video-post">
+            <div class="side-actions">
+                <div class="user-circle">
+                    <div class="follow-plus"><i class="fa-solid fa-plus"></i></div>
+                </div>
+                <div class="action-item"><i class="fa-solid fa-heart"></i><span>60K</span></div>
+                <div class="action-item"><i class="fa-solid fa-comment-dots"></i><span>1.2K</span></div>
+                <div class="action-item"><i class="fa-solid fa-share"></i><span>400</span></div>
             </div>
-
-            <div class="post-data">
-                <h3>@Founder</h3>
-                <p>Welcome to NAWI Empire. Follow the rules to stay. 💎</p>
+            <div class="post-caption">
+                <h4>@Excellency_Nsikak</h4>
+                <p>Welcome to the NAWI Empire. Follow the rules to protect the platform. Content creators, share your brand! 💎 #7Pillars #DiamondBlack</p>
             </div>
         </div>
 
-        <div class="video-section">
-            <video loop muted playsinline>
-                <source src="https://v.ftcdn.net/02/76/86/06/700_F_276860662_vR454A6XpY6F8A9Z9V5G7L9O4X8A9L8C_ST.mp4" type="video/mp4">
-            </video>
-            <div class="post-data">
-                <h3>@Creator_Brand</h3>
-                <p>Grow your brand here. Follow for Follow! 🚀</p>
+        <div class="video-post" style="background: #0a0a0a;">
+             <div class="side-actions">
+                <div class="user-circle"></div>
+                <div class="action-item"><i class="fa-solid fa-heart"></i><span>12K</span></div>
+                <div class="action-item"><i class="fa-solid fa-comment-dots"></i><span>200</span></div>
+                <div class="action-item"><i class="fa-solid fa-share"></i><span>50</span></div>
+            </div>
+            <div class="post-caption">
+                <h4>@Content_Creator</h4>
+                <p>Follow for Follow back! Completing my 500 followers task today. 🚀 #NAWI #Growth</p>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="#" class="nav-link active"><i class="fa-solid fa-house"></i>Home</a>
-        <a href="discover.html" class="nav-link"><i class="fa-solid fa-compass"></i>Discover</a>
-        <div class="plus-btn" onclick="alert('Opening Secret Master Menu...')"><i class="fa-solid fa-plus"></i></div>
-        <a href="inbox.html" class="nav-link"><i class="fa-solid fa-comment-dots"></i>Inbox</a>
-        <a href="profile.html" class="nav-link"><i class="fa-solid fa-user"></i>Profile</a>
+        <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i>Home</a>
+        <a href="discover.html" class="nav-item"><i class="fa-solid fa-compass"></i>Discover</a>
+        <div class="plus-button" onclick="toggleStudio()"><i class="fa-solid fa-plus"></i></div>
+        <a href="inbox.html" class="nav-item"><i class="fa-solid fa-comment-dots"></i>Inbox</a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i>Profile</a>
+    </div>
+
+    <div id="studio-overlay">
+        <div onclick="toggleStudio()" style="position:absolute; top:40px; right:30px; font-size:35px;">&times;</div>
+        <h2 style="color:var(--gold); margin-bottom:40px;">NAWI STUDIO</h2>
+        <div class="studio-links">
+            <a href="live.html" class="studio-box"><i class="fa-solid fa-tower-broadcast"></i>LIVE STUDIO</a>
+            <a href="post.html" class="studio-box"><i class="fa-solid fa-cloud-arrow-up"></i>POST CONTENT</a>
+        </div>
     </div>
 
     <script>
-        // Automatic video play on scroll
-        const container = document.querySelector('.video-container');
-        const videos = document.querySelectorAll('video');
-
-        container.addEventListener('scroll', () => {
-            videos.forEach(video => {
-                const rect = video.getBoundingClientRect();
-                if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
-                    video.play();
-                } else {
-                    video.pause();
-                }
-            });
-        });
+        function toggleStudio() {
+            const studio = document.getElementById('studio-overlay');
+            studio.style.display = (studio.style.display === 'flex') ? 'none' : 'flex';
+        }
     </script>
 </body>
 </html>
