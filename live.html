@@ -3,55 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI LIVE</title>
+    <title>NAWI STUDIO | LIVE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body, html { margin: 0; padding: 0; background: #000; height: 100%; overflow: hidden; font-family: sans-serif; }
-        #video-container { width: 100%; height: 100%; position: relative; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        .live-tag { position: absolute; top: 20px; left: 20px; background: red; color: white; padding: 5px 10px; border-radius: 5px; font-weight: bold; }
-        .controls { position: absolute; bottom: 30px; right: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .btn-action { background: rgba(0,0,0,0.5); border: 2px solid white; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .gift-btn { border-color: gold; color: gold; }
-        .chat-overlay { position: absolute; bottom: 100px; left: 20px; width: 70%; max-height: 200px; overflow-y: auto; color: white; text-shadow: 1px 1px 2px black; }
+        :root { --nawi-gold: #D4AF37; --nawi-red: #ff0033; --glass: rgba(255, 255, 255, 0.1); }
+        body, html { margin: 0; padding: 0; background: #000; height: 100%; font-family: 'Inter', sans-serif; color: white; overflow: hidden; }
+        
+        #preview { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        .studio-overlay { position: absolute; inset: 0; z-index: 10; background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent, rgba(0,0,0,0.9)); display: flex; flex-direction: column; justify-content: space-between; padding: 30px; }
+
+        /* MONETIZATION PROGRESS */
+        .goal-box { background: var(--glass); backdrop-filter: blur(10px); padding: 15px; border-radius: 15px; border: 1px solid var(--nawi-gold); }
+        .progress-bar { width: 100%; height: 6px; background: #333; border-radius: 3px; margin-top: 10px; }
+        .progress-fill { width: 45%; height: 100%; background: var(--nawi-gold); border-radius: 3px; }
+
+        /* THE GO LIVE BUTTON */
+        .live-footer { text-align: center; }
+        .btn-go-live { background: var(--nawi-red); color: white; border: none; width: 80px; height: 80px; border-radius: 50%; font-weight: bold; font-size: 14px; box-shadow: 0 0 20px var(--nawi-red); cursor: pointer; border: 4px solid white; margin-bottom: 10px; }
+        .btn-go-live:disabled { background: #444; box-shadow: none; border-color: #666; }
+
+        /* NAWI UNIQUE STICKER WHEEL */
+        .sticker-wheel { display: flex; gap: 20px; overflow-x: auto; padding: 10px 0; }
+        .sticker-item { min-width: 60px; height: 60px; background: var(--glass); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #444; }
     </style>
 </head>
 <body>
 
-    <div id="video-container">
-        <div class="live-tag"><i class="fa-solid fa-circle"></i> LIVE</div>
-        
-        <video id="localVideo" autoplay playsinline muted></video>
+    <video id="preview" autoplay playsinline muted></video>
 
-        <div class="chat-overlay" id="chat">
-            <p><strong>System:</strong> Welcome to NAWI Live Stream!</p>
+    <div class="studio-overlay">
+        <div class="header-tools">
+            <div class="goal-box">
+                <div style="display:flex; justify-content:space-between; font-size:12px;">
+                    <span>Monetization Goal</span>
+                    <span id="follower-count">Loading Followers...</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="p-fill"></div></div>
+            </div>
         </div>
 
-        <div class="controls">
-            <div class="btn-action" onclick="switchCamera()"><i class="fa-solid fa-camera-rotate"></i></div>
-            <div class="btn-action gift-btn" onclick="sendGift()"><i class="fa-solid fa-gem"></i></div>
-            <div class="btn-action" onclick="location.href='index.html'"><i class="fa-solid fa-xmark"></i></div>
+        <div class="live-footer">
+            <p id="lock-msg" style="font-size: 12px; color: #aaa; margin-bottom: 15px;">500 Followers Required to Unlock Live</p>
+            
+            <div class="sticker-wheel">
+                <div class="sticker-item"><i class="fa-solid fa-crown" style="color:gold"></i></div>
+                <div class="sticker-item"><i class="fa-solid fa-fire" style="color:orange"></i></div>
+                <div class="sticker-item"><i class="fa-solid fa-gem" style="color:cyan"></i></div>
+                <div class="sticker-item"><i class="fa-solid fa-heart" style="color:red"></i></div>
+            </div>
+
+            <button class="btn-go-live" id="live-btn" disabled onclick="startLive()">GO<br>LIVE</button>
+            
+            <nav style="display:flex; justify-content:space-around; padding-top:20px;">
+                <span onclick="location.href='index.html'"><i class="fa-solid fa-xmark"></i> Close</span>
+                <span><i class="fa-solid fa-gear"></i> Settings</span>
+            </nav>
         </div>
     </div>
 
     <script>
-        // ACTIVATE THE CAMERA ON SPARK 30C
-        async function startLive() {
+        // Check for 500 followers
+        const userFollowers = 120; // This will come from MongoDB via server.js
+        
+        async function setupStudio() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
-                document.getElementById('localVideo').srcObject = stream;
-            } catch (err) {
-                alert("Please allow camera access to go live.");
-            }
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('preview').srcObject = stream;
+                
+                document.getElementById('follower-count').innerText = userFollowers + " / 500 Followers";
+                let percent = (userFollowers / 500) * 100;
+                document.getElementById('p-fill').style.width = percent + "%";
+
+                if(userFollowers >= 500) {
+                    document.getElementById('live-btn').disabled = false;
+                    document.getElementById('lock-msg').innerText = "Live Access Granted";
+                    document.getElementById('lock-msg').style.color = "lime";
+                }
+            } catch (err) { alert("Camera Permission Required"); }
         }
 
-        function sendGift() {
-            // This connects to your MongoDB balance
-            alert("Sending Diamond Gift... -500 pts from Vault");
-            // Here we would add the fetch() to update MongoDB
+        function startLive() {
+            alert("Broadcast Initialized on NAWI-EMPIRE Shard...");
+            // Trigger actual broadcast logic
         }
 
-        window.onload = startLive;
+        window.onload = setupStudio;
     </script>
 </body>
 </html>
