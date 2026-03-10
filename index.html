@@ -2,89 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAWI EMPIRE</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* The Secret Entrance - Invisible to everyone but you */
-        #ghost-trigger {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 50px;
-            height: 50px;
-            z-index: 9999;
-            background: transparent;
-        }
-        .pillar-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px;
-        }
-        .pillar-btn {
-            padding: 20px;
-            border-radius: 12px;
-            border: none;
-            background: #1a1a1a;
-            color: gold;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body style="background: #000; color: #fff; font-family: sans-serif;">
+<body>
 
-    <div id="ghost-trigger" onclick="ghostCheck()"></div>
+    <div id="ghost-trigger" style="position:fixed; top:0; right:0; width:50px; height:50px; z-index:3000;"></div>
 
-    <header style="text-align: center; padding: 20px;">
-        <h1 style="color: gold; letter-spacing: 2px;">NAWI EMPIRE</h1>
-        <p id="status-text">Welcome to the 7 Pillars</p>
-        <div id="admin-panel" style="display:none; border: 1px solid gold; padding: 10px; margin-top: 10px;">
-            <h3>CONTROL ROOM</h3>
-            <p>Vault Reserve: <span id="vault-amount" style="color:lime"></span> pts</p>
+    <div class="feed-wrapper" id="feed">
+        <div class="content-card">
+            <div class="content-overlay">
+                <h4>@Founder_Active</h4>
+                <p>Welcome to the New Empire. Content is King. 🚀</p>
+            </div>
+            <div class="side-actions">
+                <i class="fa-solid fa-heart"></i>
+                <i class="fa-solid fa-comment"></i>
+                <i class="fa-solid fa-share"></i>
+                <i class="fa-solid fa-gift" style="color:gold" onclick="alert('Send Gift to Creator')"></i>
+            </div>
+            <img src="https://via.placeholder.com/1080x1920/050505/D4AF37?text=Post+1" style="width:100%; height:100%; object-fit:cover;">
         </div>
-    </header>
+    </div>
 
-    <main class="pillar-grid">
-        <button class="pillar-btn" onclick="location.href='ads.html'">📺 Ads Manager</button>
-        <button class="pillar-btn" onclick="location.href='live.html'">🎥 Live Stream</button>
-        <button class="pillar-btn" onclick="location.href='games.html'">🎮 Gaming Studio</button>
-        <button class="pillar-btn" onclick="location.href='market.html'">🛍️ Marketplace</button>
-        <button class="pillar-btn" onclick="location.href='kitchen.html'">🍳 Kitchen</button>
-        <button class="pillar-btn" onclick="location.href='music.html'">🎵 Music Promo</button>
-        <button class="pillar-btn" onclick="location.href='design.html'" style="grid-column: span 2;">🎨 Creative Studio</button>
-    </main>
+    <div id="drawer" class="pillars-drawer">
+        <h2 style="color:gold; margin-bottom:20px;">7 PILLARS</h2>
+        <a href="ads.html" class="pillar-item"><i class="fa-solid fa-rectangle-ad"></i> Ads Manager</a>
+        <a href="live.html" class="pillar-item"><i class="fa-solid fa-tower-broadcast"></i> Live Stream Studio</a>
+        <a href="games.html" class="pillar-item"><i class="fa-solid fa-gamepad"></i> Gaming Studio</a>
+        <a href="market.html" class="pillar-item"><i class="fa-solid fa-shop"></i> Marketplace</a>
+        <a href="kitchen.html" class="pillar-item"><i class="fa-solid fa-utensils"></i> Kitchen</a>
+        <a href="music.html" class="pillar-item"><i class="fa-solid fa-music"></i> Music Promotion</a>
+        <a href="design.html" class="pillar-item"><i class="fa-solid fa-palette"></i> Creative Studio</a>
+        <hr style="border:0.5px solid #333; margin:20px 0;">
+        <a href="privacy.html" class="pillar-item"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</a>
+        <a href="settings.html" class="pillar-item"><i class="fa-solid fa-gear"></i> Settings</a>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-btn active"><i class="fa-solid fa-house"></i>Home</a>
+        <a href="social.html" class="nav-btn"><i class="fa-solid fa-compass"></i>Explore</a>
+        <div class="plus-btn" onclick="alert('Post Content')"><i class="fa-solid fa-plus"></i></div>
+        <a href="live.html" class="nav-btn"><i class="fa-solid fa-video"></i>Live</a>
+        <div class="nav-btn" onclick="document.getElementById('drawer').classList.toggle('open')">
+            <i class="fa-solid fa-bars"></i>Menu
+        </div>
+    </nav>
 
     <script>
-        let clickCount = 0;
-        function ghostCheck() {
-            clickCount++;
-            if (clickCount === 5) { // Secret: Only 5 taps unlocks the prompt
-                let pin = prompt("Enter Secret Key:");
-                verifyExcellency(pin);
-                clickCount = 0;
-            }
-        }
-
-        function verifyExcellency(pin) {
-            // This calls your server to check the MongoDB secret_key
-            fetch('/api/admin-auth', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ pin: pin })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.success) {
-                    document.getElementById('admin-panel').style.display = 'block';
-                    document.getElementById('vault-amount').innerText = data.vault.toLocaleString();
-                    document.getElementById('status-text').innerText = "Logged in as Ghost CEO";
-                } else {
-                    alert("Unauthorized Access Attempt Recorded.");
-                }
-            });
-        }
+        // Ghost CEO logic - Long press 3 seconds on top right
+        let ghost = document.getElementById('ghost-trigger');
+        let timer;
+        ghost.onmousedown = function() { timer = setTimeout(() => { 
+            let pin = prompt("EXCELLENCY IDENTIFIED. ENTER KEY:");
+            if(pin === "1234") alert("Vault Unlocked: 35,000,000 pts");
+        }, 3000); };
+        ghost.onmouseup = function() { clearTimeout(timer); };
     </script>
 </body>
 </html>
