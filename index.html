@@ -6,89 +6,145 @@
     <title>NAWI EMPIRE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --white: #ffffff; --dark: #000000; }
-        body, html { margin: 0; padding: 0; background: var(--dark); color: white; font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; }
+        :root { --gold: #D4AF37; }
+        body, html { margin: 0; padding: 0; background: #000; color: white; font-family: sans-serif; height: 100vh; overflow: hidden; }
 
-        /* TOP NAVIGATION */
-        .top-nav { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: center; z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
-        .nav-tabs { display: flex; gap: 25px; font-weight: bold; font-size: 17px; }
-        .nav-tabs span { color: rgba(255,255,255,0.6); cursor: pointer; }
-        .nav-tabs .active { color: white; border-bottom: 2px solid white; padding-bottom: 5px; }
+        /* VIDEO SCROLL CONTAINER */
+        .video-container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none; /* Hide scrollbar for clean look */
+        }
+        .video-container::-webkit-scrollbar { display: none; }
 
-        /* MAIN FEED */
-        .main-feed { height: 100vh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; }
-        .video-post { height: 100vh; width: 100%; scroll-snap-align: start; position: relative; background: #000; }
+        .video-section {
+            height: 100vh;
+            width: 100vw;
+            scroll-snap-align: start;
+            position: relative;
+            background: #111;
+        }
 
-        /* SIDE ACTIONS - Exact placement from screenshots */
-        .side-actions { position: absolute; right: 12px; bottom: 120px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
-        .action-item { text-align: center; }
-        .action-item i { font-size: 32px; display: block; margin-bottom: 4px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-        .action-item span { font-size: 12px; font-weight: bold; }
+        /* REAL VIDEO ELEMENT */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-        /* CAPTION AREA - HIDDEN IDENTITY */
-        .post-caption { position: absolute; left: 15px; bottom: 95px; max-width: 75%; z-index: 10; }
-        .post-caption h4 { margin: 0 0 8px 0; font-size: 16px; color: var(--gold); }
-        .post-caption p { margin: 0; font-size: 14px; color: #fff; }
+        /* SIDE INTERACTION BUTTONS */
+        .side-icons {
+            position: absolute;
+            right: 15px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 10;
+        }
+        .icon-group { text-align: center; cursor: pointer; }
+        .icon-group i { font-size: 30px; display: block; filter: drop-shadow(0 0 5px rgba(0,0,0,0.8)); }
+        .icon-group span { font-size: 12px; font-weight: bold; }
 
-        /* BOTTOM NAVIGATION - 5 Pillars Order */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #000; display: flex; justify-content: space-around; align-items: center; border-top: 0.5px solid #222; z-index: 1000; }
-        .nav-item { color: #888; font-size: 10px; text-align: center; text-decoration: none; }
-        .nav-item.active { color: white; }
-        .nav-item i { font-size: 24px; display: block; margin-bottom: 4px; }
-        
-        /* THE PLUS BUTTON (+) */
-        .plus-button { width: 45px; height: 32px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: black; position: relative; cursor: pointer; }
-        .plus-button::before { content: ''; position: absolute; left: -5px; width: 10px; height: 100%; background: #69C9D0; border-radius: 4px; z-index: -1; }
-        .plus-button::after { content: ''; position: absolute; right: -5px; width: 10px; height: 100%; background: #EE1D52; border-radius: 4px; z-index: -1; }
+        /* USER INFO & CAPTION */
+        .post-data {
+            position: absolute;
+            left: 15px;
+            bottom: 100px;
+            z-index: 10;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+        }
+        .post-data h3 { margin: 0 0 5px 0; color: var(--gold); }
+        .post-data p { margin: 0; font-size: 14px; }
 
-        /* OVERLAYS */
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        /* BOTTOM NAV BAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            background: #000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #222;
+            z-index: 100;
+        }
+        .nav-link { color: #888; text-decoration: none; font-size: 10px; text-align: center; }
+        .nav-link.active { color: #fff; }
+        .nav-link i { font-size: 24px; display: block; margin-bottom: 2px; }
+
+        /* THE PLUS BUTTON */
+        .plus-btn {
+            width: 45px;
+            height: 30px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            position: relative;
+        }
+        .plus-btn::before { content: ''; position: absolute; left: -5px; width: 10px; height: 100%; background: #69C9D0; border-radius: 4px; z-index: -1; }
+        .plus-btn::after { content: ''; position: absolute; right: -5px; width: 10px; height: 100%; background: #EE1D52; border-radius: 4px; z-index: -1; }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
-        <div class="nav-tabs">
-            <span>Explore</span>
-            <span class="active">For You</span>
-        </div>
-    </div>
+    <div class="video-container">
+        <div class="video-section">
+            <video loop autoplay muted playsinline>
+                <source src="https://v.ftcdn.net/05/22/01/71/700_F_522017124_pG2f7P0M20kGvWz6L2I3YI9z5S2hJt8L_ST.mp4" type="video/mp4">
+            </video>
 
-    <div class="main-feed">
-        <div class="video-post">
-            <div class="side-actions">
-                <div class="action-item"><i class="fa-solid fa-heart"></i><span>0</span></div>
-                <div class="action-item"><i class="fa-solid fa-comment-dots"></i><span>0</span></div>
-                <div class="action-item"><i class="fa-solid fa-bookmark"></i><span>0</span></div>
-                <div class="action-item"><i class="fa-solid fa-share"></i><span>0</span></div>
+            <div class="side-icons">
+                <div class="icon-group" onclick="this.style.color='red'"><i class="fa-solid fa-heart"></i><span>1.2M</span></div>
+                <div class="icon-group"><i class="fa-solid fa-comment-dots"></i><span>45K</span></div>
+                <div class="icon-group"><i class="fa-solid fa-share"></i><span>12K</span></div>
             </div>
-            <div class="post-caption">
-                <h4>@Founder</h4>
-                <p>Welcome to the platform. Follow the rules to protect the Empire. This is our order. [cite: 2026-03-05]</p>
+
+            <div class="post-data">
+                <h3>@Founder</h3>
+                <p>Welcome to NAWI Empire. Follow the rules to stay. 💎</p>
+            </div>
+        </div>
+
+        <div class="video-section">
+            <video loop muted playsinline>
+                <source src="https://v.ftcdn.net/02/76/86/06/700_F_276860662_vR454A6XpY6F8A9Z9V5G7L9O4X8A9L8C_ST.mp4" type="video/mp4">
+            </video>
+            <div class="post-data">
+                <h3>@Creator_Brand</h3>
+                <p>Grow your brand here. Follow for Follow! 🚀</p>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i>Home</a>
-        <a href="discover.html" class="nav-item"><i class="fa-solid fa-compass"></i>Discover</a>
-        <div class="plus-button" onclick="openStudio()"><i class="fa-solid fa-plus"></i></div>
-        <a href="inbox.html" class="nav-item"><i class="fa-solid fa-comment-dots"></i>Inbox</a>
-        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user"></i>Profile</a>
-    </div>
-
-    <div id="overlay">
-        <div onclick="closeStudio()" style="position:absolute; top:40px; right:30px; font-size:35px;">&times;</div>
-        <h2 style="color:var(--gold)">NAWI STUDIO</h2>
-        <div style="display:flex; gap:20px; margin-top:50px;">
-            <a href="live.html" style="color:white; text-decoration:none; text-align:center;"><i class="fa-solid fa-tower-broadcast" style="font-size:40px; display:block;"></i>LIVE</a>
-            <a href="post.html" style="color:white; text-decoration:none; text-align:center;"><i class="fa-solid fa-plus-square" style="font-size:40px; display:block;"></i>POST</a>
-        </div>
+        <a href="#" class="nav-link active"><i class="fa-solid fa-house"></i>Home</a>
+        <a href="discover.html" class="nav-link"><i class="fa-solid fa-compass"></i>Discover</a>
+        <div class="plus-btn" onclick="alert('Opening Secret Master Menu...')"><i class="fa-solid fa-plus"></i></div>
+        <a href="inbox.html" class="nav-link"><i class="fa-solid fa-comment-dots"></i>Inbox</a>
+        <a href="profile.html" class="nav-link"><i class="fa-solid fa-user"></i>Profile</a>
     </div>
 
     <script>
-        function openStudio() { document.getElementById('overlay').style.display = 'flex'; }
-        function closeStudio() { document.getElementById('overlay').style.display = 'none'; }
+        // Automatic video play on scroll
+        const container = document.querySelector('.video-container');
+        const videos = document.querySelectorAll('video');
+
+        container.addEventListener('scroll', () => {
+            videos.forEach(video => {
+                const rect = video.getBoundingClientRect();
+                if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
+                    video.play();
+                } else {
+                    video.pause();
+                }
+            });
+        });
     </script>
 </body>
 </html>
