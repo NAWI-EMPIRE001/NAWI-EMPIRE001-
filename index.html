@@ -17,12 +17,13 @@
         .feed-scroll { height: 100vh; overflow-y: auto; padding: 80px 15px 100px 15px; box-sizing: border-box; scrollbar-width: none; }
         .feed-scroll::-webkit-scrollbar { display: none; }
 
-        /* CREATOR POSTING TOOL */
+        /* CREATOR POSTING TOOL (CONNECTED TO MONGODB) */
         .brand-post-box { background: #111; border-radius: 15px; padding: 15px; border: 1px solid #222; display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
         .post-input { background: #1a1a1a; border: none; border-radius: 20px; padding: 12px 18px; color: white; flex: 1; font-size: 14px; outline: none; }
         
         /* SOCIAL CARDS */
         .post-card { background: var(--glass); border-radius: 20px; padding: 15px; margin-bottom: 20px; border: 1px solid #1a1a1a; }
+        .authority-card { border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.05); } /* Highlighted Authority Card */
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .user-info { display: flex; align-items: center; gap: 10px; }
         .avatar { width: 42px; height: 42px; background: #333; border-radius: 50%; border: 1px solid var(--gold); }
@@ -57,20 +58,20 @@
     <div class="feed-scroll">
         <div class="brand-post-box">
             <div class="avatar" style="width:35px; height:35px;"></div>
-            <input type="text" class="post-input" placeholder="Share your brand or mind...">
-            <i class="fa-solid fa-camera" style="color:var(--gold); font-size:20px;"></i>
+            <input type="text" id="missionInput" class="post-input" placeholder="Share your brand or mind...">
+            <i class="fa-solid fa-paper-plane" onclick="publishMission()" style="color:var(--gold); font-size:20px; cursor:pointer;"></i>
         </div>
 
-        <div class="post-card">
+        <div class="post-card authority-card">
             <div class="post-header">
                 <div class="user-info">
-                    <div class="avatar"></div>
+                    <div class="avatar" style="background: url('https://via.placeholder.com/42'); background-size: cover;"></div>
                     <div><strong>Empire Founder</strong><br><small style="color:var(--gold)">Official Authority</small></div>
                 </div>
-                <button class="follow-btn">Follow-Back</button>
+                <button class="follow-btn" onclick="location.href='login.html'">Sign Up</button>
             </div>
             <div class="post-body">
-                This is the official order and authority to protect the founders and this platform. We're not here to collect your money, the only thing we need is for you to follow the rules. Grow together. 💎
+                This is the official order and authority to protect the founders and this platform. We're not here to collect your money, the only thing we need is for you to follow the rules of this platform. Grow together. 💎
             </div>
             <div class="post-actions">
                 <div class="action"><i class="fa-regular fa-heart"></i> 10k</div>
@@ -79,23 +80,8 @@
             </div>
         </div>
 
-        <div class="post-card">
-            <div class="post-header">
-                <div class="user-info">
-                    <div class="avatar" style="background:#444;"></div>
-                    <div><strong>Creator Hub</strong><br><small style="color:#888">Verified Brand</small></div>
-                </div>
-                <button class="follow-btn">Follow-Back</button>
+        <div id="dynamic-feed">
             </div>
-            <div class="post-body">
-                The new professional layout is live! No more TikTok clones, just pure brand building. Who else is ready for the 7 Pillars? 🚀
-            </div>
-            <div class="post-actions">
-                <div class="action"><i class="fa-regular fa-heart"></i> 2.1k</div>
-                <div class="action"><i class="fa-regular fa-comment"></i> 145</div>
-                <div class="action"><i class="fa-solid fa-share"></i> Share</div>
-            </div>
-        </div>
     </div>
 
     <div class="bottom-nav">
@@ -116,13 +102,49 @@
             <a href="kitchen.html" class="tool-item"><i class="fa-solid fa-utensils"></i><span>KITCHEN</span></a>
             <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><span>MUSIC</span></a>
         </div>
-        <div onclick="toggleDash()" style="text-align:center; margin-top:25px; color:var(--gold); font-weight:bold; cursor:pointer; font-size: 14px;">[ TAP TO HIDE ]</div>
+        <div onclick="toggleDash()" style="text-align:center; margin-top:25px; color:var(--gold); font-weight:bold; cursor:pointer;">[ TAP TO HIDE ]</div>
     </div>
 
     <script>
         function toggleDash() {
             document.getElementById('dash-overlay').classList.toggle('active');
         }
+
+        // MONGODB FEED LOGIC
+        async function publishMission() {
+            const content = document.getElementById('missionInput').value;
+            if(!content) return;
+            await fetch('/api/posts/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            });
+            document.getElementById('missionInput').value = '';
+            loadEmpireFeed();
+        }
+
+        async function loadEmpireFeed() {
+            const res = await fetch('/api/posts/feed');
+            const posts = await res.json();
+            const feed = document.getElementById('dynamic-feed');
+            feed.innerHTML = posts.map(p => `
+                <div class="post-card">
+                    <div class="post-header">
+                        <div class="user-info">
+                            <div class="avatar" style="background:#444;"></div>
+                            <div><strong>${p.author}</strong><br><small style="color:#888">Verified Brand</small></div>
+                        </div>
+                    </div>
+                    <div class="post-body">${p.content}</div>
+                    <div class="post-actions">
+                        <div class="action"><i class="fa-regular fa-heart"></i> ${p.likes || 0}</div>
+                        <div class="action"><i class="fa-regular fa-comment"></i> 0</div>
+                        <div class="action"><i class="fa-solid fa-share"></i> Share</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        window.onload = loadEmpireFeed;
     </script>
 </body>
 </html>
