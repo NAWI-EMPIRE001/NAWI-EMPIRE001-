@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWI | EMPIRE KITCHEN</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #D4AF37; --black: #0a0a0a; --card: #161616; }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; }
+        
+        /* Header */
+        .kitchen-header { padding: 40px 20px 20px; background: linear-gradient(to bottom, #1a1a1a, var(--black)); border-bottom: 1px solid #222; }
+        .kitchen-header h1 { color: var(--gold); font-size: 24px; margin: 0; letter-spacing: 2px; }
+        .coin-status { float: right; color: var(--gold); font-weight: bold; font-size: 14px; }
+
+        /* Featured Chef Live */
+        .live-chef-card { margin: 20px; height: 200px; border-radius: 20px; background: url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=500&q=80'); background-size: cover; position: relative; border: 1px solid var(--gold); overflow: hidden; }
+        .live-tag { position: absolute; top: 15px; left: 15px; background: #ff0033; padding: 4px 10px; border-radius: 5px; font-size: 10px; font-weight: bold; animation: blink 1.5s infinite; }
+        .chef-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 15px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); }
+
+        /* Recipe Grid */
+        .section-title { padding: 0 20px; font-size: 16px; color: var(--gold); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .recipe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .recipe-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #222; }
+        .recipe-img { width: 100%; height: 110px; background: #333; object-fit: cover; }
+        .recipe-info { padding: 10px; }
+        .recipe-name { font-size: 12px; font-weight: bold; display: block; margin-bottom: 5px; }
+        .recipe-price { color: var(--gold); font-size: 11px; font-weight: bold; }
+
+        /* Navigation Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #111; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; z-index: 100; }
+        .nav-item { color: #555; font-size: 20px; cursor: pointer; }
+        .nav-item.active { color: var(--gold); }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        
+        .btn-join { background: var(--gold); color: black; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; font-size: 11px; cursor: pointer; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="kitchen-header">
+        <span class="coin-status"><i class="fa-solid fa-coins"></i> 1,500</span>
+        <h1>EMPIRE KITCHEN</h1>
+        <p style="color: #666; font-size: 12px; margin-top: 5px;">7 Pillars Culinary Authority</p>
+    </div>
+
+    <div class="live-chef-card" onclick="location.href='live.html'">
+        <div class="live-tag">LIVE NOW</div>
+        <div class="chef-overlay">
+            <span style="font-size: 14px; font-weight: bold;">Chef Success: Spicy Empire Pasta</span>
+            <div style="font-size: 10px; color: #ccc;">240 Viewers • Earn 5 Coins 🪙 to watch</div>
+        </div>
+    </div>
+
+    <h2 class="section-title">Master Recipes</h2>
+    <div class="recipe-grid">
+        <div class="recipe-card">
+            <img src="https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=300&q=80" class="recipe-img">
+            <div class="recipe-info">
+                <span class="recipe-name">Royal Jollof Rice</span>
+                <span class="recipe-price">Unlock: 20 🪙</span>
+                <button class="btn-join">GET RECIPE</button>
+            </div>
+        </div>
+        <div class="recipe-card">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=300&q=80" class="recipe-img">
+            <div class="recipe-info">
+                <span class="recipe-name">Empire Salad Mix</span>
+                <span class="recipe-price">Unlock: 15 🪙</span>
+                <button class="btn-join">GET RECIPE</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <i class="fa-solid fa-house nav-item" onclick="location.href='app-grid.html'"></i>
+        <i class="fa-solid fa-video nav-item active"></i>
+        <i class="fa-solid fa-cart-shopping nav-item"></i>
+        <i class="fa-solid fa-user nav-item" onclick="location.href='profile.html'"></i>
+    </div>
+
+</body>
+</html>
