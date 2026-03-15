@@ -1,83 +1,144 @@
-<style>
-    . appgrid-html {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 3 columns for a busy, full look */
-        gap: 20px;
-        padding: 20px;
-        max-width: 500px;
-        margin: 0 auto;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NAWI EMPIRE | Official Sovereign Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap');
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .imperial-font { font-family: 'Syncopate', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.15); }
 
-    .app-icon {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: #111; /* Dark background */
-        border: 1px solid #333;
-        border-radius: 15px;
-        padding: 15px 10px;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
+        /* Combined App Grid Styles */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 10px;
+            width: 100%;
+        }
 
-    .app-icon:hover {
-        border-color: #ffd700; /* Gold glow on hover */
-        transform: translateY(-5px);
-        background: #1a1a1a;
-    }
+        .app-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 20px 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
 
-    .app-icon i {
-        font-style: normal;
-        font-size: 30px; /* Big, clear icons */
-        margin-bottom: 8px;
-    }
+        .app-icon:active {
+            border-color: #ffd700;
+            transform: scale(0.95);
+            background: #1a1a1a;
+        }
 
-    .app-icon span {
-        color: #fff;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
+        .app-icon i.emoji {
+            font-style: normal;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
 
-    /* Special style for the Ads Tool to make it stand out */
-    .app-icon.promo {
-        border-color: #ffd700;
-        background: rgba(255, 215, 0, 0.05);
-    }
-</style>
+        .app-icon span {
+            color: #fff;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-<div class="app-grid">
-    <div class="app-icon" onclick="window.location.href='live.html'">
-        <i>🎥</i><span>Live</span>
-    </div>
-    
-    <div class="app-icon" onclick="window.location.href='market.html'">
-        <i>🛒</i><span>Market</span>
-    </div>
+        .app-icon.promo {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center pb-32">
 
-    <div class="app-icon promo" onclick="window.location.href='ads.html'">
-        <i>📈</i><span>Ads Tool</span>
-    </div>
+    <header class="w-full max-w-md p-6 pt-10 flex justify-between items-center">
+        <div>
+            <h1 class="imperial-font text-xl tracking-tighter italic font-bold">NAWI EMPIRE</h1>
+            <div class="flex items-center gap-2 mt-1">
+                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <p class="text-[7px] font-black text-amber-500 uppercase tracking-[0.4em]">Node Active: 001</p>
+            </div>
+        </div>
+        <div class="w-12 h-12 glass rounded-2xl flex items-center justify-center gold-glow">
+            <i data-lucide="shield-check" class="text-amber-500 w-6 h-6"></i>
+        </div>
+    </header>
 
-    <div class="app-icon" onclick="window.location.href='games.html'">
-        <i>🎮</i><span>Games</span>
-    </div>
+    <main class="w-full max-w-md px-6 space-y-6">
+        <div class="glass rounded-[3rem] p-8 relative overflow-hidden gold-glow border-amber-500/20">
+            <div class="relative z-10">
+                <p class="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-2">Central Coin Reserve 🪙</p>
+                <h2 id="balance-display" class="text-5xl font-black italic tracking-tighter mb-8">0</h2>
+                <div class="flex gap-3">
+                    <button class="flex-1 bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95">Acquire</button>
+                    <button class="flex-1 glass py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95">Stake 0%</button>
+                </div>
+            </div>
+            <i data-lucide="coins" class="absolute -bottom-10 -right-10 w-40 h-40 text-white opacity-5 rotate-12"></i>
+        </div>
 
-    <div class="app-icon" onclick="window.location.href='kitchen.html'">
-        <i>🍽️</i><span>Kitchen</span>
-    </div>
+        <div class="space-y-4">
+            <div class="flex items-center gap-2 px-2">
+                <i data-lucide="layout-grid" class="w-3 h-3 text-amber-500"></i>
+                <h3 class="text-[8px] font-black uppercase tracking-widest text-zinc-500">Empire Systems</h3>
+            </div>
+            
+            <div class="app-grid">
+                <div class="app-icon" onclick="window.location.href='live.html'"><i class="emoji">🎥</i><span>Live</span></div>
+                <div class="app-icon" onclick="window.location.href='market.html'"><i class="emoji">🛒</i><span>Market</span></div>
+                <div class="app-icon promo" onclick="window.location.href='ads.html'"><i class="emoji">📈</i><span>Ads Tool</span></div>
+                <div class="app-icon" onclick="window.location.href='games.html'"><i class="emoji">🎮</i><span>Games</span></div>
+                <div class="app-icon" onclick="window.location.href='kitchen.html'"><i class="emoji">🍽️</i><span>Kitchen</span></div>
+                <div class="app-icon" onclick="window.location.href='music.html'"><i class="emoji">🎵</i><span>Music</span></div>
+            </div>
+        </div>
 
-    <div class="app-icon" onclick="window.location.href='design.html'">
-        <i>🎨</i><span>Studio</span>
-    </div>
+        <div class="glass rounded-[2rem] p-6 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
+                <i data-lucide="user-check" class="text-blue-500 w-5 h-5"></i>
+            </div>
+            <div>
+                <p class="text-[7px] font-black text-zinc-500 uppercase">Verified Founder</p>
+                <p class="text-[10px] font-black uppercase italic">akpanvictor848@gmail.com</p>
+            </div>
+        </div>
+    </main>
 
-    <div class="app-icon" onclick="window.location.href='music.html'">
-        <i>🎵</i><span>Music</span>
-    </div>
+    <nav class="fixed bottom-8 w-[90%] max-w-xs glass p-2 rounded-[2.5rem] flex gap-2 shadow-2xl z-50">
+        <button class="flex-1 py-5 flex justify-center text-white bg-white/10 rounded-[2rem] shadow-inner"><i data-lucide="home"></i></button>
+        <button onclick="window.location.href='content.html'" class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="book-open"></i></button>
+        <button onclick="window.location.href='design.html'" class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="palette"></i></button>
+        <button onclick="logout()" class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="log-out"></i></button>
+    </nav>
 
-    <div class="app-icon" onclick="window.location.href='content.html'">
-        <i>✍️</i><span>Stories</span>
-    </div>
-</div>
+    <script>
+        lucide.createIcons();
+        
+        window.onload = () => {
+            // Check if logged in
+            const auth = localStorage.getItem('nawi_token');
+            if (!auth) {
+                window.location.href = 'index.html';
+            }
+            document.getElementById('balance-display').innerText = "0";
+        };
+
+        function logout() {
+            localStorage.removeItem('nawi_token');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
