@@ -1,40 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NAWI EMPIRE | SECURE ACCESS</title>
     <style>
-        body { background: #000; color: #D4AF37; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: #111; padding: 40px; border-radius: 20px; border: 1px solid #D4AF37; width: 300px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #222; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #D4AF37; border: none; color: black; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-        .logo { font-size: 24px; font-weight: 900; margin-bottom: 20px; letter-spacing: 3px; }
+        :root { --gold: #D4AF37; --black: #000; --dark: #111; }
+        body { background: var(--black); color: var(--gold); font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        
+        .login-box { 
+            background: var(--dark); 
+            padding: 40px; 
+            border-radius: 25px; 
+            border: 1px solid var(--gold); 
+            width: 320px; 
+            text-align: center; 
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .logo { font-size: 26px; font-weight: 900; margin-bottom: 5px; letter-spacing: 3px; }
+        .sub-text { color: #888; font-size: 11px; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 10px 0; 
+            background: #1a1a1a; 
+            border: 1px solid #333; 
+            color: white; 
+            border-radius: 10px; 
+            box-sizing: border-box; 
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--gold); }
+
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--gold); 
+            border: none; 
+            color: black; 
+            font-weight: 800; 
+            cursor: pointer; 
+            border-radius: 10px; 
+            margin-top: 15px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover { opacity: 0.9; transform: scale(0.98); }
+
+        .footer-note { font-size: 10px; margin-top: 25px; color: #444; font-weight: bold; line-height: 1.4; }
     </style>
 </head>
 <body>
+
     <div class="login-box">
         <div class="logo">NAWI EMPIRE</div>
-        <p style="color: #888; font-size: 12px;">WORLD-WIDE ACCESS PORTAL</p>
-        <input type="email" id="email" placeholder="Email Address">
-        <input type="password" id="pass" placeholder="Password">
-        <button onclick="login()">ENTER THE EMPIRE</button>
-        <p style="font-size: 11px; margin-top: 20px; color: #555;">PROTECTING THE FOUNDERS & THE PLATFORM</p>
+        <div class="sub-text">World-Wide Access Portal</div>
+        
+        <input type="email" id="email" placeholder="Founder Email">
+        <input type="password" id="pass" placeholder="Master Password">
+        
+        <button onclick="handleLogin()">Enter the Empire</button>
+        
+        <p class="footer-note">
+            OFFICIAL AUTHORITY: PROTECTING THE FOUNDERS AND THE 7 PILLARS PLATFORM
+        </p>
     </div>
 
     <script>
-        async function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('pass').value;
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-            if(data.success) {
-                localStorage.setItem('user', JSON.stringify(data.user));
-                window.location.href = 'index.html';
-            } else {
-                alert("Access Denied: " + data.error);
+        async function handleLogin() {
+            const emailInput = document.getElementById('email').value;
+            const passInput = document.getElementById('pass').value;
+
+            // Targeting the professional endpoint we created in node.js
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email: emailInput, password: passInput })
+                });
+
+                const data = await res.json();
+
+                if(data.success) {
+                    // Store founder session
+                    localStorage.setItem('nawi_token', 'FOUNDER_VERIFIED');
+                    // Redirect to the 8-Pillar grid
+                    window.location.href = data.redirect; 
+                } else {
+                    alert("ACCESS DENIED: " + data.message);
+                }
+            } catch (error) {
+                console.error("Empire Connection Error:", error);
+                alert("Platform connection failed. Check your Render server.");
             }
         }
     </script>
