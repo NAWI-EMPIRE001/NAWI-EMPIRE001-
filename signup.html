@@ -13,14 +13,17 @@
         .logo { color: var(--gold); font-weight: 900; letter-spacing: 3px; margin-bottom: 5px; font-size: 22px; }
         .sub-text { font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 1px; }
         
-        input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; border-radius: 12px; color: white; box-sizing: border-box; outline: none; transition: 0.3s; font-size: 16px; }
         input:focus { border-color: var(--gold); background: #222; }
         
-        .action-btn { background: var(--gold); color: black; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; }
-        .action-btn:hover { transform: scale(0.98); opacity: 0.9; }
+        .action-btn { background: var(--gold); color: black; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 10px; transition: 0.3s; }
+        .action-btn:active { transform: scale(0.95); opacity: 0.8; }
+        .action-btn:disabled { background: #444; color: #888; cursor: wait; }
 
         .footer-link { margin-top: 25px; font-size: 12px; color: #555; }
         .footer-link a { color: var(--gold); text-decoration: none; font-weight: bold; }
+        
+        #status-msg { font-size: 10px; margin-top: 10px; color: var(--gold); display: none; }
     </style>
 </head>
 <body>
@@ -34,7 +37,8 @@
             <input type="email" id="email" value="akpanvictor848@gmail.com" required>
             <input type="password" id="password" value="$Nsikak111" required>
             
-            <button type="submit" class="action-btn">Verify & Activate</button>
+            <button type="submit" id="submitBtn" class="action-btn">Verify & Activate</button>
+            <div id="status-msg">Waking up Empire Servers... Please wait...</div>
         </form>
 
         <div class="footer-link">
@@ -43,37 +47,50 @@
     </div>
 
     <script>
+        // MASTER CONFIGURATION
+        const EMPIRE_URL = "https://nawi-empire1.onrender.com";
+
         document.getElementById('signupForm').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('status-msg');
             
+            // UI Feedback
+            btn.disabled = true;
+            btn.innerText = "CONNECTING...";
+            msg.style.display = "block";
+
             const userData = {
-                username: document.getElementById('username').value,
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value,
-                role: "FOUNDER" // Identifying your special status
+                username: document.getElementById('username').value
             };
 
-            // This MUST point to your master server path
             try {
-                const response = await fetch('/api/posts/create', { // Temporarily using create to log the founder entry
+                // We use the LOGIN route because your node.js is configured to check these specific credentials
+                const response = await fetch(`${EMPIRE_URL}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        author: userData.username,
-                        content: "Founder Identity Activated: " + userData.email,
-                        type: "official_log"
-                    })
+                    body: JSON.stringify(userData)
                 });
 
-                if (response.ok) {
-                    alert("EMPIRE ACTIVATED: Welcome Founder.");
-                    localStorage.setItem('nawi_token', 'FOUNDER_VERIFIED');
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert("AUTHORITY VERIFIED. Welcome to the Empire.");
+                    localStorage.setItem('nawi_token', 'FOUNDER_001');
                     window.location.href = 'app-grid.html';
                 } else {
-                    alert("Connection failed. Ensure Render is LIVE.");
+                    alert("ACCESS DENIED: " + (result.message || "Invalid Credentials"));
+                    btn.disabled = false;
+                    btn.innerText = "VERIFY & ACTIVATE";
+                    msg.style.display = "none";
                 }
             } catch (err) {
-                alert("Empire System Offline. Check GitHub for errors.");
+                console.error(err);
+                alert("SYSTEM OFFLINE: Tap 'OK' and wait 30 seconds for Render to wake up, then try again.");
+                btn.disabled = false;
+                btn.innerText = "RETRY ACTIVATION";
             }
         };
     </script>
