@@ -1,25 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI-EMPIRE | Studio</title>
+    <title>NAWI-EMPIRE | Design Studio</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
-        .portfolio { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .box { background: #1a1a1a; height: 100px; border-radius: 10px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 12px; }
-        .btn-order { background: #ffd700; color: #000; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; border: none; margin-top: 20px; }
+        :root { --gold: #ffd700; --dark: #111; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; padding: 20px; text-align: center; margin: 0; }
+        
+        .header { margin-bottom: 30px; }
+        .header h1 { color: var(--gold); margin: 0; letter-spacing: 2px; font-size: 28px; }
+        .header p { color: #888; font-size: 14px; margin-top: 5px; }
+
+        /* Portfolio Grid */
+        .portfolio { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        
+        .box { 
+            background: var(--dark); 
+            height: 120px; 
+            border-radius: 15px; 
+            border: 1px solid #222; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        .box:hover { border-color: var(--gold); transform: translateY(-5px); background: #1a1a1a; }
+        .box i { font-size: 24px; margin-bottom: 8px; }
+        .box span { font-size: 11px; font-weight: bold; letter-spacing: 1px; color: #ccc; }
+
+        /* Pricing/Order Section */
+        .studio-info { background: rgba(255, 215, 0, 0.05); border: 1px dashed var(--gold); padding: 20px; border-radius: 15px; margin-top: 30px; }
+        .price-tag { color: var(--gold); font-size: 20px; font-weight: bold; margin: 10px 0; }
+
+        .btn-order { 
+            background: var(--gold); 
+            color: #000; 
+            padding: 18px; 
+            width: 100%; 
+            border-radius: 12px; 
+            font-weight: 800; 
+            border: none; 
+            margin-top: 15px; 
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .back-btn { 
+            background: none; 
+            color: #555; 
+            margin-top: 20px; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 14px; 
+            display: block;
+            width: 100%;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-    <h1 style="color:#ffd700">🎨 DESIGN STUDIO</h1>
-    <p>Luxury 3D Branding & Graphics</p>
-    <div class="portfolio">
-        <div class="box">LOGOS</div>
-        <div class="box">FLYERS</div>
-        <div class="box">STICKERS</div>
-        <div class="box">COVERS</div>
+
+    <div class="header">
+        <h1>🎨 DESIGN STUDIO</h1>
+        <p>Premium Luxury & 3D Branding</p>
     </div>
-    <button class="btn-order" onclick="alert('empire-inbox message 7 pillars...')">REQUEST QUOTE</button>
-    <button style="background:none; color:#888; margin-top:10px; border:none;" onclick="location.href='index.html'">← Home</button>
+
+    <div class="portfolio">
+        <div class="box"><i>🏆</i><span>LOGOS</span></div>
+        <div class="box"><i>📄</i><span>FLYERS</span></div>
+        <div class="box"><i>✨</i><span>STICKERS</span></div>
+        <div class="box"><i>💿</i><span>COVERS</span></div>
+    </div>
+
+    <div class="studio-info">
+        <h3>Request Custom Design</h3>
+        <p style="font-size: 13px; color: #aaa;">Hire the 7 Pillars official designers for your brand assets.</p>
+        <div class="price-tag">Starting at 50 Coins 🪙</div>
+        <button class="btn-order" onclick="alert('Redirecting to Empire-Inbox: Message 7 Pillars...')">
+            ORDER NOW
+        </button>
+    </div>
+
+    <a href="app-grid.html" class="back-btn">← Back to HQ</a>
+
 </body>
 </html>
