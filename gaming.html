@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWI-EMPIRE | Pro Gaming Arena</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --black: #050505; --card: #111; --neon-blue: #00d4ff; }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; }
+        
+        /* LUXURY GAMING HEADER */
+        .game-header { padding: 50px 20px 30px; background: linear-gradient(to bottom, #1a1a1a, #050505); border-bottom: 1px solid rgba(212, 175, 55, 0.3); text-align: center; }
+        .game-header h1 { color: var(--gold); font-size: 22px; letter-spacing: 6px; margin: 0; font-weight: 900; text-transform: uppercase; }
+        .coin-balance { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.6); border: 1px solid var(--gold); padding: 8px 18px; border-radius: 30px; margin-top: 15px; font-size: 12px; font-weight: 900; color: var(--gold); }
+
+        /* TOURNAMENT SPOTLIGHT */
+        .spotlight { margin: 20px; border-radius: 24px; background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%); border: 1px solid #222; padding: 25px; position: relative; overflow: hidden; }
+        .spotlight::after { content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: var(--gold); filter: blur(100px); opacity: 0.1; }
+        .live-tag { background: #ff3b3b; color: white; font-size: 9px; font-weight: 900; padding: 3px 10px; border-radius: 4px; display: inline-block; margin-bottom: 10px; letter-spacing: 1px; }
+
+        /* ARENA GRID */
+        .section-label { padding: 0 25px; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; margin-bottom: 15px; }
+        .arena-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .arena-card { background: var(--card); border-radius: 20px; border: 1px solid #1a1a1a; overflow: hidden; transition: 0.3s; position: relative; }
+        .arena-card:active { transform: scale(0.96); border-color: var(--gold); }
+        
+        .arena-thumb { height: 110px; background: #080808; display: flex; align-items: center; justify-content: center; position: relative; }
+        .arena-thumb i { font-size: 35px; color: #222; }
+        .entry-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); border: 1px solid var(--gold); color: var(--gold); font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; }
+
+        .arena-info { padding: 15px; }
+        .arena-name { font-size: 13px; font-weight: 800; display: block; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .arena-status { font-size: 10px; color: #666; display: flex; align-items: center; gap: 5px; }
+        .status-dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; display: inline-block; }
+
+        .btn-enter { background: var(--gold); color: black; border: none; padding: 12px; width: 100%; font-weight: 900; font-size: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* MASTER NAV */
+        .master-nav { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
+        .nav-box { text-align: center; color: #444; text-decoration: none; }
+        .nav-box p { font-size: 9px; margin: 5px 0 0; font-weight: bold; text-transform: uppercase; }
+        .active-tab { color: var(--gold) !important; }
+        .plus-btn { background: var(--gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -10px; }
+    </style>
+</head>
+<body>
+
+    <div class="game-header">
+        <h1>GAMING STUDIO</h1>
+        <div class="coin-balance"><i class="fa-solid fa-coins"></i> 1,500 🪙</div>
+    </div>
+
+    <div class="spotlight">
+        <span class="live-tag">WORLD TOURNAMENT</span>
+        <h2 style="margin:0; font-size:20px; font-weight:900;">DreamLeague 2026</h2>
+        <p style="color:#888; font-size:11px; margin:5px 0 15px;">Official Empire Season • Pool: 10,000 🪙</p>
+        <button class="btn-enter" style="border-radius:12px;" onclick="P2P_GATEWAY.initiateTransaction('DreamLeague 2026 Entry', 50)">Enter Season (50 🪙)</button>
+    </div>
+
+    <h2 class="section-label">Active Arenas</h2>
+    <div class="arena-grid">
+        <div class="arena-card">
+            <div class="arena-thumb">
+                <i class="fa-solid fa-ranking-star"></i>
+                <span class="entry-badge">10 🪙</span>
+            </div>
+            <div class="arena-info">
+                <span class="arena-name">eFootball 2026</span>
+                <span class="arena-status"><span class="status-dot"></span> 12 Active</span>
+            </div>
+            <button class="btn-enter" onclick="P2P_GATEWAY.initiateTransaction('eFootball 2026 Entry', 10)">Join Match</button>
+        </div>
+
+        <div class="arena-card">
+            <div class="arena-thumb">
+                <i class="fa-solid fa-gun"></i>
+                <span class="entry-badge">15 🪙</span>
+            </div>
+            <div class="arena-info">
+                <span class="arena-name">Free Fire Max</span>
+                <span class="arena-status"><span class="status-dot"></span> Squad Rush</span>
+            </div>
+            <button class="btn-enter" onclick="P2P_GATEWAY.initiateTransaction('Free Fire Max Entry', 15)">Join Squad</button>
+        </div>
+
+        <div class="arena-card">
+            <div class="arena-thumb">
+                <i class="fa-solid fa-parachute-box"></i>
+                <span class="entry-badge">20 🪙</span>
+            </div>
+            <div class="arena-info">
+                <span class="arena-name">PUBG Mobile</span>
+                <span class="arena-status"><span class="status-dot"></span> Battle Royale</span>
+            </div>
+            <button class="btn-enter" onclick="P2P_GATEWAY.initiateTransaction('PUBG Mobile Entry', 20)">Enter Arena</button>
+        </div>
+
+        <div class="arena-card">
+            <div class="arena-thumb">
+                <i class="fa-solid fa-crosshairs"></i>
+                <span class="entry-badge">25 🪙</span>
+            </div>
+            <div class="arena-info">
+                <span class="arena-name">COD Mobile</span>
+                <span class="arena-status"><span class="status-dot"></span> 5v5 Ranked</span>
+            </div>
+            <button class="btn-enter" onclick="P2P_GATEWAY.initiateTransaction('COD Mobile Entry', 25)">Start Match</button>
+        </div>
+    </div>
+
+    <nav class="master-nav">
+        <a href="index.html" class="nav-box"><i class="fa-solid fa-house" style="font-size: 18px;"></i><p>Home</p></a>
+        <a href="discover.html" class="nav-box"><i class="fa-solid fa-compass" style="font-size: 18px;"></i><p>Explore</p></a>
+        <div onclick="window.location.href='index.html'" class="nav-box">
+            <div class="plus-btn"><i class="fa-solid fa-plus" style="font-size: 18px; color: black;"></i></div>
+        </div>
+        <a href="inbox.html" class="nav-box"><i class="fa-solid fa-message" style="font-size: 18px;"></i><p>Inbox</p></a>
+        <a href="profile.html" class="nav-box"><i class="fa-solid fa-user" style="font-size: 18px;"></i><p>Profile</p></a>
+    </nav>
+
+    <script src="p2p-gateway.js"></script>
+
+</body>
+</html>
