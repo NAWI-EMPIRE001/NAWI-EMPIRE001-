@@ -1,23 +1,199 @@
-/* PREMIUM BASE */
-:root { --gold: #D4AF37; --black: #050505; --gray: #1a1a1a; }
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { background: var(--black); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+/* NAWI-EMPIRE MASTER STYLESHEET 
+   Theme: Luxury Professional / Dark Mode
+   Authority: 7 Pillars Control
+*/
 
-/* REEL/CONTENT FEED */
-.feed-wrapper { width: 100%; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
-.content-card { height: 100vh; width: 100%; scroll-snap-align: start; position: relative; background: #000; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #111; }
-.content-overlay { position: absolute; bottom: 80px; left: 15px; z-index: 10; width: 70%; }
-.side-actions { position: absolute; right: 15px; bottom: 120px; display: flex; flexDirection: column; gap: 20px; align-items: center; }
-.side-actions i { font-size: 28px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 
-/* PROFESSIONAL BOTTOM NAVIGATION */
-.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: rgba(0,0,0,0.95); border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px; z-index: 1000; }
-.nav-btn { color: #666; text-decoration: none; display: flex; flex-direction: column; align-items: center; font-size: 10px; }
+:root {
+    --gold: #D4AF37;
+    --gold-light: #FDFC97;
+    --black: #050505;
+    --card-bg: #111111;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(212, 175, 55, 0.2);
+    --text-main: #FFFFFF;
+    --text-dim: #888888;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+}
+
+body { 
+    background: var(--black); 
+    color: var(--text-main); 
+    font-family: 'Inter', sans-serif; 
+    overflow-x: hidden; 
+    line-height: 1.6;
+}
+
+/* --- PROFESSIONAL REEL FEED --- */
+.feed-wrapper { 
+    width: 100%; 
+    height: 100vh; 
+    overflow-y: scroll; 
+    scroll-snap-type: y mandatory; 
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+
+.feed-wrapper::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+
+.content-card { 
+    height: 100vh; 
+    width: 100%; 
+    scroll-snap-align: start; 
+    position: relative; 
+    background: #000; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+/* Subtle Overlay for Readability */
+.content-overlay { 
+    position: absolute; 
+    bottom: 90px; 
+    left: 20px; 
+    z-index: 10; 
+    width: 75%; 
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+.content-overlay h3 {
+    color: var(--gold);
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+/* Side Interaction Panel */
+.side-actions { 
+    position: absolute; 
+    right: 15px; 
+    bottom: 120px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 25px; 
+    align-items: center; 
+}
+
+.side-actions div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.side-actions i { 
+    font-size: 26px; 
+    color: white; 
+    transition: 0.3s;
+}
+
+.side-actions span {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+}
+
+/* --- LUXURY NAVIGATION --- */
+.bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    height: 80px; 
+    background: rgba(0,0,0,0.9); 
+    backdrop-filter: blur(15px);
+    border-top: 1px solid #1a1a1a; 
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center; 
+    padding-bottom: 20px; 
+    z-index: 1000; 
+}
+
+.nav-btn { 
+    color: #555; 
+    text-decoration: none; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.nav-btn i { font-size: 20px; }
+.nav-btn p { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
 .nav-btn.active { color: var(--gold); }
-.plus-btn { width: 45px; height: 32px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 20px; }
 
-/* THE 7 PILLARS MENU (Hidden/Slide-out) */
-.pillars-drawer { position: fixed; top: 0; right: -100%; width: 85%; height: 100%; background: var(--black); z-index: 2000; transition: 0.4s; padding: 20px; border-left: 1px solid var(--gold); }
+/* The Action Hub Button */
+.plus-btn { 
+    width: 50px; 
+    height: 50px; 
+    background: linear-gradient(135deg, var(--gold), #fdfc97); 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    color: black; 
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    margin-top: -35px;
+    border: 4px solid var(--black);
+}
+
+/* --- THE 7 PILLARS DRAWER --- */
+.pillars-drawer { 
+    position: fixed; 
+    top: 0; 
+    right: -100%; 
+    width: 80%; 
+    height: 100%; 
+    background: var(--black); 
+    z-index: 2000; 
+    transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
+    padding: 30px 20px; 
+    border-left: 1px solid var(--border); 
+}
+
 .pillars-drawer.open { right: 0; }
-.pillar-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #222; color: white; text-decoration: none; }
-.pillar-item i { margin-right: 15px; color: var(--gold); width: 25px; }
+
+.drawer-header {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 900;
+    margin-bottom: 30px;
+    padding-left: 15px;
+}
+
+.pillar-item { 
+    display: flex; 
+    align-items: center; 
+    padding: 18px 15px; 
+    background: var(--glass);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    color: white; 
+    text-decoration: none; 
+    border: 1px solid transparent;
+    transition: 0.3s;
+}
+
+.pillar-item:active {
+    background: rgba(212, 175, 55, 0.05);
+    border-color: var(--gold);
+}
+
+.pillar-item i { 
+    margin-right: 20px; 
+    color: var(--gold); 
+    font-size: 20px;
+    width: 25px; 
+    text-align: center;
+}
