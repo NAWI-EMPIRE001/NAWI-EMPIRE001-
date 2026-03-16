@@ -3,230 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI-EMPIRE | CHIEF AUTHORITY</title>
+    <title>NAWI-EMPIRE | MASTER IDENTITY</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --gold: #D4AF37; 
-            --gold-glow: rgba(212, 175, 55, 0.3);
-            --dark-bg: #050505; 
-            --neon: #00ff41; 
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-        }
-
-        body { 
-            background: var(--dark-bg); 
-            color: white; 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; 
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-x: hidden;
-        }
-
-        /* MASTER TOGGLE */
-        .mode-header { 
-            padding: 40px 20px 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-        }
-
-        .switch-btn { 
-            background: var(--glass); 
-            border: 1px solid var(--border); 
-            color: var(--gold); 
-            padding: 8px 20px; 
-            border-radius: 4px; 
-            font-size: 10px; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            font-weight: 800; 
-            letter-spacing: 2px;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
-        }
-
-        .switch-btn:hover { background: var(--gold); color: black; }
-
-        /* LUXURY PROFILE VIEW */
-        #profileView { transition: 0.5s opacity; padding: 20px; }
+        :root { --gold: #D4AF37; --dark-bg: #000; --neon-green: #00ff41; }
+        body { background: var(--dark-bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 80px; transition: 0.4s; }
         
-        .founder-ring { 
-            width: 130px; height: 130px; 
-            border-radius: 50%; 
-            border: 1px solid var(--gold); 
-            margin: 20px auto; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            position: relative;
-            box-shadow: 0 0 40px var(--gold-glow);
-        }
+        /* TOP HEADER */
+        .header { padding: 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #111; }
+        .switch-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 6px 14px; border-radius: 4px; font-size: 10px; font-weight: 900; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; }
 
-        .founder-ring i { font-size: 50px; color: var(--gold); }
-        
-        .name-plate h2 { font-weight: 800; letter-spacing: 4px; margin-bottom: 5px; font-size: 28px; }
-        .name-plate p { color: #555; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; }
+        /* VIEW 1: NORMAL LUXURY PROFILE */
+        #normalView { text-align: center; padding-top: 40px; display: block; }
+        .lux-circle { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a, #000); }
+        .lux-circle i { font-size: 45px; color: var(--gold); }
+        .stat-row { display: flex; justify-content: center; gap: 35px; margin-top: 25px; }
+        .stat-row div { text-align: center; }
+        .stat-row strong { display: block; font-size: 18px; }
+        .stat-row small { color: #555; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* CONTROL ROOM VIEW */
-        #controlRoom { 
-            display: none; 
-            padding: 30px 20px; 
-            font-family: 'JetBrains Mono', monospace; 
-            animation: scanline 0.2s infinite;
-        }
+        /* VIEW 2: MASTER COMMAND CENTER (Hidden) */
+        #masterView { display: none; padding: 20px; }
+        .command-title { color: var(--neon-green); font-family: 'Courier New', monospace; font-size: 13px; margin-bottom: 20px; display: block; }
+        .monitor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .monitor-card { background: #080808; border: 1px solid #1a1a1a; padding: 15px; border-radius: 6px; }
+        .monitor-card label { color: #444; font-size: 9px; text-transform: uppercase; display: block; margin-bottom: 8px; }
+        .monitor-card span { font-size: 16px; font-weight: bold; color: var(--gold); }
+        .pulse { width: 7px; height: 7px; background: var(--neon-green); border-radius: 50%; display: inline-block; margin-right: 6px; box-shadow: 0 0 10px var(--neon-green); }
 
-        .grid-system { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            margin-top: 30px; 
-        }
-
-        .stat-card { 
-            background: var(--glass); 
-            border: 1px solid var(--border); 
-            padding: 20px; 
-            border-radius: 2px; 
-            text-align: left;
-            position: relative;
-        }
-
-        .stat-card label { color: var(--neon); font-size: 9px; display: block; margin-bottom: 10px; opacity: 0.7; }
-        .stat-card span { font-size: 18px; font-weight: bold; letter-spacing: -1px; }
-
-        .active-pulse { 
-            width: 6px; height: 6px; 
-            background: var(--neon); 
-            border-radius: 50%; 
-            display: inline-block; 
-            margin-right: 8px; 
-            box-shadow: 0 0 10px var(--neon);
-            animation: blink 1s infinite;
-        }
-
-        /* BUTTONS */
-        .btn-action {
-            width: 100%;
-            margin-top: 20px;
-            background: none;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 15px;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 3px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        /* NAVIGATION */
-        .master-nav { 
-            position: fixed; 
-            bottom: 0; 
-            width: 100%; 
-            background: rgba(0,0,0,0.8); 
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border); 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 20px 0 35px; 
-        }
-
-        .nav-link { color: #333; font-size: 22px; transition: 0.3s; }
-        .nav-link.active { color: var(--gold); text-shadow: 0 0 15px var(--gold-glow); }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        /* BOTTOM NAVIGATION */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 18px 0; z-index: 100; }
+        .nav-icon { color: #333; font-size: 22px; cursor: pointer; }
+        .nav-active { color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="mode-header">
-        <i class="fa-solid fa-shield-halved" style="color: var(--gold); font-size: 14px;"></i>
-        <button class="switch-btn" onclick="toggleMode()">Authorize Command</button>
+    <div class="header">
+        <i class="fa-solid fa-shield-halved" style="color: var(--gold);"></i>
+        <button class="switch-btn" onclick="toggleMode()">Master Command</button>
+        <i class="fa-solid fa-sliders" style="color: #222;"></i>
     </div>
 
-    <div id="profileView">
-        <div class="founder-ring">
-            <i class="fa-solid fa-crown"></i>
-        </div>
-        <div class="name-plate" style="text-align: center;">
-            <h2>7 PILLARS</h2>
-            <p>NAWI-EMPIRE Chief Authority</p>
-        </div>
-
-        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">
-            <div style="text-align: center;"><span style="font-size: 20px; font-weight: 800;">1.2M</span><br><small style="color:#555; font-size: 9px; letter-spacing: 1px;">HOLDERS</small></div>
-            <div style="text-align: center;"><span style="font-size: 20px; font-weight: 800;">0</span><br><small style="color:#555; font-size: 9px; letter-spacing: 1px;">FOLLOWING</small></div>
-        </div>
+    <div id="normalView">
+        <div class="lux-circle"><i class="fa-solid fa-crown"></i></div>
+        <h2 style="letter-spacing: 2px; margin: 0;">NAWI FOUNDER 001</h2>
+        <p style="color: #444; font-size: 11px; margin: 5px 0;">Chief Authority Verified</p>
         
-        <button class="btn-action" onclick="location.href='app-grid.html'">Enter Marketplace</button>
+        <div class="stat-row">
+            <div><strong>1.2M</strong><small>Followers</small></div>
+            <div><strong>0</strong><small>Following</small></div>
+            <div><strong>0</strong><small>Likes</small></div>
+        </div>
     </div>
 
-    <div id="controlRoom">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-            <div>
-                <h1 style="font-size: 14px; margin: 0; color: var(--neon);">SYSTEM OVERRIDE</h1>
-                <p style="font-size: 9px; color: #444; margin: 0;">Identity: Encrypted Sovereign</p>
+    <div id="masterView">
+        <span class="command-title">> SOVEREIGN ACCESS GRANTED</span>
+        <div class="monitor-grid">
+            <div class="monitor-card">
+                <label><div class="pulse"></div> System Nodes</label>
+                <span>4,102 Active</span>
             </div>
-            <div style="font-size: 10px; color: var(--neon);">[001_ACTIVE]</div>
-        </div>
-
-        <div class="grid-system">
-            <div class="stat-card">
-                <label><div class="active-pulse"></div> Live Nodes</label>
-                <span>8,492.00</span>
+            <div class="monitor-card">
+                <label>Total Reserves</label>
+                <span>$35.0M</span>
             </div>
-            <div class="stat-card">
-                <label>Vault Value</label>
-                <span>$35.00M</span>
-            </div>
-            <div class="stat-card">
-                <label>Coin Minted</label>
+            <div class="monitor-card">
+                <label>Platform Coins</label>
                 <span>999K+ 🪙</span>
             </div>
-            <div class="stat-card" onclick="location.href='app-grid.html'" style="border: 1px solid var(--gold);">
-                <label style="color: var(--gold);">Admin Override</label>
-                <span style="font-size: 12px; color: var(--gold);">EDIT EMPIRE →</span>
+            <div class="monitor-card" onclick="location.href='app-grid.html'" style="border-color: var(--gold);">
+                <label style="color: var(--gold);">Core Management</label>
+                <span style="font-size: 12px;">7 PILLARS →</span>
             </div>
-        </div>
-
-        <div style="margin-top: 40px; padding: 15px; background: rgba(255,0,0,0.05); border: 1px solid rgba(255,0,0,0.1);">
-            <p style="font-size: 10px; color: #ff4444; margin: 0;">CRITICAL LOGS:</p>
-            <marquee scrollamount="3" style="font-size: 11px; color: var(--neon); margin-top: 5px;">
-                Connecting to MongoDB Atlas Cluster... [OK] | Identity Verification... [SUCCESS] | P2P Gateway... [ENABLED] | Founder Visibility... [HIDDEN]
-            </marquee>
         </div>
     </div>
 
-    <div class="master-nav">
-        <i class="fa-solid fa-house nav-link" onclick="location.href='index.html'"></i>
-        <i class="fa-solid fa-compass nav-link"></i>
-        <div onclick="location.href='app-grid.html'" style="width: 50px; height: 50px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -35px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
-            <i class="fa-solid fa-layer-group" style="color: black; font-size: 20px;"></i>
-        </div>
-        <i class="fa-solid fa-bolt nav-link"></i>
-        <i class="fa-solid fa-user-shield nav-link active"></i>
+    <div class="nav-bar">
+        <i class="fa-solid fa-house nav-icon" onclick="location.href='index.html'"></i>
+        <i class="fa-solid fa-compass nav-icon"></i>
+        <i class="fa-solid fa-circle-plus nav-icon" style="font-size: 32px;" onclick="location.href='app-grid.html'"></i>
+        <i class="fa-solid fa-message nav-icon"></i>
+        <i class="fa-solid fa-user nav-icon nav-active"></i>
     </div>
 
     <script>
         function toggleMode() {
-            var profile = document.getElementById("profileView");
-            var room = document.getElementById("controlRoom");
-            var btn = document.querySelector(".switch-btn");
-
-            if (profile.style.display === "none") {
-                profile.style.display = "block";
-                room.style.display = "none";
-                btn.innerText = "Authorize Command";
-                document.body.style.background = "#050505";
-            } else {
-                profile.style.display = "none";
-                room.style.display = "block";
-                btn.innerText = "De-Authorize";
+            const v1 = document.getElementById('normalView');
+            const v2 = document.getElementById('masterView');
+            const btn = document.querySelector('.switch-btn');
+            
+            if (v1.style.display === "none") {
+                v1.style.display = "block";
+                v2.style.display = "none";
+                btn.innerText = "Master Command";
                 document.body.style.background = "#000";
+            } else {
+                v1.style.display = "none";
+                v2.style.display = "block";
+                btn.innerText = "Exit Command";
+                document.body.style.background = "#050505";
             }
         }
     </script>
