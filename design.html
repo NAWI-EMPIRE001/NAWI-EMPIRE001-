@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NAWI-EMPIRE | Design Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #ffd700; --dark: #111; }
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; padding: 20px; text-align: center; margin: 0; }
+        :root { --gold: #D4AF37; --dark: #111; --black: #000; }
+        body { background: var(--black); color: #fff; font-family: 'Inter', sans-serif; padding: 20px 20px 100px; text-align: center; margin: 0; }
         
-        .header { margin-bottom: 30px; }
-        .header h1 { color: var(--gold); margin: 0; letter-spacing: 2px; font-size: 28px; }
+        .header { margin-top: 20px; margin-bottom: 30px; }
+        .header h1 { color: var(--gold); margin: 0; letter-spacing: 2px; font-size: 28px; font-weight: 900; }
         .header p { color: #888; font-size: 14px; margin-top: 5px; }
 
         /* Portfolio Grid */
@@ -17,7 +18,7 @@
         
         .box { 
             background: var(--dark); 
-            height: 120px; 
+            height: 130px; 
             border-radius: 15px; 
             border: 1px solid #222; 
             display: flex; 
@@ -26,17 +27,21 @@
             justify-content: center; 
             transition: 0.3s;
             cursor: pointer;
+            text-decoration: none;
+            color: white;
         }
         
         .box:hover { border-color: var(--gold); transform: translateY(-5px); background: #1a1a1a; }
-        .box i { font-size: 24px; margin-bottom: 8px; }
-        .box span { font-size: 11px; font-weight: bold; letter-spacing: 1px; color: #ccc; }
+        .box i { font-size: 30px; margin-bottom: 12px; color: var(--gold); }
+        .box span { font-size: 11px; font-weight: bold; letter-spacing: 1px; color: #ccc; text-transform: uppercase; }
 
-        /* Pricing/Order Section */
-        .studio-info { background: rgba(255, 215, 0, 0.05); border: 1px dashed var(--gold); padding: 20px; border-radius: 15px; margin-top: 30px; }
-        .price-tag { color: var(--gold); font-size: 20px; font-weight: bold; margin: 10px 0; }
+        /* Request Section */
+        .studio-info { background: rgba(212, 175, 55, 0.05); border: 1px dashed var(--gold); padding: 25px; border-radius: 15px; margin-top: 30px; }
+        .studio-info h3 { margin: 0; font-size: 18px; }
+        .price-tag { color: var(--gold); font-size: 20px; font-weight: bold; margin: 15px 0; }
 
         .btn-order { 
+            display: block;
             background: var(--gold); 
             color: #000; 
             padding: 18px; 
@@ -47,19 +52,16 @@
             margin-top: 15px; 
             cursor: pointer;
             text-transform: uppercase;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
         }
 
-        .back-btn { 
-            background: none; 
-            color: #555; 
-            margin-top: 20px; 
-            border: none; 
-            cursor: pointer; 
-            font-size: 14px; 
-            display: block;
-            width: 100%;
-            text-decoration: none;
-        }
+        /* MASTER NAVIGATION BAR */
+        .master-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
+        .nav-box { text-align: center; cursor: pointer; color: #555; text-decoration: none; }
+        .nav-box p { font-size: 10px; margin: 5px 0 0; font-weight: bold; }
+        .active-tab { color: var(--gold) !important; }
+        .plus-btn { background: var(--gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -10px; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3); }
     </style>
 </head>
 <body>
@@ -70,22 +72,52 @@
     </div>
 
     <div class="portfolio">
-        <div class="box"><i>🏆</i><span>LOGOS</span></div>
-        <div class="box"><i>📄</i><span>FLYERS</span></div>
-        <div class="box"><i>✨</i><span>STICKERS</span></div>
-        <div class="box"><i>💿</i><span>COVERS</span></div>
+        <a href="logos.html" class="box">
+            <i class="fa-solid fa-trophy"></i>
+            <span>LOGOS</span>
+        </a>
+        <a href="flyers.html" class="box">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>FLYERS</span>
+        </a>
+        <a href="stickers.html" class="box">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>STICKERS</span>
+        </a>
+        <a href="covers.html" class="box">
+            <i class="fa-solid fa-compact-disc"></i>
+            <span>COVERS</span>
+        </a>
     </div>
 
     <div class="studio-info">
         <h3>Request Custom Design</h3>
         <p style="font-size: 13px; color: #aaa;">Hire the 7 Pillars official designers for your brand assets.</p>
         <div class="price-tag">Starting at 50 Coins 🪙</div>
-        <button class="btn-order" onclick="alert('Redirecting to Empire-Inbox: Message 7 Pillars...')">
-            ORDER NOW
-        </button>
+        <a href="inbox.html" class="btn-order">ORDER NOW</a>
     </div>
 
-    <a href="app-grid.html" class="back-btn">← Back to HQ</a>
+    <nav class="master-nav">
+        <a href="index.html" class="nav-box">
+            <i class="fa-solid fa-house" style="font-size: 20px;"></i>
+            <p>Home</p>
+        </a>
+        <a href="discover.html" class="nav-box">
+            <i class="fa-solid fa-compass" style="font-size: 20px;"></i>
+            <p>Discover</p>
+        </a>
+        <div onclick="window.location.href='app-grid.html'" class="nav-box">
+            <div class="plus-btn"><i class="fa-solid fa-plus" style="font-size: 20px; color: black;"></i></div>
+        </div>
+        <a href="inbox.html" class="nav-box">
+            <i class="fa-solid fa-message" style="font-size: 20px;"></i>
+            <p>Inbox</p>
+        </a>
+        <a href="profile.html" class="nav-box">
+            <i class="fa-solid fa-user" style="font-size: 20px;"></i>
+            <p>Profile</p>
+        </a>
+    </nav>
 
 </body>
 </html>
