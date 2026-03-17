@@ -2,155 +2,137 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAWI-EMPIRE | Music & Promotion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NAWI-EMPIRE | GLOBAL MUSIC HUB</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --dark: #111; --black: #000; --glass: rgba(255, 255, 255, 0.03); }
-        body { background: var(--black); color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 20px 20px 100px; }
-        
+        :root { --gold: #D4AF37; --black: #050505; --card: #111; }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 120px; }
+
         /* PREMIUM HEADER */
-        .header { text-align: center; margin: 20px 0 40px; }
-        .header h1 { color: var(--gold); margin: 0; letter-spacing: 4px; font-size: 26px; font-weight: 900; }
-        .header p { color: #666; font-size: 12px; letter-spacing: 1px; margin-top: 8px; text-transform: uppercase; }
-
-        /* PROMOTION CARD (LUXURY STYLE) */
-        .promo-card { 
-            background: linear-gradient(145deg, #111, #050505);
-            border: 1px solid var(--gold); 
-            padding: 30px 20px; 
-            border-radius: 20px; 
-            margin-bottom: 40px; 
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1);
-        }
-        .promo-card h2 { color: var(--gold); margin: 0 0 10px; font-size: 20px; }
-        .promo-card p { color: #aaa; font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
+        .music-header { padding: 40px 20px; background: linear-gradient(to bottom, #1a1a1a, #000); border-bottom: 1px solid #222; }
+        .music-header h1 { color: var(--gold); font-size: 24px; letter-spacing: 3px; font-weight: 900; margin: 0; text-transform: uppercase; }
+        .promo-banner { margin: 20px; background: linear-gradient(45deg, #111, #222); border: 1.5px solid var(--gold); border-radius: 20px; padding: 25px; text-align: center; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1); }
         
-        .btn-promote { 
-            display: inline-block;
-            background: var(--gold); 
-            color: #000; 
-            padding: 15px 40px; 
-            border-radius: 50px; 
-            font-weight: 900; 
-            text-decoration: none; 
-            font-size: 13px;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
+        /* PLAYER CONTROL */
+        .master-player { position: fixed; bottom: 80px; left: 0; width: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(15px); border-top: 1px solid var(--gold); padding: 15px 20px; box-sizing: border-box; display: flex; align-items: center; gap: 15px; z-index: 2000; }
+        .mini-cover { width: 50px; height: 50px; border-radius: 10px; background: #222; object-fit: cover; }
+        .track-meta { flex: 1; }
+        .track-meta h4 { margin: 0; font-size: 14px; color: white; }
+        .track-meta p { margin: 2px 0 0; font-size: 11px; color: var(--gold); font-weight: 700; }
+        .play-controls { font-size: 24px; color: var(--gold); cursor: pointer; }
 
-        /* MUSIC FEED */
-        .feed-title { font-size: 12px; color: #555; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; font-weight: 900; }
-        .track-list { display: grid; gap: 12px; }
-        .track-item { 
-            background: var(--glass); 
-            border: 1px solid #222; 
-            padding: 15px; 
-            border-radius: 16px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            transition: 0.3s;
-        }
-        .track-item:hover { background: #1a1a1a; border-color: var(--gold); }
+        /* GLOBAL TRENDING LIST */
+        .section-title { padding: 0 20px; font-size: 13px; color: var(--gold); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 30px 0 15px; }
+        .track-list { padding: 0 15px; }
+        .track-item { background: var(--card); border: 1px solid #1a1a1a; border-radius: 18px; padding: 12px 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; transition: 0.2s; }
+        .track-item:active { transform: scale(0.98); border-color: var(--gold); }
+        .play-btn-circle { width: 40px; height: 40px; background: #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 14px; border: 1px solid #333; }
         
-        .track-main { display: flex; align-items: center; gap: 15px; }
-        .play-ring { 
-            width: 45px; height: 45px; 
-            border: 1px solid var(--gold); 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            color: var(--gold);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .play-ring:hover { background: var(--gold); color: black; }
+        .track-info { flex: 1; }
+        .track-info span { display: block; font-weight: 800; font-size: 14px; }
+        .track-info small { color: #666; font-size: 11px; }
         
-        .track-info { display: flex; flex-direction: column; }
-        .track-name { font-weight: 700; font-size: 15px; color: #fff; }
-        .artist-name { font-size: 12px; color: #666; margin-top: 3px; }
+        .reward-tag { background: rgba(212, 175, 55, 0.1); color: var(--gold); font-size: 10px; font-weight: 900; padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3); }
 
-        /* EARNING BADGE */
-        .earn-tag { 
-            background: rgba(212, 175, 55, 0.1); 
-            color: var(--gold); 
-            padding: 6px 12px; 
-            border-radius: 30px; 
-            font-size: 11px; 
-            font-weight: 900; 
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        /* MASTER NAVIGATION */
-        .master-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
-        .nav-box { text-align: center; cursor: pointer; color: #555; text-decoration: none; }
-        .nav-box p { font-size: 10px; margin: 5px 0 0; font-weight: bold; }
-        .active-tab { color: var(--gold) !important; }
-        .plus-btn { background: var(--gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -10px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .btn-boost { background: var(--gold); color: black; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 900; font-size: 12px; cursor: pointer; text-transform: uppercase; margin-top: 15px; width: 100%; }
+        
+        /* NAV FIX */
+        .master-nav { position: fixed; bottom: 0; width: 100%; background: #080808; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #111; z-index: 3000; }
+        .nav-link { text-align: center; text-decoration: none; color: #444; font-size: 20px; }
+        .nav-link.active { color: var(--gold); }
+        .nav-link p { font-size: 9px; margin: 5px 0 0; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>🎵 MUSIC HUB</h1>
-        <p>Listen to Earn • Pay to Grow</p>
+    <div class="music-header">
+        <h1>GLOBAL MUSIC HUB</h1>
     </div>
 
-    <div class="promo-card">
-        <h2>Boost Your Track</h2>
-        <p>Reach 10,000 verified listeners and grow your fanbase across the Empire.</p>
-        <a href="inbox.html" class="btn-promote">Promote for 10 Coins 🪙</a>
+    <div class="promo-banner">
+        <h3 style="color:var(--gold); margin:0; font-size:16px;">BOOST YOUR ANTHEM</h3>
+        <p style="font-size:11px; color:#888; margin:10px 0;">Reach 5,000 global listeners for 5 Coins 🪙</p>
+        <button class="btn-boost" onclick="P2P_GATEWAY.initiateTransaction('Music Promotion Boost', 5)">PROMOTE MY MUSIC</button>
     </div>
 
-    <div class="feed-title">Trending in the Empire</div>
-
-    <div class="track-list">
-        <div class="track-item">
-            <div class="track-main">
-                <div class="play-ring" onclick="handlePlay('Anthem')">
-                    <i class="fa-solid fa-play"></i>
-                </div>
-                <div class="track-info">
-                    <span class="track-name">Empire Anthem (Remix)</span>
-                    <span class="artist-name">Empire studio</span>
-                </div>
+    <h2 class="section-title">Global Trending (Listen to Earn)</h2>
+    
+    <div class="track-list" id="global-playlist">
+        <div class="track-item" onclick="playTrack('Empire Anthem (Remix)', 'Vicky Para', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=100&q=80')">
+            <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
+            <div class="track-info">
+                <span>Empire Anthem (Remix)</span>
+                <small>Artist: Vicky Para</small>
             </div>
-            <div class="earn-tag">+2 Coins</div>
+            <div class="reward-tag">+2 Coins</div>
         </div>
 
-        <div class="track-item">
-            <div class="track-main">
-                <div class="play-ring" onclick="handlePlay('Naira Dreams')">
-                    <i class="fa-solid fa-play"></i>
-                </div>
-                <div class="track-info">
-                    <span class="track-name">Naira Dreams</span>
-                    <span class="artist-name">7 Pillars Studio</span>
-                </div>
+        <div class="track-item" onclick="playTrack('Naira Dreams', '7 Pillars Studio', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&w=100&q=80')">
+            <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
+            <div class="track-info">
+                <span>Naira Dreams</span>
+                <small>Artist: 7 Pillars Studio</small>
             </div>
-            <div class="earn-tag">+2 Coins</div>
+            <div class="reward-tag">+2 Coins</div>
         </div>
+
+        <div class="track-item" onclick="playTrack('Sovereign Beats', 'Nawi Empire', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', 'https://images.unsplash.com/photo-1514525253361-bee8a187499b?auto=format&fit=crop&w=100&q=80')">
+            <div class="play-btn-circle"><i class="fa-solid fa-play"></i></div>
+            <div class="track-info">
+                <span>Sovereign Beats</span>
+                <small>Artist: Nawi Empire</small>
+            </div>
+            <div class="reward-tag">+2 Coins</div>
+        </div>
+    </div>
+
+    <div class="master-player" id="player-bar" style="display:none;">
+        <img id="player-cover" src="" class="mini-cover">
+        <div class="track-meta">
+            <h4 id="player-title">Track Name</h4>
+            <p id="player-artist">Artist Name</p>
+        </div>
+        <div class="play-controls" onclick="togglePlayback()">
+            <i id="play-icon" class="fa-solid fa-pause"></i>
+        </div>
+        <audio id="main-audio" style="display:none;"></audio>
     </div>
 
     <nav class="master-nav">
-        <a href="index.html" class="nav-box"><i class="fa-solid fa-house" style="font-size: 20px;"></i><p>Home</p></a>
-        <a href="discover.html" class="nav-box"><i class="fa-solid fa-compass" style="font-size: 20px;"></i><p>Discover</p></a>
-        <div onclick="window.location.href='app-grid.html'" class="nav-box">
-            <div class="plus-btn"><i class="fa-solid fa-plus" style="font-size: 20px; color: black;"></i></div>
-        </div>
-        <a href="inbox.html" class="nav-box"><i class="fa-solid fa-message" style="font-size: 20px;"></i><p>Inbox</p></a>
-        <a href="profile.html" class="nav-box"><i class="fa-solid fa-user" style="font-size: 20px;"></i><p>Profile</p></a>
+        <a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i><p>Home</p></a>
+        <a href="discover.html" class="nav-link"><i class="fa-solid fa-compass"></i><p>Explore</p></a>
+        <a href="index.html" class="nav-link"><div style="background:var(--gold); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-top:-10px; color:black;"><i class="fa-solid fa-plus"></i></div></a>
+        <a href="inbox.html" class="nav-link"><i class="fa-solid fa-message"></i><p>Inbox</p></a>
+        <a href="profile.html" class="nav-link"><i class="fa-solid fa-user"></i><p>Profile</p></a>
     </nav>
 
+    <script src="p2p-gateway.js"></script>
     <script>
-        function handlePlay(track) {
-            console.log("Streaming: " + track);
-            // This button works! It can trigger your music player later.
+        const audio = document.getElementById('main-audio');
+        const playIcon = document.getElementById('play-icon');
+
+        function playTrack(title, artist, url, cover) {
+            document.getElementById('player-bar').style.display = 'flex';
+            document.getElementById('player-title').innerText = title;
+            document.getElementById('player-artist').innerText = artist;
+            document.getElementById('player-cover').src = cover;
+            
+            audio.src = url;
+            audio.play();
+            playIcon.className = 'fa-solid fa-pause';
+        }
+
+        function togglePlayback() {
+            if (audio.paused) {
+                audio.play();
+                playIcon.className = 'fa-solid fa-pause';
+            } else {
+                audio.pause();
+                playIcon.className = 'fa-solid fa-play';
+            }
         }
     </script>
-
 </body>
 </html>
