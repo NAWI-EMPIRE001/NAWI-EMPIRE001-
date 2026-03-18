@@ -7,39 +7,49 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --glass: rgba(255, 255, 255, 0.05); }
-        body { margin: 0; background: #000; color: white; font-family: 'Inter', sans-serif; }
+        :root { --gold: #D4AF37; --glass: rgba(255, 255, 255, 0.05); --black: #080808; }
+        body { margin: 0; background: #000; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
-        /* Specific tweaks for Index logic */
+        /* Auth Gate */
         #auth-gate { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #111 0%, #000 100%); padding: 20px; text-align: center; z-index: 3000; position: fixed; width: 100%; top: 0; transition: 0.5s; }
         .authority-card { background: rgba(255,255,255,0.03); border: 1px solid var(--gold); border-radius: 24px; padding: 40px 30px; max-width: 400px; width: 100%; backdrop-filter: blur(10px); }
         .order-text { font-size: 13px; line-height: 1.8; margin-bottom: 30px; color: #eee; border-left: 3px solid var(--gold); padding-left: 15px; text-align: left; }
         .gate-btn { background: var(--gold); color: black; border: none; padding: 18px; border-radius: 12px; width: 100%; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        #main-platform { display: none; padding-bottom: 80px; }
+        #main-platform { display: none; padding-bottom: 100px; }
         
-        /* Content Card styling */
-        .content-card { height: 80vh; margin: 10px; border-radius: 20px; background: #111; position: relative; display: flex; align-items: flex-end; padding: 20px; border: 1px solid #222; }
-        .content-overlay h3 { color: var(--gold); margin: 0; font-size: 16px; }
-        .content-overlay p { font-size: 12px; color: #888; margin: 5px 0 0; }
+        /* Global Product Feed */
+        .feed-wrapper { padding: 15px; }
+        .product-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; }
+        .product-card h3 { color: var(--gold); margin: 0 0 5px; font-size: 16px; text-transform: uppercase; }
+        .product-card p { font-size: 12px; color: #888; margin: 2px 0; }
+        .market-tag { position: absolute; top: 15px; right: 15px; background: rgba(0,255,100,0.1); color: #00ff64; font-size: 9px; padding: 4px 8px; border-radius: 5px; font-weight: 900; }
+        .price-tag { font-size: 18px; font-weight: 900; color: white; margin-top: 10px; display: block; }
 
-        /* Dashboard Overlay Styling */
-        #dash-overlay { position: fixed; bottom: -110%; left: 0; width: 100%; height: 85vh; background: #080808; z-index: 2500; border-top: 2px solid var(--gold); border-radius: 30px 30px 0 0; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding: 40px 25px; box-sizing: border-box; overflow-y: auto; }
+        /* Dashboard Overlay */
+        #dash-overlay { position: fixed; bottom: -110%; left: 0; width: 100%; height: 85vh; background: var(--black); z-index: 2500; border-top: 2px solid var(--gold); border-radius: 30px 30px 0 0; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding: 30px 20px; box-sizing: border-box; overflow-y: auto; }
         #dash-overlay.active { bottom: 0; }
         
-        .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 30px; }
-        .tool-item { background: var(--glass); padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #1a1a1a; text-decoration: none; color: white; transition: 0.3s; }
-        .tool-item:active { transform: scale(0.95); border-color: var(--gold); }
-        .tool-item i { color: var(--gold); font-size: 24px; margin-bottom: 10px; display: block; }
-        .tool-item span { font-size: 10px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
+        /* P2P WALLET SECTION (Balanced Side) */
+        .wallet-sector { background: #111; border-radius: 20px; padding: 20px; margin-top: 25px; border: 1px solid #222; }
+        .balance-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
+        .balance-amount { font-size: 28px; font-weight: 900; color: var(--gold); margin: 5px 0 15px; }
+        .wallet-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .wallet-btn { padding: 12px; border-radius: 10px; border: none; font-weight: 900; font-size: 11px; cursor: pointer; text-transform: uppercase; }
+        .btn-deposit { background: #00ff64; color: black; }
+        .btn-withdraw { background: #333; color: white; }
+
+        /* Tool Grid */
+        .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px; }
+        .tool-item { background: var(--glass); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #1a1a1a; text-decoration: none; color: white; }
+        .tool-item i { color: var(--gold); font-size: 20px; margin-bottom: 8px; display: block; }
+        .tool-item span { font-size: 9px; font-weight: 900; text-transform: uppercase; }
 
         /* Navigation */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #080808; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #111; z-index: 2000; }
         .nav-btn { text-align: center; text-decoration: none; color: #555; }
         .nav-btn.active { color: var(--gold); }
-        .nav-btn i { font-size: 20px; }
-        .nav-btn p { font-size: 9px; margin: 5px 0 0; font-weight: bold; }
-        .plus-btn { background: var(--gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -10px; color: black; font-size: 20px; cursor: pointer; }
+        .plus-btn { background: var(--gold); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -10px; color: black; font-size: 20px; cursor: pointer; box-shadow: 0 0 20px rgba(212,175,55,0.3); }
     </style>
 </head>
 <body>
@@ -56,18 +66,13 @@
     </div>
 
     <div id="main-platform">
-        <div class="feed-wrapper">
-            <div class="content-card">
-                <div class="content-overlay">
-                    <h3>@NAWI_EMPIRE</h3>
-                    <p>A digital ecosystem built for Founders to connect, learn, and create. Join the move.</p>
-                </div>
-            </div>
+        <div class="feed-wrapper" id="product-display">
+            <p style="text-align:center; color:#555; margin-top:50px;">Syncing with Global Market...</p>
         </div>
 
         <nav class="bottom-nav">
             <a href="index.html" class="nav-btn active"><i class="fa-solid fa-house"></i><p>Home</p></a>
-            <a href="discover.html" class="nav-btn"><i class="fa-solid fa-compass"></i><p>Explore</p></a>
+            <a href="market.html" class="nav-btn"><i class="fa-solid fa-shop"></i><p>Market</p></a>
             <div class="plus-btn" onclick="toggleDash()"><i class="fa-solid fa-plus"></i></div>
             <a href="inbox.html" class="nav-btn"><i class="fa-solid fa-message"></i><p>Inbox</p></a>
             <a href="profile.html" class="nav-btn"><i class="fa-solid fa-user"></i><p>Profile</p></a>
@@ -75,20 +80,28 @@
     </div>
 
     <div id="dash-overlay">
-        <div style="width: 40px; height: 4px; background: #333; border-radius: 10px; margin: 0 auto 30px;"></div>
-        <h3 style="color:var(--gold); text-align:center; letter-spacing:3px; font-weight:900; font-size:16px;">THE 7 PILLARS</h3>
+        <div style="width: 40px; height: 4px; background: #333; border-radius: 10px; margin: 0 auto 20px;"></div>
+        <h3 style="color:var(--gold); text-align:center; letter-spacing:3px; font-weight:900; font-size:14px;">THE 7 PILLARS</h3>
         
         <div class="tool-grid">
-            <a href="studio.html" class="tool-item"><i class="fa-solid fa-clapperboard"></i><span>CREATOR STUDIO</span></a>
+            <a href="studio.html" class="tool-item"><i class="fa-solid fa-clapperboard"></i><span>STUDIO</span></a>
             <a href="gaming.html" class="tool-item"><i class="fa-solid fa-gamepad"></i><span>GAMING</span></a>
             <a href="market.html" class="tool-item"><i class="fa-solid fa-shop"></i><span>MARKET</span></a>
-            <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><span>MUSIC HUB</span></a>
             <a href="kitchen.html" class="tool-item"><i class="fa-solid fa-utensils"></i><span>KITCHEN</span></a>
-            <a href="live.html" class="tool-item"><i class="fa-solid fa-tower-broadcast"></i><span>LIVE STREAM</span></a>
-            <a href="ads.html" class="tool-item"><i class="fa-solid fa-rectangle-ad"></i><span>AD CENTER</span></a>
+            <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><span>MUSIC</span></a>
+            <a href="add-product.html" class="tool-item"><i class="fa-solid fa-plus-circle"></i><span>VENDOR</span></a>
+        </div>
+
+        <div class="wallet-sector">
+            <span class="balance-label">P2P Gateway Balance</span>
+            <div class="balance-amount">$0.00 <span style="font-size:12px; color:#555;">USD</span></div>
+            <div class="wallet-actions">
+                <button class="wallet-btn btn-deposit"><i class="fa-solid fa-arrow-down"></i> Deposit</button>
+                <button class="wallet-btn btn-withdraw"><i class="fa-solid fa-arrow-up"></i> Withdraw</button>
+            </div>
         </div>
         
-        <p onclick="toggleDash()" style="text-align:center; color:#555; margin-top:40px; cursor:pointer; font-size:11px; font-weight:bold; letter-spacing:2px;">DISMISS SYSTEM</p>
+        <p onclick="toggleDash()" style="text-align:center; color:#444; margin-top:30px; cursor:pointer; font-size:10px; font-weight:bold; letter-spacing:2px;">DISMISS SYSTEM</p>
     </div>
 
     <script>
@@ -104,13 +117,38 @@
                 gate.style.display = 'none';
                 main.style.display = 'block';
                 localStorage.setItem('nawi_token', 'FOUNDER_VERIFIED');
+                displayEmpireProducts(); // Load products once entered
             }, 500);
+        }
+
+        async function displayEmpireProducts() {
+            const productList = document.getElementById('product-display');
+            try {
+                const response = await fetch('/api/get-products');
+                const products = await response.json();
+                productList.innerHTML = ''; // Clear loading text
+
+                products.forEach(item => {
+                    productList.innerHTML += `
+                        <div class="product-card">
+                            <span class="market-tag">${item.market || 'WORLDWIDE'}</span>
+                            <h3>${item.product_name}</h3>
+                            <p>${item.category}</p>
+                            <span class="price-tag">$${item.price} USD</span>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error("Empire Display Error:", err);
+                productList.innerHTML = '<p style="text-align:center; color:red;">Connection to Vault Interrupted</p>';
+            }
         }
 
         window.onload = function() {
             if(localStorage.getItem('nawi_token') === 'FOUNDER_VERIFIED') {
                 document.getElementById('auth-gate').style.display = 'none';
                 document.getElementById('main-platform').style.display = 'block';
+                displayEmpireProducts();
             }
         };
     </script>
