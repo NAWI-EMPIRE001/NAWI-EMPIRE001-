@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,6 +18,33 @@
 
         #main-platform { display: none; padding-bottom: 100px; }
         
+        /* GLOBAL DISCOVERY SEARCH BAR */
+        .top-search-container { 
+            padding: 20px 15px 10px; 
+            background: #000; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
+        .search-wrapper {
+            background: var(--glass);
+            border: 1px solid #222;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+        }
+        .search-wrapper i { color: #555; margin-right: 10px; }
+        .search-wrapper input {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: 14px;
+            outline: none;
+        }
+        .search-wrapper input::placeholder { color: #444; }
+
         /* Global Product Feed */
         .feed-wrapper { padding: 15px; }
         .product-card { background: #111; border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 15px; position: relative; }
@@ -30,7 +57,7 @@
         #dash-overlay { position: fixed; bottom: -110%; left: 0; width: 100%; height: 85vh; background: var(--black); z-index: 2500; border-top: 2px solid var(--gold); border-radius: 30px 30px 0 0; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1); padding: 30px 20px; box-sizing: border-box; overflow-y: auto; }
         #dash-overlay.active { bottom: 0; }
         
-        /* P2P WALLET SECTION (Balanced Side) */
+        /* P2P WALLET SECTION */
         .wallet-sector { background: #111; border-radius: 20px; padding: 20px; margin-top: 25px; border: 1px solid #222; }
         .balance-label { font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
         .balance-amount { font-size: 28px; font-weight: 900; color: var(--gold); margin: 5px 0 15px; }
@@ -66,6 +93,13 @@
     </div>
 
     <div id="main-platform">
+        <div class="top-search-container">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Discover anything in the world...">
+            </div>
+        </div>
+
         <div class="feed-wrapper" id="product-display">
             <p style="text-align:center; color:#555; margin-top:50px;">Syncing with Global Market...</p>
         </div>
@@ -105,6 +139,9 @@
     </div>
 
     <script>
+        // Global store for products
+        let allEmpireProducts = [];
+
         function toggleDash() { 
             document.getElementById('dash-overlay').classList.toggle('active'); 
         }
@@ -117,32 +154,58 @@
                 gate.style.display = 'none';
                 main.style.display = 'block';
                 localStorage.setItem('nawi_token', 'FOUNDER_VERIFIED');
-                displayEmpireProducts(); // Load products once entered
+                displayEmpireProducts(); 
             }, 500);
         }
 
         async function displayEmpireProducts() {
             const productList = document.getElementById('product-display');
             try {
-                const response = await fetch('/api/get-products');
-                const products = await response.json();
-                productList.innerHTML = ''; // Clear loading text
-
-                products.forEach(item => {
-                    productList.innerHTML += `
-                        <div class="product-card">
-                            <span class="market-tag">${item.market || 'WORLDWIDE'}</span>
-                            <h3>${item.product_name}</h3>
-                            <p>${item.category}</p>
-                            <span class="price-tag">$${item.price} USD</span>
-                        </div>
-                    `;
-                });
+                // Pointing to your live Render Engine
+                const response = await fetch('https://nawi-empire1.onrender.com/api/get-products');
+                allEmpireProducts = await response.json();
+                renderFilteredProducts(allEmpireProducts);
             } catch (err) {
                 console.error("Empire Display Error:", err);
-                productList.innerHTML = '<p style="text-align:center; color:red;">Connection to Vault Interrupted</p>';
+                productList.innerHTML = '<p style="text-align:center; color:red; font-size:12px;">Connection to Vault Interrupted</p>';
             }
         }
+
+        function renderFilteredProducts(products) {
+            const productList = document.getElementById('product-display');
+            productList.innerHTML = ''; 
+
+            if(products.length === 0) {
+                productList.innerHTML = '<p style="text-align:center; color:#444; margin-top:50px;">No matches found in the Empire.</p>';
+                return;
+            }
+
+            products.forEach(item => {
+                productList.innerHTML += `
+                    <div class="product-card">
+                        <span class="market-tag">${item.market || 'WORLDWIDE'}</span>
+                        <h3>${item.product_name}</h3>
+                        <p>${item.category}</p>
+                        <span class="price-tag">${item.price} ${item.currency || 'USD'}</span>
+                    </div>
+                `;
+            });
+        }
+
+        // THE GLOBAL DISCOVERY SEARCH LOGIC
+        document.querySelector('.search-wrapper input').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            const filtered = allEmpireProducts.filter(product => {
+                return (
+                    product.product_name.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm) ||
+                    (product.description && product.description.toLowerCase().includes(searchTerm))
+                );
+            });
+
+            renderFilteredProducts(filtered);
+        });
 
         window.onload = function() {
             if(localStorage.getItem('nawi_token') === 'FOUNDER_VERIFIED') {
