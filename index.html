@@ -119,7 +119,7 @@
         
         <div class="tool-grid">
             <a href="studio.html" class="tool-item"><i class="fa-solid fa-clapperboard"></i><span>STUDIO</span></a>
-            <a href="gaming.html" class="tool-item"><i class="fa-solid fa-gamepad"></i><span>GAMING</span></a>
+            <a href="gaming.html" class="tool-item"><i class="fa-solid fa-gamepad"></i><span>GAMES</span></a>
             <a href="market.html" class="tool-item"><i class="fa-solid fa-shop"></i><span>MARKET</span></a>
             <a href="kitchen.html" class="tool-item"><i class="fa-solid fa-utensils"></i><span>KITCHEN</span></a>
             <a href="music.html" class="tool-item"><i class="fa-solid fa-music"></i><span>MUSIC</span></a>
@@ -142,7 +142,6 @@
         // --- LIFE CONNECTION BRIDGE ---
         const API_URL = "https://nawi-empire1.onrender.com";
         
-        // Global store for products
         let allEmpireProducts = [];
 
         function toggleDash() { 
@@ -161,15 +160,19 @@
             }, 500);
         }
 
+        // UPDATED MASTER CONNECTION FUNCTION
         async function displayEmpireProducts() {
             const productList = document.getElementById('product-display');
             try {
-                // Now using the Global API_URL Variable
+                // Using the Global API_URL and checking for a healthy response
                 const response = await fetch(`${API_URL}/api/get-products`);
+                
+                if (!response.ok) throw new Error('Vault Offline');
+                
                 allEmpireProducts = await response.json();
                 renderFilteredProducts(allEmpireProducts);
             } catch (err) {
-                console.error("Empire Display Error:", err);
+                console.error("Connection Error:", err);
                 productList.innerHTML = '<p style="text-align:center; color:red; font-size:12px;">Connection to Vault Interrupted</p>';
             }
         }
@@ -195,7 +198,7 @@
             });
         }
 
-        // THE GLOBAL DISCOVERY SEARCH LOGIC
+        // GLOBAL DISCOVERY SEARCH LOGIC
         document.querySelector('.search-wrapper input').addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
             
