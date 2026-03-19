@@ -139,9 +139,9 @@
     </div>
 
     <script>
-        // --- THE MASTER CONNECTION LINK ---
+        // --- LIFE CONNECTION BRIDGE ---
         const API_URL = "https://nawi-empire1.onrender.com";
-
+        
         // Global store for products
         let allEmpireProducts = [];
 
@@ -164,7 +164,7 @@
         async function displayEmpireProducts() {
             const productList = document.getElementById('product-display');
             try {
-                // Fetching from your live Render URL
+                // Now using the Global API_URL Variable
                 const response = await fetch(`${API_URL}/api/get-products`);
                 allEmpireProducts = await response.json();
                 renderFilteredProducts(allEmpireProducts);
