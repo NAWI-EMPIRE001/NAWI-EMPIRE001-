@@ -6,23 +6,23 @@
     <title>NAWI-EMPIRE | VENDOR COMMAND</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --card: #111; --input: #1a1a1a; }
+        :root { --gold: #D4AF37; --black: #050505; --card: #111; --input: #1a1a1a; --glass: rgba(255, 255, 255, 0.05); }
         body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px 20px 100px; }
 
         .header { text-align: center; margin-bottom: 30px; }
         .header h1 { color: var(--gold); font-size: 18px; letter-spacing: 3px; text-transform: uppercase; margin: 0; }
         .header p { font-size: 10px; color: #555; margin-top: 5px; font-weight: 800; }
 
-        .form-section { background: var(--card); border: 1px solid #222; border-radius: 25px; padding: 25px; margin-bottom: 20px; }
+        .form-section { background: var(--card); border: 1px solid #222; border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .section-label { color: var(--gold); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: block; border-left: 3px solid var(--gold); padding-left: 10px; }
 
         .input-group { margin-bottom: 15px; }
         label { display: block; font-size: 10px; color: #777; margin-bottom: 8px; font-weight: 700; text-transform: uppercase; }
         input, select, textarea { 
             width: 100%; background: var(--input); border: 1px solid #333; color: white; 
-            padding: 15px; border-radius: 12px; font-size: 13px; box-sizing: border-box; outline: none;
+            padding: 15px; border-radius: 12px; font-size: 13px; box-sizing: border-box; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--gold); }
+        input:focus, select:focus { border-color: var(--gold); background: #222; }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
@@ -30,62 +30,66 @@
             background: var(--gold); color: #000; width: 100%; padding: 20px; border-radius: 15px; 
             border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; 
             font-size: 13px; letter-spacing: 2px; margin-top: 20px; box-shadow: 0 10px 30px rgba(212,175,55,0.2);
+            transition: 0.3s;
         }
+        .btn-deploy:active { transform: scale(0.98); }
 
         /* MASTER NAV */
         .master-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #080808; border-top: 1px solid #111; display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
         .nav-box { text-align: center; color: #555; text-decoration: none; font-size: 20px; }
         .nav-box p { font-size: 9px; margin-top: 5px; font-weight: bold; text-transform: uppercase; }
+        .nav-box.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Global Vendor Command</h1>
-        <p>7 Pillars Kitchen Listing Protocol</p>
+        <p>NAWI EMPIRE ASSET REGISTRATION PROTOCOL</p>
     </div>
 
-    <form id="productForm">
+    <form id="globalProductForm">
         <div class="form-section">
-            <span class="section-label">Product Identity</span>
+            <span class="section-label">Asset Identity</span>
             <div class="input-group">
-                <label>Product Title</label>
-                <input type="text" id="title" placeholder="e.g. Premium Basmati Rice (5kg)" required>
+                <label>Asset Name (Product Title)</label>
+                <input type="text" id="product_name" placeholder="e.g. Sovereign Digital Access Key" required>
             </div>
             <div class="grid-2">
                 <div class="input-group">
                     <label>Category</label>
                     <select id="category">
-                        <option value="Kitchen Meal">Kitchen Staples</option>
-                        <option value="Kitchen Meal">Ready-to-Cook</option>
-                        <option value="Kitchen Meal">Gourmet Ingredients</option>
-                        <option value="Gaming">Gaming Studio</option>
+                        <option value="Digital Tech">Digital Tech</option>
+                        <option value="Kitchen Meal">Kitchen Meal</option>
+                        <option value="Empire Studio">Empire Studio</option>
+                        <option value="Gaming">Gaming</option>
                         <option value="Music">Music Promotion</option>
                     </select>
                 </div>
                 <div class="input-group">
-                    <label>Product ID (SKU)</label>
-                    <input type="text" id="sku" placeholder="NW-KITCH-001">
+                    <label>Product SKU</label>
+                    <input type="text" id="sku" placeholder="NW-GLOBAL-001">
                 </div>
             </div>
         </div>
 
         <div class="form-section">
-            <span class="section-label">P2P Economics</span>
+            <span class="section-label">P2P Economics & Distribution</span>
             <div class="grid-2">
                 <div class="input-group">
-                    <label>Base Price (USD)</label>
-                    <input type="number" id="price" placeholder="25.00" step="0.01" required>
+                    <label>P2P Value (USD)</label>
+                    <input type="number" id="price" placeholder="0.00" step="0.01" required style="color: #00ff64; font-weight: bold;">
                 </div>
                 <div class="input-group">
-                    <label>Shipping Region</label>
-                    <select id="shipping">
-                        <option value="Worldwide">Worldwide</option>
-                        <option value="Continental">Continental</option>
+                    <label>Distribution Scope</label>
+                    <select id="origin_country" name="origin_country" style="border: 1px solid var(--gold); color: var(--gold); font-weight: bold;">
+                        <option value="Global (Worldwide)">🌐 Global (Worldwide)</option>
+                        <option value="Sovereign Node 001">🏰 Sovereign Node 001 (HQ)</option>
+                        <option value="International Waters">🌊 International Waters</option>
                     </select>
                 </div>
             </div>
-            <p style="font-size: 9px; color: #00ff64; font-weight: 800;"><i class="fa-solid fa-lock"></i> P2P ESCROW PROTECTED BY DEFAULT</p>
+            <p style="font-size: 9px; color: #00ff64; font-weight: 800; margin-top: 15px;"><i class="fa-solid fa-shield-halved"></i> P2P GATEWAY: ESCROW ACTIVE BY DEFAULT</p>
         </div>
 
         <div class="form-section">
@@ -93,14 +97,14 @@
             <div class="input-group">
                 <label>Certification Badge</label>
                 <select id="cert">
-                    <option>ISO-9001 Certified</option>
-                    <option>Organic / Halal</option>
-                    <option>Empire Verified</option>
+                    <option value="Empire Verified">Empire Verified</option>
+                    <option value="ISO-9001 Certified">ISO-9001 Certified</option>
+                    <option value="Organic / Halal">Organic / Halal</option>
                 </select>
             </div>
             <div class="input-group">
-                <label>Origin Country</label>
-                <input type="text" id="origin" placeholder="e.g. Nigeria / India">
+                <label>Asset Description</label>
+                <textarea id="description" placeholder="Describe the global utility of this asset..." rows="3" style="font-family: inherit;"></textarea>
             </div>
         </div>
 
@@ -109,41 +113,46 @@
 
     <nav class="master-nav">
         <a href="index.html" class="nav-box"><i class="fa-solid fa-house"></i><p>Home</p></a>
-        <a href="kitchen.html" class="nav-box"><i class="fa-solid fa-utensils"></i><p>Kitchen</p></a>
+        <a href="market.html" class="nav-box"><i class="fa-solid fa-shop"></i><p>Market</p></a>
         <a href="profile.html" class="nav-box"><i class="fa-solid fa-user-shield"></i><p>CEO</p></a>
     </nav>
 
     <script>
-        document.getElementById('productForm').addEventListener('submit', async (e) => {
+        const API_URL = "https://nawi-empire1.onrender.com";
+
+        document.getElementById('globalProductForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const productData = {
-                product_name: document.getElementById('title').value,
+                product_name: document.getElementById('product_name').value,
                 sku: document.getElementById('sku').value,
-                price: parseFloat(document.getElementById('price').value),
+                price: document.getElementById('price').value,
                 category: document.getElementById('category').value,
-                origin: document.getElementById('origin').value,
+                origin_country: document.getElementById('origin_country').value,
                 certification: document.getElementById('cert').value,
-                shipping: document.getElementById('shipping').value,
+                description: document.getElementById('description').value,
+                currency: "USD",
+                market: "Worldwide",
                 status: "Escrow Active"
             };
 
             try {
-                const response = await fetch('/api/add-product', {
+                // Connecting to your live Render server
+                const response = await fetch(`${API_URL}/api/add-product`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(productData)
                 });
 
                 if (response.ok) {
-                    alert("SUCCESS: " + productData.product_name + " has been deployed to the Global 7 Pillars Market.");
-                    document.getElementById('productForm').reset();
+                    alert("SUCCESS: Asset '" + productData.product_name + "' has been deployed to the Global Vault.");
+                    window.location.href = "index.html"; 
                 } else {
-                    alert("Error: Connection to Empire Vault failed.");
+                    alert("Vault Error: Connection to Empire Database failed.");
                 }
             } catch (err) {
                 console.error("Deploy Error:", err);
-                alert("Critical Error: Check your internet or server connection.");
+                alert("Critical Error: Ensure your Render server is 'Live' and not sleeping.");
             }
         });
     </script>
