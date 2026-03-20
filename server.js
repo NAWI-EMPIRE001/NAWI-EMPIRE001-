@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '/')));
 
 // --- DATABASE CONNECTION ---
-const uri = "mongodb+srv://NAWIEMPIRE001:NAWI-EMPIRE01@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority";
+const uri = "mongodb+srv://NAWIEMPIRE001:NAWI-EMPIRE001@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority";
 
 // FIX 2: Added connection options for stability on mobile-managed servers
 mongoose.connect(uri)
