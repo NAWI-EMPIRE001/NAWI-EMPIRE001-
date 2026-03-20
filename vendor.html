@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWI EMPIRE | VENDOR COMMAND</title>
+    <style>
+        :root {
+            --gold: #d4af37;
+            --dark-bg: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--gold);
+            letter-spacing: 4px;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .command-box {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: var(--gold);
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn-deploy {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #d4af37, #f4df4e);
+            border: none;
+            border-radius: 8px;
+            color: black;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-deploy:active {
+            transform: scale(0.98);
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>NAWI EMPIRE</h1>
+        <p style="font-size: 0.7rem; color: #888;">OFFICIAL VENDOR GATEWAY</p>
+    </div>
+
+    <div class="command-box">
+        <div class="input-group">
+            <label>Asset Name</label>
+            <input type="text" id="p_name" placeholder="e.g. Empire King Meal">
+        </div>
+
+        <div class="input-group">
+            <label>Price (USD)</label>
+            <input type="text" id="p_price" placeholder="50.00">
+        </div>
+
+        <div class="input-group">
+            <label>Category</label>
+            <select id="p_cat">
+                <option value="Kitchen Meal">Kitchen Meal</option>
+                <option value="Digital Asset">Digital Asset</option>
+                <option value="Graphics Service">Graphics Service</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Sovereign Description</label>
+            <textarea id="p_desc" rows="3" placeholder="Describe the asset quality..."></textarea>
+        </div>
+
+        <button class="btn-deploy" onclick="deployToVault()">Deploy to Vault</button>
+        
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function deployToVault() {
+            const status = document.getElementById('status');
+            const data = {
+                product_name: document.getElementById('p_name').value,
+                price: document.getElementById('p_price').value,
+                category: document.getElementById('p_cat').value,
+                description: document.getElementById('p_desc').value,
+                tier: "7 Pillars Elite"
+            };
+
+            if(!data.product_name || !data.price) {
+                status.innerHTML = "❌ Error: Asset Name & Price Required";
+                return;
+            }
+
+            status.innerHTML = "⏳ Synchronizing with Vault...";
+
+            try {
+                const response = await fetch('https://nawi-empire1.onrender.com/api/add-product', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if(result.success) {
+                    status.innerHTML = "🏰 <span style='color: #d4af37;'>SUCCESS: Asset Registered!</span>";
+                    // Clear inputs
+                    document.getElementById('p_name').value = '';
+                    document.getElementById('p_price').value = '';
+                    document.getElementById('p_desc').value = '';
+                } else {
+                    status.innerHTML = "❌ Vault Rejection: " + result.error;
+                }
+            } catch (err) {
+                status.innerHTML = "❌ Engine Offline. Check Render Logs.";
+            }
+        }
+    </script>
+</body>
+</html>
