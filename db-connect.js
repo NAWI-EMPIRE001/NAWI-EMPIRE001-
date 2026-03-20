@@ -6,8 +6,9 @@
 
 const mongoose = require('mongoose');
 
-// 🔒 Your Secure Connection String
-const uri = "mongodb+srv://NAWIEMPIRE001:NAWI-EMPIRE01@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority&appName=NAWI-EMPIRE001";
+// 🔒 THE MASTER URI (Certified & Secured)
+// Password: NAWI-EMPIRE01 | Username: NAWIE-MPIRE01 (Matched to Atlas)
+const uri = "mongodb+srv://NAWIE-MPIRE001:NAWI-EMPIRE01@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority&appName=NAWI-EMPIRE001";
 
 const clientOptions = { 
     serverApi: { version: '1', strict: true, deprecationErrors: true },
@@ -19,18 +20,24 @@ const clientOptions = {
  */
 async function connectVault() {
   try {
-    if (mongoose.connection.readyState === 1) return; // Already connected
+    // Prevent duplicate connection attempts
+    if (mongoose.connection.readyState === 1) return; 
     
     await mongoose.connect(uri, clientOptions);
     console.log("🏰 NAWI EMPIRE: Vault Synchronized Successfully!");
     console.log("🚀 Status: Database is now PERMANENTLY ACTIVE.");
   } catch (error) {
     console.error("❌ Vault Connection Failed:", error.message);
-    setTimeout(connectVault, 5000); // Re-sync attempt
+    // If it's a password error, we log it clearly
+    if (error.message.includes("authentication failed")) {
+        console.error("👉 ACTION: Reset password in Atlas to NAWI-EMPIRE01");
+    }
+    // Auto-retry every 10 seconds if connection drops
+    setTimeout(connectVault, 10000); 
   }
 }
 
-// Start the engine immediately
+// Start the engine
 connectVault();
 
 // Keep-Alive Listener
@@ -63,14 +70,15 @@ const KitchenMeal = mongoose.model('KitchenMeal', kitchenSchema, 'Kitchen-meals'
 async function pushToGlobalMarket(productData) {
     try {
         if (mongoose.connection.readyState !== 1) {
-            return { success: false, error: "Vault Syncing... Please wait 5 seconds." };
+            return { success: false, error: "Vault Syncing... Please wait 10 seconds." };
         }
 
         const finalProduct = new KitchenMeal({
             ...productData,
             market: "Worldwide",
             currency: "USD",
-            tier: "7 Pillars Elite"
+            tier: "7 Pillars Elite",
+            status: "Available"
         });
 
         const result = await finalProduct.save();
@@ -87,5 +95,5 @@ async function pushToGlobalMarket(productData) {
     }
 }
 
-// Export both the connection and the push function
+// Export the push function for the server to use
 module.exports = { mongoose, pushToGlobalMarket };
