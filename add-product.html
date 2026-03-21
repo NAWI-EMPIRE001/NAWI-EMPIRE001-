@@ -53,16 +53,17 @@
             <span class="section-label">Asset Identity</span>
             <div class="input-group">
                 <label>Asset Name (Product Title)</label>
-                <input type="text" id="product_name" placeholder="e.g. Sovereign Digital Access Key" required>
+                <input type="text" id="product_name" placeholder="e.g. Empire Signature Hoodie" required>
             </div>
             <div class="grid-2">
                 <div class="input-group">
-                    <label>Category</label>
-                    <select id="category">
-                        <option value="Digital Tech">Digital Tech</option>
-                        <option value="Kitchen Meal">Kitchen Meal</option>
-                        <option value="Empire Studio">Empire Studio</option>
-                        <option value="Gaming">Gaming</option>
+                    <label>7 Pillars Category</label>
+                    <select id="category" required>
+                        <option value="Apparel">Apparel & Design</option>
+                        <option value="Accessories">Luxury Accessories</option>
+                        <option value="Kitchen_Meal">Kitchen Meal</option>
+                        <option value="Gaming_Asset">Gaming Assets</option>
+                        <option value="Logo">Professional Logo</option>
                         <option value="Music">Music Promotion</option>
                     </select>
                 </div>
@@ -77,38 +78,49 @@
             <span class="section-label">P2P Economics & Distribution</span>
             <div class="grid-2">
                 <div class="input-group">
-                    <label>P2P Value (USD)</label>
-                    <input type="number" id="price" placeholder="0.00" step="0.01" required style="color: #00ff64; font-weight: bold;">
+                    <label>Price (Local Amount)</label>
+                    <input type="number" id="priceLocal" placeholder="0.00" required style="color: #00ff64; font-weight: bold;">
                 </div>
                 <div class="input-group">
-                    <label>Distribution Scope</label>
-                    <select id="origin_country" name="origin_country" style="border: 1px solid var(--gold); color: var(--gold); font-weight: bold;">
-                        <option value="Global (Worldwide)">🌐 Global (Worldwide)</option>
-                        <option value="Sovereign Node 001">🏰 Sovereign Node 001 (HQ)</option>
-                        <option value="International Waters">🌊 International Waters</option>
+                    <label>Currency Detected</label>
+                    <select id="currencyCode" style="border: 1px solid var(--gold); color: var(--gold); font-weight: bold;">
+                        <option value="NGN">🇳🇬 NGN (Naira)</option>
+                        <option value="USD">🇺🇸 USD (Dollar)</option>
+                        <option value="GBP">🇬🇧 GBP (Pound)</option>
+                        <option value="INR">🇮🇳 INR (Rupee)</option>
                     </select>
                 </div>
             </div>
-            <p style="font-size: 9px; color: #00ff64; font-weight: 800; margin-top: 15px;"><i class="fa-solid fa-shield-halved"></i> P2P GATEWAY: ESCROW ACTIVE BY DEFAULT</p>
+            <p style="font-size: 9px; color: #00ff64; font-weight: 800; margin-top: 15px;"><i class="fa-solid fa-shield-halved"></i> P2P GATEWAY: ESCROW HELD BY EMPIRE</p>
         </div>
 
         <div class="form-section">
-            <span class="section-label">Trust & Certification</span>
+            <span class="section-label">Live Preview & Human Supply</span>
             <div class="input-group">
-                <label>Certification Badge</label>
-                <select id="cert">
-                    <option value="Empire Verified">Empire Verified</option>
-                    <option value="ISO-9001 Certified">ISO-9001 Certified</option>
-                    <option value="Organic / Halal">Organic / Halal</option>
-                </select>
+                <label>3D Model / Live Preview URL</label>
+                <input type="url" id="threeD_url" placeholder="https://empire-assets.com/view/001">
             </div>
-            <div class="input-group">
-                <label>Asset Description</label>
-                <textarea id="description" placeholder="Describe the global utility of this asset..." rows="3" style="font-family: inherit;"></textarea>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Supply Origin</label>
+                    <input type="text" id="shippingOrigin" placeholder="e.g. Lagos, Nigeria">
+                </div>
+                <div class="input-group">
+                    <label>Stock Status</label>
+                    <select id="stockStatus">
+                        <option value="In_Stock">In Stock</option>
+                        <option value="Made_to_Order">Made to Order</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <button type="submit" class="btn-deploy">Deploy to Global Market</button>
+        <div class="form-section">
+            <span class="section-label">Asset Description</span>
+            <textarea id="description" placeholder="Describe the global utility of this asset..." rows="3" style="font-family: inherit;"></textarea>
+        </div>
+
+        <button type="submit" class="btn-deploy">Deploy to Global Vault</button>
     </form>
 
     <nav class="master-nav">
@@ -123,21 +135,21 @@
         document.getElementById('globalProductForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            // This object matches your MongoDB Schema exactly
             const productData = {
-                product_name: document.getElementById('product_name').value,
-                sku: document.getElementById('sku').value,
-                price: document.getElementById('price').value,
+                productName: document.getElementById('product_name').value,
                 category: document.getElementById('category').value,
-                origin_country: document.getElementById('origin_country').value,
-                certification: document.getElementById('cert').value,
+                priceLocal: document.getElementById('priceLocal').value,
+                currencyCode: document.getElementById('currencyCode').value,
+                threeD_model_url: document.getElementById('threeD_url').value,
+                shippingOrigin: document.getElementById('shippingOrigin').value,
+                stockStatus: document.getElementById('stockStatus').value,
                 description: document.getElementById('description').value,
-                currency: "USD",
-                market: "Worldwide",
-                status: "Escrow Active"
+                brandOwner: "NAWI-EMPIRE",
+                escrowStatus: "Held_by_Empire"
             };
 
             try {
-                // Connecting to your live Render server
                 const response = await fetch(`${API_URL}/api/add-product`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -145,14 +157,14 @@
                 });
 
                 if (response.ok) {
-                    alert("SUCCESS: Asset '" + productData.product_name + "' has been deployed to the Global Vault.");
+                    alert("SUCCESS: Asset '" + productData.productName + "' deployed. P2P Gateway Active.");
                     window.location.href = "index.html"; 
                 } else {
-                    alert("Vault Error: Connection to Empire Database failed.");
+                    alert("Vault Error: Empire Database rejected the Asset.");
                 }
             } catch (err) {
                 console.error("Deploy Error:", err);
-                alert("Critical Error: Ensure your Render server is 'Live' and not sleeping.");
+                alert("Critical Error: Ensure Render server is 'Live'.");
             }
         });
     </script>
