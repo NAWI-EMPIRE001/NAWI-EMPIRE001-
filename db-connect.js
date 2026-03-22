@@ -1,61 +1,51 @@
 const mongoose = require('mongoose');
 
-// 🛡️ SOVEREIGN VAULT CONNECTION 
-// Loads from Render Environment Variables to keep the Founder's identity secure.
-const uri = process.env.MONGODB_URI; 
+// 🛡️ MASTER CONNECTION STRING
+// Using your verified NAWI-EMPIRE001 credentials directly for 100% uptime.
+const uri = "mongodb+srv://NAWI-EMPIRE001:NAWI-EMPIRE001@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority";
 
 const clientOptions = { 
-    serverApi: { version: '1', strict: true, deprecationErrors: true },
-    autoIndex: true, 
+    serverApi: { version: '1', strict: true, deprecationErrors: true } 
 };
 
 async function connectVault() {
   try {
     if (mongoose.connection.readyState === 1) return; 
     
-    if (!uri) {
-        console.error("❌ EMPIRE ERROR: MONGODB_URI is missing in Render Environment Variables!");
-        return;
-    }
-
+   // Connect and STAY connected. No disconnect command used here.
     await mongoose.connect(uri, clientOptions);
-    console.log("🏰 NAWI EMPIRE: Vault Synchronized Successfully!");
+    console.log("🏰 NAWI EMPIRE: Vault Synchronized & Locked Open!");
   } catch (error) {
-    console.error("⚠️ EMPIRE SYNC FAILURE:", error.message);
-    setTimeout(connectVault, 5000); // Re-attempt connection if it fails
+    console.error("⚠️ SYNC FAILURE:", error.message);
+    setTimeout(connectVault, 5000); // Reconnect if signal drops
   }
 }
 
-// Start the connection
+// Execute connection
 connectVault();
 
-// 📂 THE GLOBAL MARKET SCHEMA
+// 📂 SCHEMA STRUCTURE
+// We force the collection name to 'Kitchen-meals' to match your Atlas dashboard.
 const kitchenSchema = new mongoose.Schema({
     product_name: { type: String, required: true },
     price: String,
     tier: { type: String, default: "7 Pillars Elite" },
-    category: String,
-    description: String
-});
+    category: { type: String, default: "Global Asset" }
+}, { collection: 'Kitchen-meals' });
 
-// Syncing with the specific 'Kitchen-meals' collection in the Vault
-const KitchenMeal = mongoose.model('KitchenMeal', kitchenSchema, 'Kitchen-meals');
+const KitchenMeal = mongoose.model('KitchenMeal', kitchenSchema);
 
-// 🚀 MASTER PUSH FUNCTION
+// 🚀 MASTER EXPORTS
+// We export the Model so server.js can find the products
+// We export the Function so vendor.html can add new products
 async function pushToGlobalMarket(productData) {
     try {
-        if (mongoose.connection.readyState !== 1) {
-           await connectVault(); // Ensure we are connected before pushing
-        }
         const finalProduct = new KitchenMeal(productData);
-       const result = await finalProduct.save();
-        console.log("✅ ASSET DEPLOYED:", result.product_name);
+        const result = await finalProduct.save();
         return { success: true, id: result._id };
     } catch (err) {
-        console.error("❌ DEPLOYMENT FAILED:", err.message);
         return { success: false, error: err.message };
     }
 }
 
-// Exporting both the connection and the push function for the Vendor Command
-module.exports = { mongoose, pushToGlobalMarket };
+module.exports = { mongoose, KitchenMeal, pushToGlobalMarket };
