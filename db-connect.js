@@ -45,10 +45,10 @@ const KitchenMeal = mongoose.model('KitchenMeal', kitchenSchema, 'Kitchen-meals'
 async function pushToGlobalMarket(productData) {
     try {
         if (mongoose.connection.readyState !== 1) {
-            await connectVault(); // Ensure we are connected before pushing
+           await connectVault(); // Ensure we are connected before pushing
         }
         const finalProduct = new KitchenMeal(productData);
-        const result = await finalProduct.save();
+       const result = await finalProduct.save();
         console.log("✅ ASSET DEPLOYED:", result.product_name);
         return { success: true, id: result._id };
     } catch (err) {
