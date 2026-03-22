@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-const { mongoose, pushToGlobalMarket } = require('./db-connect');
+// 👑 IMPORT THE CORRECT MODEL FROM DB-CONNECT
+const { mongoose, KitchenMeal, pushToGlobalMarket } = require('./db-connect');
 
 const app = express();
 
@@ -15,36 +16,20 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/')));
 
-mongoose.connection.once('open', () => {
-    console.log("🚀 Empire Engine: High-Level Sync Confirmed.");
-});
-
-const productSchema = new mongoose.Schema({
-    product_name: { type: String, required: true },
-    category: String,
-    price: String,
-    sku: String,
-    origin_country: { type: String, default: "Global Empire" }, 
-    market: { type: String, default: "Worldwide" },
-    description: String,
-    currency: { type: String, default: "USD" },
-    status: { type: String, default: "Active" },
-    timestamp: { type: Date, default: Date.now }
-});
-
-const Product = mongoose.model('Product', productSchema, 'products');
-
-app.get('/health', (req, res) => { res.status(200).send('Empire Active'); });
-
+// 📡 THE GLOBAL FEED ROUTE (FIXED)
 app.get('/api/get-products', async (req, res) => {
     try {
-        const products = await Product.find().sort({ timestamp: -1 }); 
+        // This now looks in 'Kitchen-meals' as seen in your Atlas screenshot
+        const products = await KitchenMeal.find({}).sort({ _id: -1 }); 
+        console.log(`📦 Empire Vault: Found ${products.length} assets`);
         res.json(products);
     } catch (err) {
+        console.error("❌ Vault Sync Error:", err.message);
         res.status(500).json({ message: "Internal Empire Error" });
     }
 });
 
+// 📥 VENDOR UPLOAD ROUTE
 app.post('/api/add-product', async (req, res) => {
     try {
         const result = await pushToGlobalMarket(req.body);
@@ -58,6 +43,7 @@ app.post('/api/add-product', async (req, res) => {
     }
 });
 
+// 🔐 FOUNDER LOGIN
 const ADMIN_EMAIL = "akpanvictor848@gmail.com";
 const ADMIN_PASS = "$Nsikak111";
 
@@ -68,6 +54,8 @@ app.post('/api/login', (req, res) => {
     }
     res.status(401).json({ success: false, message: "Invalid Identity" });
 });
+
+app.get('/health', (req, res) => { res.status(200).send('Empire Active'); });
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
