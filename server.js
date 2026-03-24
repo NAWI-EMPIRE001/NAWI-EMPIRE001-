@@ -9,16 +9,31 @@ const { mongoose, KitchenMeal, pushToGlobalMarket } = require('./db-connect');
 const app = express();
 const db = mongoose.connection;
 
+// --- ☣️ GLOBAL SYSTEM STATE ---
+let isSystemLocked = false; 
+
+// --- 🛡️ MIDDLEWARE STACK ---
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'user-id']
 }));
-
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/')));
 
-// --- 🛡️ FOUNDER SECURITY MIDDLEWARE ---
+// --- 🛡️ THE GATEKEEPER (Sovereign Lockdown & Security) ---
+app.use((req, res, next) => {
+    const userId = req.headers['user-id'];
+
+    // If system is locked, only Node 001 can pass
+    if (isSystemLocked && userId !== "NAWI-EMPIRE001") {
+        return res.status(503).json({ 
+            message: "SYSTEM UNDER MAINTENANCE. PLEASE WAIT FOR THE FOUNDER." 
+        });
+    }
+    next();
+});
+
 const authorizeFounder = (req, res, next) => {
     const token = req.headers.authorization;
     if (token === "FOUNDER_001") {
@@ -29,11 +44,9 @@ const authorizeFounder = (req, res, next) => {
 };
 
 // --- 👤 IDENTITY & REGISTRATION (ANTI-SCAM) ---
-
 app.post('/api/register', async (req, res) => {
     const { email, password, deviceId } = req.body;
     try {
-        // 1. Device Lock: One Phone, One Node
         const existingDevice = await db.collection('users').findOne({ deviceId: deviceId });
         if (existingDevice) {
             return res.status(403).json({ 
@@ -42,11 +55,10 @@ app.post('/api/register', async (req, res) => {
             });
         }
 
-        // 2. Create User: Locked until ID Verification
         const newUser = {
-            email: email,
-            password: password, // In production, hash this password!
-            deviceId: deviceId,
+            email,
+            password, 
+            deviceId,
             balance: 0, 
             violationCount: 0,
             isVerified: false,
@@ -61,133 +73,146 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// --- 💰 SOVEREIGN WITHDRAWAL (IDENTITY MATCHING) ---
+// --- 🛰️ THE ALL-SEEING EYE (Global Content Monitor) ---
+const BANNED_PATTERNS = [/t\.me\//i, /chat\.whatsapp\.com/i, /wa\.me\//i, /bit\.ly\//i, /crypto-giveaway/i];
 
+app.post('/api/global-monitor', async (req, res) => {
+    const { userId, content, type, attachmentType } = req.body; 
+    let violationFound = false;
+    let reason = "";
+
+    const hasForbiddenLink = BANNED_PATTERNS.some(pattern => pattern.test(content));
+    if (hasForbiddenLink) {
+        violationFound = true;
+        reason = "🚩 FORBIDDEN EXTERNAL LINK (TELEGRAM/WHATSAPP)";
+    }
+
+    if (attachmentType === 'video') {
+        const nsfwKeywords = ['nude', 'sex', '18+', 'xxx', 'viral_video'];
+        if (nsfwKeywords.some(word => content.toLowerCase().includes(word))) {
+            violationFound = true;
+            reason = "🔞 ADULT CONTENT VIOLATION";
+        }
+    }
+
+    if (violationFound) {
+        await db.collection('reports').insertOne({
+            suspect: userId,
+            reason: reason,
+            evidence: content,
+            timestamp: new Date(),
+            status: "PENDING_JUDGMENT"
+        });
+
+        await db.collection('users').updateOne(
+            { _id: new ObjectId(userId) }, 
+            { $inc: { violationCount: 1 }, $set: { status: "FLAGGED" } }
+        );
+
+        return res.json({ success: false, message: "Content violates Imperial Safety Rules." });
+    }
+    res.json({ success: true });
+});
+
+// --- 🛡️ IMPERIAL CHAT MONITOR (TRAP LOGIC) ---
+app.post('/api/send-message', async (req, res) => {
+    const { senderId, receiverId, message } = req.body;
+    const scamKeywords = ["password", "login", "otp", "verify account", "give me money", "admin", "founder", "hack"];
+    
+    let scamScore = 0;
+    const cleanMessage = message.toLowerCase();
+    const hasPhoneNumber = /\+?\d{10,15}/.test(cleanMessage);
+
+    if (scamKeywords.some(word => cleanMessage.includes(word))) scamScore += 50;
+    if (scamScore >= 50 && hasPhoneNumber) scamScore += 50;
+
+    if (scamScore >= 50) {
+        await db.collection('reports').insertOne({
+            suspect: senderId,
+            reason: `🚩 SCAM PATTERN DETECTED: "${message}"`,
+            timestamp: new Date(),
+            status: "PENDING_JUDGMENT"
+        });
+    }
+
+    try {
+        await db.collection('messages').insertOne({ senderId, receiverId, message, timestamp: new Date() });
+        res.json({ success: true });
+    } catch (err) { res.status(500).json({ success: false }); }
+});
+
+// --- 💰 SOVEREIGN WITHDRAWAL & IDENTITY ---
 app.post('/api/request-withdrawal', async (req, res) => {
     const { userId, accountName, accountNumber, bankName, amount } = req.body;
     try {
         const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
         if (!user) return res.status(404).json({ success: false, message: "Identity Not Found." });
 
-        // THE STRICT MATCH: Comparing Registered Name vs Bank Account Name
-        const registeredName = (user.fullName || "").toLowerCase().trim();
-        const withdrawalName = (accountName || "").toLowerCase().trim();
-
-        if (registeredName !== withdrawalName) {
+        if ((user.fullName || "").toLowerCase().trim() !== (accountName || "").toLowerCase().trim()) {
             await db.collection('users').updateOne({ _id: user._id }, { $inc: { violationCount: 1 } });
-            return res.status(403).json({ 
-                success: false, 
-                type: "GOLDEN_WARNING",
-                message: "⚠️ IDENTITY MISMATCH: Name does not match Sovereign ID. Violation logged." 
-            });
+            return res.status(403).json({ success: false, message: "⚠️ IDENTITY MISMATCH: Name does not match Sovereign ID." });
         }
 
-        const withdrawalRequest = {
+        await db.collection('withdrawals').insertOne({
             userId: user._id,
             fullName: user.fullName,
             bankDetails: { accountName, accountNumber, bankName },
             amount: parseFloat(amount),
             status: "PENDING_AUTHORIZATION",
             timestamp: new Date()
-        };
-
-        await db.collection('withdrawals').insertOne(withdrawalRequest);
+        });
         res.status(200).json({ success: true, message: "✨ Authorized. Awaiting Founder Release." });
-    } catch (err) {
-        res.status(500).json({ success: false, message: "Vault Sync Error." });
-    }
+    } catch (err) { res.status(500).json({ success: false }); }
 });
 
-// --- ⚖️ THE FOUNDER'S JUDGMENT & HQ ROUTES ---
-
-// Approve Human ID & Release 10 Coin Bonus
+// --- ⚖️ THE FOUNDER'S JUDGMENT (HQ ROUTES) ---
 app.post('/api/admin/verify-human', authorizeFounder, async (req, res) => {
-    const { userId } = req.body;
     await db.collection('users').updateOne(
-        { _id: new ObjectId(userId) },
+        { _id: new ObjectId(req.body.userId) },
         { $set: { balance: 10, isVerified: true, status: "ACTIVE" } }
     );
-    res.json({ success: true, message: "10 🪙 Bonus Unlocked." });
+    res.json({ success: true });
 });
 
-// Issue Golden Warning
-app.post('/api/admin/issue-warning', authorizeFounder, async (req, res) => {
-    const { suspectId } = req.body;
-    await db.collection('users').updateOne(
-        { _id: new ObjectId(suspectId) },
-        { $set: { pendingWarning: "⚠️ FINAL WARNING: Imperial Violation Detected. Obey the rules." } }
-    );
-    res.json({ success: true, message: "Warning Published." });
-});
-
-// Terminate Node (Permanent Ban)
 app.post('/api/admin/terminate-node', authorizeFounder, async (req, res) => {
-    const { suspectId } = req.body;
     await db.collection('users').updateOne(
-        { _id: new ObjectId(suspectId) },
+        { _id: new ObjectId(req.body.suspectId) },
         { $set: { status: "TERMINATED", balance: 0 } }
     );
-    res.json({ success: true, message: "Node Removed from Empire." });
+    res.json({ success: true });
 });
 
-// --- 🛡️ REPORTING & MONITORING ---
+// --- ☣️ SOVEREIGN OVERRIDE (GLOBAL LOCKOUT) ---
+app.post('/api/admin/self-destruct', async (req, res) => {
+    const { masterPin, action } = req.body;
+    if (masterPin !== "7777") return res.status(403).json({ message: "AUTHORITY DENIED" });
 
-app.post('/api/submit-report', async (req, res) => {
-    try {
-        await db.collection('reports').insertOne(req.body);
-        res.status(200).json({ success: true });
-    } catch (err) {
-        res.status(500).send("Command Sync Error.");
-    }
-});
-
-app.get('/api/get-withdrawals', authorizeFounder, async (req, res) => {
-    try {
-        const requests = await db.collection('withdrawals').find({ status: "PENDING_AUTHORIZATION" }).toArray();
-        res.json(requests);
-    } catch (err) {
-        res.status(500).json({ message: "Sync Error." });
-    }
+    isSystemLocked = (action === "LOCK_ALL");
+    console.log(isSystemLocked ? "⚠️ EMPIRE IN LOCKDOWN." : "✅ EMPIRE RESTORED.");
+    res.json({ success: true, message: isSystemLocked ? "EMPIRE LOCKED" : "EMPIRE RESTORED" });
 });
 
 // --- 📦 KITCHEN & GLOBAL MARKET ---
-
 app.get('/api/get-products', async (req, res) => {
-    try {
-        const products = await KitchenMeal.find({}).sort({ _id: -1 }); 
-        res.json(products);
-    } catch (err) {
-        res.status(500).json({ message: "Internal Empire Error" });
-    }
+    const products = await KitchenMeal.find({}).sort({ _id: -1 }); 
+    res.json(products);
 });
 
 app.post('/api/add-product', async (req, res) => {
-    try {
-        const result = await pushToGlobalMarket(req.body);
-        res.status(201).json(result);
-    } catch (err) {
-        res.status(500).json({ success: false, error: "Vault Entry Failed" });
-    }
+    const result = await pushToGlobalMarket(req.body);
+    res.status(201).json(result);
 });
 
 // --- 🔐 FOUNDER LOGIN ---
-const ADMIN_EMAIL = "akpanvictor848@gmail.com";
-const ADMIN_PASS = "$Nsikak111";
-
 app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
-    if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
+    if (req.body.email === "akpanvictor848@gmail.com" && req.body.password === "$Nsikak111") {
         return res.status(200).json({ success: true, token: "FOUNDER_001" });
     }
-    res.status(401).json({ success: false, message: "Invalid Identity" });
+    res.status(401).json({ success: false });
 });
 
-// --- ⚙️ SYSTEM HEALTH & ROUTING ---
-app.get('/health', (req, res) => { res.status(200).send('Empire Engine Active'); });
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+// --- ⚙️ START ENGINE ---
+app.get('*', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); });
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
