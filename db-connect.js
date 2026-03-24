@@ -3,7 +3,7 @@ const Meal = require('./models/Meal');
 
 // 🛡️ MASTER CONNECTION CONFIGURATION
 // Credentials updated with Password: NAWI-EMPIRE001
-const MONGO_URI = "mongodb+srv://akpanvictor848:NAWI-EMPIRE001@nawi-empire01.7588n.mongodb.net/NAWI_VAULT?retryWrites=true&w=majority";
+const MONGO_URI = "mongodb+srv://NAWI-EMPIRE001:NAWI-EMPIRE001@nawi-empire001.7588n.mongodb.net/NAWI_VAULT?retryWrites=true&w=majority";
 
 const clientOptions = { 
     serverApi: { version: '1', strict: true, deprecationErrors: true } 
