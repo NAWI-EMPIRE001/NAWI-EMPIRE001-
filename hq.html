@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>7 PILLARS | HQ COMMAND</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --dark: #000; --card: #080808; --red: #800000; }
-        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; }
+        :root { --gold: #D4AF37; --dark: #000; --card: #080808; --red: #800000; --alert: #ff4d4d; }
+        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 20px; padding-bottom: 50px; overflow-x: hidden; }
         
         /* HEADER SECTION */
         .hq-header { text-align: center; padding: 40px 0; border-bottom: 1px solid #111; margin-bottom: 30px; }
@@ -16,23 +17,28 @@
         .status-tag { font-size: 9px; color: #0f0; letter-spacing: 2px; text-transform: uppercase; margin-top: 10px; font-weight: 900; }
 
         /* COMMAND SECTIONS */
-        .command-section { margin-bottom: 40px; }
+        .command-section { margin-bottom: 40px; animation: fadeIn 0.8s ease; }
         .section-title { color: var(--gold); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; border-left: 2px solid var(--gold); padding-left: 15px; margin-bottom: 20px; font-weight: 900; }
 
         /* FEED CARDS */
         .feed-container { display: grid; gap: 15px; }
-        .admin-card { background: var(--card); border: 1px solid #1a1a1a; padding: 18px; border-radius: 15px; position: relative; }
+        .admin-card { background: var(--card); border: 1px solid #1a1a1a; padding: 18px; border-radius: 15px; position: relative; transition: 0.3s; }
+        .suspicious-node { border-left: 3px solid var(--alert); }
         .card-label { font-size: 8px; color: #444; text-transform: uppercase; font-weight: 900; margin-bottom: 8px; display: block; }
         .card-main { font-size: 12px; color: #eee; line-height: 1.5; margin: 10px 0; }
+        .evidence-box { background: #050505; border: 1px dashed #222; padding: 10px; border-radius: 8px; font-size: 10px; color: #888; margin-top: 8px; font-style: italic; }
 
         /* BUTTONS */
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        button { cursor: pointer; border-radius: 8px; font-size: 9px; font-weight: 900; padding: 10px; text-transform: uppercase; transition: 0.3s; }
+        button { cursor: pointer; border-radius: 8px; font-size: 9px; font-weight: 900; padding: 12px; text-transform: uppercase; transition: 0.2s; border: none; }
         .btn-gold { background: none; border: 1px solid var(--gold); color: var(--gold); }
         .btn-gold:hover { background: var(--gold); color: #000; }
-        .btn-red { background: var(--red); border: none; color: #fff; }
+        .btn-red { background: var(--red); color: #fff; }
+        .btn-red:active { transform: scale(0.95); }
         
         .back-btn { display: block; text-align: center; margin-top: 50px; color: #333; text-decoration: none; font-size: 10px; font-weight: 900; letter-spacing: 2px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -41,13 +47,27 @@
         <div class="shield-icon"><i class="fa-solid fa-shield-halved"></i></div>
         <h1>7 PILLARS HQ</h1>
         <div class="status-tag"><span style="display:inline-block; width:6px; height:6px; background:#0f0; border-radius:50%; margin-right:5px;"></span> Authority Active</div>
-        <p style="font-size: 10px; color: #444; margin-top: 15px; font-style: italic;">"This is my order and my authority to protect the founders and this platform."</p>
+        <p style="font-size: 10px; color: #444; margin-top: 15px; font-style: italic;">"Protect the founders. Protect the platform. Follow the rules."</p>
     </div>
 
     <div class="command-section">
         <div class="section-title">Global Violation Feed</div>
         <div id="report-list" class="feed-container">
             <p style="color: #222; font-size: 9px; text-align: center;">Scanning for stubborn nodes...</p>
+        </div>
+    </div>
+
+    <div class="command-section">
+        <div class="section-title">Imperial Intelligence (Chat Monitor)</div>
+        <div id="scam-chat-list" class="feed-container">
+            <p style="color: #222; font-size: 9px; text-align: center;">Scanning the airwaves for deception...</p>
+        </div>
+    </div>
+
+    <div class="command-section">
+        <div class="section-title">Kitchen Marketplace Audit</div>
+        <div id="meal-audit-list" class="feed-container">
+            <p style="color: #222; font-size: 9px; text-align: center;">Scanning the global kitchen...</p>
         </div>
     </div>
 
@@ -62,35 +82,113 @@
 
     <script>
         const API_URL = "https://nawi-empire1.onrender.com";
-        const FOUNDER_TOKEN = "FOUNDER_001"; // Used for authorization headers
+        const FOUNDER_TOKEN = "FOUNDER_001"; 
 
-        // --- FETCH REPORTS (VIOLATIONS) ---
-        async function fetchReports() {
+        // --- 1. GLOBAL REPORTS ---
+        async function fetchGlobalReports() {
             try {
-                const response = await fetch(`${API_URL}/api/get-all-reports`);
-                const reports = await response.json();
+                const res = await fetch(`${API_URL}/api/get-all-reports`, {
+                    headers: { 'Authorization': FOUNDER_TOKEN }
+                });
+                const reports = await res.json();
                 const container = document.getElementById('report-list');
-                if (reports.length === 0) return;
                 
+                if (reports.length === 0) {
+                    container.innerHTML = '<p style="font-size:9px; color:#222; text-align:center;">Empire is stable.</p>';
+                    return;
+                }
+
                 container.innerHTML = "";
                 reports.forEach(report => {
                     const card = document.createElement('div');
-                    card.className = "admin-card";
-                    card.style.borderLeft = "3px solid var(--gold)";
+                    card.className = "admin-card suspicious-node";
                     card.innerHTML = `
-                        <span class="card-label">Target: ${report.suspect}</span>
-                        <div class="card-main">"${report.reason}"</div>
+                        <span class="card-label">Node: ${report.suspect}</span>
+                        <div class="card-main">
+                            <span style="color:var(--alert); font-weight:900;">${report.reason}</span>
+                            <div class="evidence-box">Evidence: "${report.evidence}"</div>
+                        </div>
                         <div class="btn-grid">
                             <button class="btn-gold" onclick="issueWarning('${report.suspect}')">Issue Warning</button>
-                            <button class="btn-red" onclick="terminateNode('${report.suspect}')">Terminate</button>
+                            <button class="btn-red" onclick="terminateNode('${report.suspect}')">Terminate Node</button>
                         </div>
                     `;
                     container.appendChild(card);
                 });
-            } catch (err) { console.log("Report Sync Failed."); }
+            } catch (err) { console.error("Report Sync Error"); }
         }
 
-        // --- FETCH WITHDRAWALS (MONEY) ---
+        // --- 2. CHAT INTELLIGENCE ---
+        async function fetchScamChats() {
+            try {
+                const res = await fetch(`${API_URL}/api/admin/flagged-chats`, {
+                    headers: { 'Authorization': FOUNDER_TOKEN }
+                });
+                const flags = await res.json();
+                const container = document.getElementById('scam-chat-list');
+                
+                if (flags.length === 0) {
+                    container.innerHTML = '<p style="font-size:9px; color:#222; text-align:center;">No deception detected.</p>';
+                    return;
+                }
+
+                container.innerHTML = "";
+                flags.forEach(flag => {
+                    const card = document.createElement('div');
+                    card.className = "admin-card suspicious-node";
+                    card.innerHTML = `
+                        <div style="display:flex; justify-content:space-between;">
+                            <span class="card-label">Sender: ${flag.senderName}</span>
+                            <span style="font-size:8px; color:var(--alert); font-weight:900;">SCAM SCORE: ${flag.score}%</span>
+                        </div>
+                        <div class="card-main">
+                            <div class="evidence-box">"${flag.message}"</div>
+                        </div>
+                        <div class="btn-grid">
+                            <button class="btn-gold" onclick="ignoreFlag('${flag._id}')">Ignore (Partner)</button>
+                            <button class="btn-red" onclick="terminateNode('${flag.senderId}')">Terminate Node</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) { console.error("Intelligence Feed Error"); }
+        }
+
+        // --- 3. KITCHEN AUDIT ---
+        async function fetchPendingMeals() {
+            try {
+                const res = await fetch(`${API_URL}/api/admin/pending-meals`, {
+                    headers: { 'Authorization': FOUNDER_TOKEN }
+                });
+                const meals = await res.json();
+                const container = document.getElementById('meal-audit-list');
+                
+                if (meals.length === 0) {
+                    container.innerHTML = '<p style="font-size:9px; color:#222; text-align:center;">Kitchen is verified.</p>';
+                    return;
+                }
+
+                container.innerHTML = "";
+                meals.forEach(meal => {
+                    const card = document.createElement('div');
+                    card.className = "admin-card";
+                    card.innerHTML = `
+                        <span class="card-label">Seller: ${meal.sellerId}</span>
+                        <div class="card-main">
+                            <strong>${meal.mealName}</strong> (${meal.origin})<br>
+                            Price: ${meal.price} 🪙
+                        </div>
+                        <div class="btn-grid">
+                            <button class="btn-gold" onclick="updateMealStatus('${meal._id}', 'APPROVED')">Approve</button>
+                            <button class="btn-red" onclick="updateMealStatus('${meal._id}', 'REJECTED')">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) { console.error("Kitchen Audit Error"); }
+        }
+
+        // --- 4. VAULT RELEASE ---
         async function fetchWithdrawals() {
             try {
                 const res = await fetch(`${API_URL}/api/get-withdrawals`, {
@@ -98,7 +196,11 @@
                 });
                 const requests = await res.json();
                 const container = document.getElementById('withdrawal-list');
-                if (requests.length === 0) return;
+                
+                if (requests.length === 0) {
+                    container.innerHTML = '<p style="font-size:9px; color:#222; text-align:center;">Vault is locked.</p>';
+                    return;
+                }
 
                 container.innerHTML = "";
                 requests.forEach(req => {
@@ -108,35 +210,35 @@
                         <span class="card-label">Citizen: ${req.fullName}</span>
                         <div class="card-main">${req.amount} 🪙 | ${req.bankDetails.bankName}</div>
                         <div class="btn-grid">
-                            <button class="btn-gold" onclick="updateAsset('${req._id}', 'APPROVED')">Release</button>
-                            <button class="btn-red" onclick="updateAsset('${req._id}', 'REJECTED')">Block</button>
+                            <button class="btn-gold" onclick="updateAsset('${req._id}', 'APPROVED')">Release Asset</button>
+                            <button class="btn-red" onclick="updateAsset('${req._id}', 'REJECTED')">Block Request</button>
                         </div>
                     `;
                     container.appendChild(card);
                 });
-            } catch (err) { console.log("Vault Sync Failed."); }
+            } catch (err) { console.error("Vault Sync Error"); }
         }
 
-        // --- JUDICIAL ACTIONS ---
+        // --- COMMAND ACTIONS ---
         async function issueWarning(id) {
             await fetch(`${API_URL}/api/admin/issue-warning`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': FOUNDER_TOKEN },
                 body: JSON.stringify({ suspectId: id })
             });
-            alert("⚠️ WARNING SENT TO NODE");
-            fetchReports();
+            alert("⚠️ WARNING ISSUED");
+            fetchGlobalReports();
         }
 
         async function terminateNode(id) {
-            if(!confirm("ARE YOU SURE? This node will be erased.")) return;
+            if(!confirm("DELETE NODE? This action is permanent.")) return;
             await fetch(`${API_URL}/api/admin/terminate-node`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': FOUNDER_TOKEN },
                 body: JSON.stringify({ suspectId: id })
             });
-            alert("💀 NODE TERMINATED");
-            fetchReports();
+            alert("💀 NODE PURGED");
+            location.reload();
         }
 
         async function updateAsset(id, status) {
@@ -149,14 +251,37 @@
             fetchWithdrawals();
         }
 
-        // --- AUTO REFRESH ---
+        async function updateMealStatus(id, status) {
+            await fetch(`${API_URL}/api/admin/verify-meal`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': FOUNDER_TOKEN },
+                body: JSON.stringify({ mealId: id, status: status })
+            });
+            alert("KITCHEN UPDATED");
+            fetchPendingMeals();
+        }
+
+        async function ignoreFlag(flagId) {
+            await fetch(`${API_URL}/api/admin/clear-flag/${flagId}`, {
+                method: 'POST',
+                headers: { 'Authorization': FOUNDER_TOKEN }
+            });
+            fetchScamChats();
+        }
+
+        // --- MASTER SYNC ---
         window.onload = () => {
-            fetchReports();
+            fetchGlobalReports();
+            fetchScamChats();
+            fetchPendingMeals();
             fetchWithdrawals();
+            // Refresh every 30s to keep the Empire secure
             setInterval(() => {
-                fetchReports();
+                fetchGlobalReports();
+                fetchScamChats();
+                fetchPendingMeals();
                 fetchWithdrawals();
-            }, 30000); // Check every 30 seconds
+            }, 30000);
         };
     </script>
 </body>
