@@ -47,7 +47,6 @@
         /* --- 🏛️ MAIN PLATFORM --- */
         #main-platform { display: none; opacity: 0; transition: 1s ease; }
 
-        /* Notification Bar */
         #empire-notifier { 
             position: fixed; top: -100px; left: 0; width: 100%; background: var(--gold); 
             color: black; padding: 15px; font-weight: 900; font-size: 10px; 
@@ -70,7 +69,7 @@
         .pillar-icon { font-size: 24px; color: var(--gold); margin-bottom: 12px; opacity: 0.8; }
         .pillar-label { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #666; text-align: center; }
 
-        /* --- 7 PULSE ANIMATION --- */
+        /* --- CENTER NODE SCANNING --- */
         @keyframes pillarScan {
             0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
             70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
@@ -152,15 +151,15 @@
                 <h2 class="text-xl font-black tracking-tighter uppercase italic">Welcome to the<br>7 Pillars Core</h2>
             </div>
 
-            <h3 class="text-[9px] font-black text-zinc-500 uppercase tracking-[0.4em] mb-6 px-2">7 Pillars Studios</h3>
+            <h3 class="text-[9px] font-black text-zinc-500 uppercase tracking-[0.4em] mb-6 px-2">Empire Infrastructure</h3>
             <div class="grid grid-cols-2 gap-4">
                 <div class="pillar-node" onclick="notify('Live Stream: Access Restricted')">
                     <i class="fa-solid fa-tower-broadcast pillar-icon"></i>
                     <span class="pillar-label">Live Stream</span>
                 </div>
-                <div class="pillar-node" onclick="notify('Gaming: Authentication Required')">
-                    <i class="fa-solid fa-gamepad pillar-icon"></i>
-                    <span class="pillar-label">Gaming</span>
+                <div class="pillar-node" onclick="window.location.href='market.html'">
+                    <i class="fa-solid fa-shop pillar-icon"></i>
+                    <span class="pillar-label">Marketplace</span>
                 </div>
                 <div class="pillar-node" onclick="window.location.href='kitchen.html'">
                     <i class="fa-solid fa-utensils pillar-icon"></i>
@@ -168,15 +167,15 @@
                 </div>
                 <div class="pillar-node" onclick="window.location.href='studio.html'">
                     <i class="fa-solid fa-compass-drafting pillar-icon"></i>
-                    <span class="pillar-label">Studio</span>
-                </div>
-                <div class="pillar-node" onclick="notify('Music: Encrypting Metadata...')">
-                    <i class="fa-solid fa-music pillar-icon"></i>
-                    <span class="pillar-label">Music Prod.</span>
+                    <span class="pillar-label">Design Studio</span>
                 </div>
                 <div class="pillar-node" onclick="notify('Ads: Verification Pending')">
                     <i class="fa-solid fa-ad pillar-icon"></i>
                     <span class="pillar-label">Ads Program</span>
+                </div>
+                <div class="pillar-node" onclick="notify('Gaming: Nodes Offline')">
+                    <i class="fa-solid fa-gamepad pillar-icon"></i>
+                    <span class="pillar-label">Gaming Zone</span>
                 </div>
             </div>
         </div>
@@ -186,14 +185,16 @@
             <a href="market.html" class="nav-item text-zinc-600"><i class="fa-solid fa-shop"></i></a>
             <div class="center-circle" id="main-7-node" onclick="toggleHub()">7</div>
             <a href="messages.html" class="nav-item text-zinc-600"><i class="fa-solid fa-message"></i></a>
-            <div id="profile-trigger" class="nav-item"><i class="fa-solid fa-circle-user text-zinc-600"></i></div>
+            <div id="profile-trigger" class="nav-item" onclick="enterEmpire()">
+                <i class="fa-solid fa-circle-user text-zinc-600"></i>
+            </div>
         </nav>
     </div>
 
     <script>
         const API_URL = "https://nawi-empire1.onrender.com";
 
-        // --- AUTH & INITIALIZATION ---
+        // --- AUTH GATE LOGIC ---
         function unlockEmpire() {
             document.getElementById('auth-gate').style.opacity = '0';
             setTimeout(() => {
@@ -209,7 +210,6 @@
             if (!citizen) {
                 document.getElementById('entrance-portal').style.display = 'flex';
             } else {
-                notify(`Welcome back, Citizen ${JSON.parse(citizen).name}`);
                 syncWithVault();
             }
         }
@@ -237,7 +237,19 @@
 
         function bypassEntry() { document.getElementById('entrance-portal').style.display = 'none'; syncWithVault(); }
 
-        // --- SYSTEM SYNC & HUB ---
+        // --- SOVEREIGN ROUTING ---
+        function enterEmpire() {
+            const userToken = localStorage.getItem('auth_token');
+            if (userToken === "FOUNDER_001") {
+                // Secret route for you (Master Mode)
+                window.location.href = "profile.html?mode=sovereign";
+            } else {
+                // Regular route for citizens
+                window.location.href = "profile.html";
+            }
+        }
+
+        // --- HUB & NOTIFICATIONS ---
         async function syncWithVault() {
             const node7 = document.getElementById('main-7-node');
             node7.classList.add('scanning');
@@ -265,15 +277,21 @@
             setTimeout(() => { bar.style.top = "-100px"; }, 3000);
         }
 
-        // --- MASTER VAULT ACCESS ---
+        // --- HIDDEN MASTER HOLD (Trigger on Profile) ---
         let pressTimer;
-        document.getElementById('profile-trigger').addEventListener('touchstart', () => {
+        const profBtn = document.getElementById('profile-trigger');
+        
+        profBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             pressTimer = setTimeout(() => {
-                localStorage.setItem('NAWI_MASTER_TOKEN', 'SOVEREIGN_001_ALPHA_OMEGA');
-                window.location.href = 'sys-log-cache-82.html'; 
-            }, 2000);
+                localStorage.setItem('auth_token', 'FOUNDER_001'); // Auto-sets you as Master
+                notify("Sovereign Identity Recognized");
+                if (navigator.vibrate) navigator.vibrate(200);
+                enterEmpire();
+            }, 5000); // 5 Second hold on the profile icon
         });
-        document.getElementById('profile-trigger').addEventListener('touchend', () => clearTimeout(pressTimer));
+        profBtn.addEventListener('touchend', () => clearTimeout(pressTimer));
+        profBtn.addEventListener('touchmove', () => clearTimeout(pressTimer));
     </script>
 </body>
 </html>
