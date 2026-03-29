@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI EMPIRE | 7 PILLARS</title>
+    <title>NAWI EMPIRE | Social Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -14,173 +14,178 @@
             font-family: 'Inter', sans-serif; 
             margin: 0; 
             overflow-x: hidden;
-            -webkit-user-select: none; /* Prevents text selection during long-press */
+            -webkit-user-select: none;
         }
 
-        /* --- THE DYNAMIC GRID --- */
-        .app-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            padding: 20px;
-            margin-top: 20px;
+        /* --- CONTENT FEED STYLES --- */
+        .feed-container { padding: 15px; padding-bottom: 140px; }
+        .post-card { 
+            background: #0a0a0a; border: 1px solid #1a1a1a; 
+            border-radius: 24px; margin-bottom: 20px; overflow: hidden;
+            transition: 0.3s;
         }
+        .post-image { width: 100%; aspect-ratio: 1/1; background: #111; object-fit: cover; }
+        .post-content { padding: 18px; }
 
-        .app-card {
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 20px;
-            padding: 25px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        /* --- THE 7 PILLARS HUB OVERLAY --- */
+        #hubOverlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98);
+            backdrop-filter: blur(20px); z-index: 5000; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .pillar-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 25px;
+        }
+        .pillar-tool {
+            background: #0d0d0d; border: 1px solid #1a1a1a; aspect-ratio: 1/1;
+            border-radius: 20px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .app-card i { font-size: 28px; color: var(--gold); }
-        .app-card span { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: #666; }
-        .app-card:active { transform: scale(0.95); border-color: var(--gold); }
-
-        /* --- MASTER THEME OVERRIDE --- */
-        .master-mode .app-card { border-color: var(--neon); }
-        .master-mode .app-card i { color: var(--neon); text-shadow: 0 0 10px rgba(0,255,65,0.3); }
-        .master-mode #node7 { background: var(--neon) !important; box-shadow: 0 0 30px var(--neon); }
+        .pillar-tool:active { transform: scale(0.9); border-color: var(--gold); }
+        .pillar-tool i { color: var(--gold); font-size: 22px; }
+        .pillar-tool span { font-size: 8px; font-weight: 900; text-transform: uppercase; color: #555; letter-spacing: 1px; }
 
         /* --- MASTER AUTH OVERLAY --- */
         #masterAuth {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.98);
-            z-index: 9999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(20px);
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.99);
+            z-index: 9999; flex-direction: column; align-items: center; justify-content: center;
         }
         #masterAuth input {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--neon);
-            color: var(--neon);
-            font-size: 32px;
-            text-align: center;
-            width: 150px;
-            letter-spacing: 15px;
-            outline: none;
-            margin: 20px 0;
+            background: transparent; border: none; border-bottom: 2px solid var(--neon);
+            color: var(--neon); font-size: 32px; text-align: center; width: 160px;
+            letter-spacing: 15px; outline: none; margin: 30px 0;
         }
+
+        /* --- MASTER MODE STYLES --- */
+        .master-mode .post-card { border-color: rgba(0, 255, 65, 0.2); }
+        .master-mode .pillar-tool { border-color: rgba(0, 255, 65, 0.3); }
+        .master-mode .pillar-tool i { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+        .master-mode #node7 { background: var(--neon) !important; box-shadow: 0 0 30px var(--neon); }
 
         /* --- NAVIGATION --- */
-        .node-7-wrapper { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; }
+        .node-7-wrapper { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 6000; }
         .main-node {
-            width: 70px; height: 70px; background: white; color: black; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; font-size: 28px;
-            font-weight: 900; border: 5px solid var(--black); transition: 0.5s;
+            width: 75px; height: 75px; background: white; color: black; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 30px;
+            font-weight: 900; border: 6px solid var(--black); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .bottom-bar {
-            position: fixed; bottom: 0; width: 100%; height: 85px; background: rgba(10,10,10,0.95);
-            display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px;
-            border-top: 1px solid #111; z-index: 900;
+            position: fixed; bottom: 0; width: 100%; height: 90px; background: rgba(5,5,5,0.95);
+            backdrop-filter: blur(10px); display: flex; justify-content: space-around; 
+            align-items: center; padding-bottom: 20px; border-top: 1px solid #111; z-index: 1000;
         }
-        .nav-link { color: #333; font-size: 22px; transition: 0.3s; }
+        .nav-link { color: #333; font-size: 24px; transition: 0.3s; }
         .nav-link.active { color: var(--gold); }
     </style>
 </head>
 <body id="mainBody">
 
     <div id="masterAuth">
-        <i class="fa-solid fa-user-shield text-[#00ff41] text-5xl mb-4"></i>
-        <p class="text-[#00ff41] text-[10px] font-black tracking-widest uppercase">Identity Verification Required</p>
+        <i class="fa-solid fa-user-shield text-[#00ff41] text-6xl mb-6"></i>
+        <p class="text-[#00ff41] text-[10px] font-black tracking-[0.5em] uppercase">Sovereign Identification</p>
         <input type="password" id="passCode" maxlength="4" placeholder="••••">
-        <button onclick="verifyAccess()" class="bg-[#00ff41] text-black px-8 py-3 rounded-full font-black text-[10px] uppercase">Authorize</button>
-        <p onclick="closeAuth()" class="mt-8 text-zinc-600 text-[8px] font-bold uppercase">Abort Session</p>
+        <button onclick="verifyAccess()" class="bg-[#00ff41] text-black px-10 py-4 rounded-full font-black text-[10px] uppercase tracking-widest">Verify Authority</button>
+        <p onclick="closeAuth()" class="mt-10 text-zinc-700 text-[8px] font-bold uppercase tracking-widest">Abort Session</p>
     </div>
 
-    <div class="p-6 pt-10 flex justify-between items-center">
+    <div id="hubOverlay">
+        <h2 class="text-amber-500 font-black tracking-[0.6em] mb-12 text-[10px] uppercase">Infrastructure Nodes</h2>
+        <div class="pillar-grid">
+            <div class="pillar-tool" onclick="location.href='live.html'"><i class="fa-solid fa-tower-broadcast"></i><span>Live</span></div>
+            <div class="pillar-tool" onclick="location.href='market.html'"><i class="fa-solid fa-gem"></i><span>Market</span></div>
+            <div class="pillar-tool" onclick="location.href='kitchen.html'"><i class="fa-solid fa-utensils"></i><span>Kitchen</span></div>
+            <div class="pillar-tool" onclick="location.href='studio.html'"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Studio</span></div>
+            <div class="pillar-tool" onclick="location.href='ads.html'"><i class="fa-solid fa-rectangle-ad"></i><span>Ads</span></div>
+            <div class="pillar-tool" onclick="location.href='games.html'"><i class="fa-solid fa-gamepad"></i><span>Games</span></div>
+            
+            <div id="masterLink1" class="pillar-tool hidden" onclick="location.href='sys-log-cache-82.html'"><i class="fa-solid fa-microchip"></i><span>System</span></div>
+            <div id="masterLink2" class="pillar-tool hidden" onclick="location.href='admin-vault.html'"><i class="fa-solid fa-vault"></i><span>Reserve</span></div>
+        </div>
+        <button onclick="toggleHub()" class="mt-16 text-zinc-600 text-[9px] font-black uppercase tracking-[0.4em]">Dismiss Hub</button>
+    </div>
+
+    <header class="p-6 pt-12 flex justify-between items-center sticky top-0 bg-black/80 backdrop-blur-md z-40">
         <div>
-            <p id="realm-label" class="text-[8px] font-black tracking-[0.4em] text-zinc-600 uppercase">Citizen Realm</p>
-            <h1 id="greeting" class="text-xl font-black italic">NAWI HUB</h1>
+            <p id="realm-label" class="text-[7px] font-black tracking-[0.5em] text-zinc-600 uppercase">Empire Feed</p>
+            <h1 id="greeting" class="text-xl font-black italic">NAWI SOCIAL</h1>
         </div>
-        <div class="flex flex-col items-end">
-            <div id="status-light" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
-            <span class="text-[6px] text-zinc-800 font-bold mt-1">NODE 001</span>
-        </div>
-    </div>
+        <button onclick="location.href='create-post.html'" class="bg-zinc-900 w-12 h-12 rounded-full flex items-center justify-center gold-glow">
+            <i class="fa-solid fa-plus text-amber-500"></i>
+        </button>
+    </header>
 
-    <div class="app-container">
-        <div class="app-card" onclick="location.href='market.html'">
-            <i class="fa-solid fa-store"></i>
-            <span>Market</span>
-        </div>
-        <div class="app-card" onclick="location.href='kitchen.html'">
-            <i class="fa-solid fa-utensils"></i>
-            <span>Kitchen</span>
-        </div>
-        <div class="app-card" onclick="location.href='studio.html'">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <span>Studio</span>
-        </div>
-        <div class="app-card" onclick="location.href='messages.html'">
-            <i class="fa-solid fa-inbox"></i>
-            <span>Inbox</span>
-        </div>
-    </div>
-
-    <div id="imperialSection" class="px-6 hidden mt-4 animate-pulse">
-        <div class="border-t border-zinc-900 pt-6 mb-4">
-            <h3 class="text-[9px] font-black text-[#00ff41] tracking-[0.4em] uppercase">Sovereign Control</h3>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="app-card border-dotted border-green-900" onclick="location.href='sys-log-cache-82.html'">
-                <i class="fa-solid fa-microchip !text-[#00ff41]"></i>
-                <span class="!text-zinc-500">Command Suite</span>
+    <main class="feed-container">
+        <div class="post-card">
+            <div class="p-5 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-zinc-800 border border-zinc-700"></div>
+                    <div>
+                        <p class="text-[10px] font-black uppercase tracking-wider">Empire Admin</p>
+                        <p class="text-[7px] text-zinc-600 uppercase font-bold">Official Announcement</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-ellipsis-vertical text-zinc-800"></i>
             </div>
-            <div class="app-card border-dotted border-green-900" onclick="location.href='admin-vault.html'">
-                <i class="fa-solid fa-vault !text-[#00ff41]"></i>
-                <span class="!text-zinc-500">Global Reserve</span>
+            <div class="post-image flex items-center justify-center text-zinc-900">
+                <i class="fa-solid fa-shield-halved text-7xl"></i>
+            </div>
+            <div class="post-content">
+                <p class="text-[12px] leading-relaxed text-zinc-400">Welcome to the central feed. This is the heart of the NAWI ecosystem. Share your progress and follow the rules of the platform.</p>
+                <div class="flex gap-4 mt-5 text-zinc-700 text-sm">
+                    <i class="fa-regular fa-heart"></i>
+                    <i class="fa-regular fa-comment"></i>
+                    <i class="fa-regular fa-paper-plane"></i>
+                </div>
             </div>
         </div>
-        <button onclick="lockMaster()" class="w-full mt-6 py-3 border border-zinc-900 rounded-xl text-[8px] font-black text-zinc-700 uppercase">Seal Session</button>
-    </div>
+    </main>
 
     <div class="node-7-wrapper">
-        <div class="main-node" id="node7" onclick="handle7Node()">7</div>
+        <div class="main-node" id="node7" onclick="toggleHub()">7</div>
     </div>
 
     <nav class="bottom-bar">
         <a href="index.html" class="nav-link active"><i class="fa-solid fa-house"></i></a>
-        <a href="market.html" class="nav-link"><i class="fa-solid fa-gem"></i></a>
-        <div style="width: 70px;"></div>
-        <a href="messages.html" class="nav-link"><i class="fa-solid fa-message"></i></a>
+        <a href="market.html" class="nav-link"><i class="fa-solid fa-bag-shopping"></i></a>
+        <div style="width: 75px;"></div> <a href="messages.html" class="nav-link"><i class="fa-solid fa-paper-plane"></i></a>
         <div id="profileTrigger" class="nav-link"><i class="fa-solid fa-circle-user"></i></div>
     </nav>
 
     <script>
-        let pressTimer;
-        const secretCode = "0001"; // Your Master Password
+        const secretCode = "0001"; // Your Founder Access Code
 
-        // 1. Long Press Logic on Profile
+        function toggleHub() {
+            const hub = document.getElementById('hubOverlay');
+            if (hub.style.display === 'flex') {
+                hub.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            } else {
+                hub.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // --- SECRET LONG PRESS LOGIC ---
+        let pressTimer;
         const trigger = document.getElementById('profileTrigger');
+
         trigger.addEventListener('touchstart', (e) => {
             e.preventDefault();
             pressTimer = setTimeout(() => {
-                if (window.navigator.vibrate) window.navigator.vibrate(100);
+                if (window.navigator.vibrate) window.navigator.vibrate(80);
                 document.getElementById('masterAuth').style.display = 'flex';
-            }, 4000); // 4 Seconds to trigger
+            }, 4000); // 4 Seconds
         });
+
         trigger.addEventListener('touchend', () => clearTimeout(pressTimer));
 
-        // 2. Verification Logic
         function verifyAccess() {
             const input = document.getElementById('passCode').value;
             if (input === secretCode) {
                 unlockMaster();
             } else {
-                alert("ACCESS DENIED");
+                alert("UNAUTHORIZED ACCESS DETECTED");
                 closeAuth();
             }
         }
@@ -188,17 +193,15 @@
         function unlockMaster() {
             document.getElementById('masterAuth').style.display = 'none';
             document.getElementById('mainBody').classList.add('master-mode');
-            document.getElementById('imperialSection').classList.remove('hidden');
             document.getElementById('realm-label').innerText = "Imperial Command Center";
             document.getElementById('realm-label').style.color = "#00ff41";
-            document.getElementById('status-light').classList.replace('bg-amber-500', 'bg-[#00ff41]');
-            document.getElementById('greeting').innerText = "WELCOME FOUNDER";
+            document.getElementById('greeting').innerText = "FOUNDER ACTIVE";
+            
+            // Show Master tools inside the Hub
+            document.getElementById('masterLink1').classList.remove('hidden');
+            document.getElementById('masterLink2').classList.remove('hidden');
+            
             localStorage.setItem('session_type', 'MASTER');
-        }
-
-        function lockMaster() {
-            localStorage.removeItem('session_type');
-            location.reload();
         }
 
         function closeAuth() {
@@ -206,17 +209,7 @@
             document.getElementById('passCode').value = '';
         }
 
-        function handle7Node() {
-            if (localStorage.getItem('session_type') === 'MASTER') {
-                location.href = 'sys-log-cache-82.html';
-            } else {
-                const node = document.getElementById('node7');
-                node.style.transform = "rotate(360deg) scale(1.1)";
-                setTimeout(() => node.style.transform = "rotate(0) scale(1)", 500);
-            }
-        }
-
-        // On Load Check
+        // On Load Check for persistent Master session
         window.onload = () => {
             if(localStorage.getItem('session_type') === 'MASTER') unlockMaster();
         };
