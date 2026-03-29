@@ -3,174 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI EMPIRE | Official Sovereign Portal</title>
+    <title>NAWI EMPIRE | 7 PILLARS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap');
-        
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .imperial-font { font-family: 'Syncopate', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .gold-glow { box-shadow: 0 0 30px rgba(245, 158, 11, 0.15); }
-
-        /* UPGRADED 7 PILLARS GRID STYLES */
-        .pillar-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            padding: 5px;
-            width: 100%;
+        :root { --gold: #D4AF37; --black: #050505; --neon: #00ff41; }
+        body { 
+            background: var(--black); 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            overflow-x: hidden;
+            -webkit-user-select: none; /* Prevents text selection during long-press */
         }
 
-        .pillar-item {
+        /* --- THE DYNAMIC GRID --- */
+        .app-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .app-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 20px;
+            padding: 25px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 20px;
-            padding: 22px 10px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
+            gap: 10px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .app-card i { font-size: 28px; color: var(--gold); }
+        .app-card span { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: #666; }
+        .app-card:active { transform: scale(0.95); border-color: var(--gold); }
+
+        /* --- MASTER THEME OVERRIDE --- */
+        .master-mode .app-card { border-color: var(--neon); }
+        .master-mode .app-card i { color: var(--neon); text-shadow: 0 0 10px rgba(0,255,65,0.3); }
+        .master-mode #node7 { background: var(--neon) !important; box-shadow: 0 0 30px var(--neon); }
+
+        /* --- MASTER AUTH OVERLAY --- */
+        #masterAuth {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.98);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+        #masterAuth input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--neon);
+            color: var(--neon);
+            font-size: 32px;
             text-align: center;
+            width: 150px;
+            letter-spacing: 15px;
+            outline: none;
+            margin: 20px 0;
         }
 
-        .pillar-item:active {
-            border-color: #f59e0b;
-            transform: scale(0.92);
-            background: #111;
+        /* --- NAVIGATION --- */
+        .node-7-wrapper { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; }
+        .main-node {
+            width: 70px; height: 70px; background: white; color: black; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 28px;
+            font-weight: 900; border: 5px solid var(--black); transition: 0.5s;
         }
 
-        .pillar-item i {
-            font-size: 24px;
-            color: #f59e0b; /* Golden Amber */
-            margin-bottom: 10px;
+        .bottom-bar {
+            position: fixed; bottom: 0; width: 100%; height: 85px; background: rgba(10,10,10,0.95);
+            display: flex; justify-content: space-around; align-items: center; padding-bottom: 15px;
+            border-top: 1px solid #111; z-index: 900;
         }
-
-        .pillar-item span {
-            color: #888;
-            font-size: 9px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        /* Highlight for the primary Ads Tool */
-        .promo-pillar {
-            border-color: rgba(245, 158, 11, 0.3);
-            background: linear-gradient(145deg, #0a0a0a, #1a150a);
-        }
+        .nav-link { color: #333; font-size: 22px; transition: 0.3s; }
+        .nav-link.active { color: var(--gold); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pb-32">
+<body id="mainBody">
 
-    <header class="w-full max-w-md p-6 pt-10 flex justify-between items-center">
+    <div id="masterAuth">
+        <i class="fa-solid fa-user-shield text-[#00ff41] text-5xl mb-4"></i>
+        <p class="text-[#00ff41] text-[10px] font-black tracking-widest uppercase">Identity Verification Required</p>
+        <input type="password" id="passCode" maxlength="4" placeholder="••••">
+        <button onclick="verifyAccess()" class="bg-[#00ff41] text-black px-8 py-3 rounded-full font-black text-[10px] uppercase">Authorize</button>
+        <p onclick="closeAuth()" class="mt-8 text-zinc-600 text-[8px] font-bold uppercase">Abort Session</p>
+    </div>
+
+    <div class="p-6 pt-10 flex justify-between items-center">
         <div>
-            <h1 class="imperial-font text-xl tracking-tighter italic font-bold">NAWI EMPIRE</h1>
-            <div class="flex items-center gap-2 mt-1">
-                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                <p class="text-[7px] font-black text-amber-500 uppercase tracking-[0.4em]">Node Active: 001</p>
+            <p id="realm-label" class="text-[8px] font-black tracking-[0.4em] text-zinc-600 uppercase">Citizen Realm</p>
+            <h1 id="greeting" class="text-xl font-black italic">NAWI HUB</h1>
+        </div>
+        <div class="flex flex-col items-end">
+            <div id="status-light" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+            <span class="text-[6px] text-zinc-800 font-bold mt-1">NODE 001</span>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <div class="app-card" onclick="location.href='market.html'">
+            <i class="fa-solid fa-store"></i>
+            <span>Market</span>
+        </div>
+        <div class="app-card" onclick="location.href='kitchen.html'">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Kitchen</span>
+        </div>
+        <div class="app-card" onclick="location.href='studio.html'">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Studio</span>
+        </div>
+        <div class="app-card" onclick="location.href='messages.html'">
+            <i class="fa-solid fa-inbox"></i>
+            <span>Inbox</span>
+        </div>
+    </div>
+
+    <div id="imperialSection" class="px-6 hidden mt-4 animate-pulse">
+        <div class="border-t border-zinc-900 pt-6 mb-4">
+            <h3 class="text-[9px] font-black text-[#00ff41] tracking-[0.4em] uppercase">Sovereign Control</h3>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="app-card border-dotted border-green-900" onclick="location.href='sys-log-cache-82.html'">
+                <i class="fa-solid fa-microchip !text-[#00ff41]"></i>
+                <span class="!text-zinc-500">Command Suite</span>
+            </div>
+            <div class="app-card border-dotted border-green-900" onclick="location.href='admin-vault.html'">
+                <i class="fa-solid fa-vault !text-[#00ff41]"></i>
+                <span class="!text-zinc-500">Global Reserve</span>
             </div>
         </div>
-        <div class="w-12 h-12 glass rounded-2xl flex items-center justify-center gold-glow">
-            <i data-lucide="shield-check" class="text-amber-500 w-6 h-6"></i>
-        </div>
-    </header>
+        <button onclick="lockMaster()" class="w-full mt-6 py-3 border border-zinc-900 rounded-xl text-[8px] font-black text-zinc-700 uppercase">Seal Session</button>
+    </div>
 
-    <main class="w-full max-w-md px-6 space-y-6">
-        <div class="glass rounded-[3rem] p-8 relative overflow-hidden gold-glow border-amber-500/20">
-            <div class="relative z-10">
-                <p class="text-[8px] font-black text-zinc-500 uppercase tracking-widest mb-2">Central Coin Reserve 🪙</p>
-                <h2 id="balance-display" class="text-5xl font-black italic tracking-tighter mb-8">0</h2>
-                <div class="flex gap-3">
-                    <button class="flex-1 bg-white text-black py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95">Acquire</button>
-                    <button class="flex-1 glass py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest active:scale-95">Stake 0%</button>
-                </div>
-            </div>
-            <i data-lucide="coins" class="absolute -bottom-10 -right-10 w-40 h-40 text-white opacity-5 rotate-12"></i>
-        </div>
+    <div class="node-7-wrapper">
+        <div class="main-node" id="node7" onclick="handle7Node()">7</div>
+    </div>
 
-        <div class="space-y-4">
-            <div class="flex items-center gap-2 px-2">
-                <i data-lucide="layout-grid" class="w-3 h-3 text-amber-500"></i>
-                <h3 class="text-[8px] font-black uppercase tracking-widest text-zinc-500">Empire Systems</h3>
-            </div>
-            
-            <div class="pillar-grid">
-                <div class="pillar-item" onclick="window.location.href='market.html'">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span>Market</span>
-                </div>
-
-                <div class="pillar-item" onclick="window.location.href='studio.html'">
-                    <i class="fa-solid fa-pen-nib"></i>
-                    <span>Studio</span>
-                </div>
-
-                <div class="pillar-item promo-pillar" onclick="window.location.href='ads.html'">
-                    <i class="fa-solid fa-rectangle-ad"></i>
-                    <span>Ads Manager</span>
-                </div>
-
-                <div class="pillar-item" onclick="window.location.href='kitchen.html'">
-                    <i class="fa-solid fa-utensils"></i>
-                    <span>Kitchen</span>
-                </div>
-
-                <div class="pillar-item" onclick="window.location.href='games.html'">
-                    <i class="fa-solid fa-gamepad"></i>
-                    <span>Games</span>
-                </div>
-
-                <div class="pillar-item" onclick="window.location.href='music.html'">
-                    <i class="fa-solid fa-music"></i>
-                    <span>Music</span>
-                </div>
-
-                <div class="pillar-item" onclick="window.location.href='stickers.html'">
-                    <i class="fa-solid fa-face-smile"></i>
-                    <span>Stickers</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass rounded-[2rem] p-6 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center">
-                <i data-lucide="user-check" class="text-blue-500 w-5 h-5"></i>
-            </div>
-            <div>
-                <p class="text-[7px] font-black text-zinc-500 uppercase">Verified Founder</p>
-                <p class="text-[10px] font-black uppercase italic">akpanvictor848@gmail.com</p>
-            </div>
-        </div>
-    </main>
-
-    <nav class="fixed bottom-8 w-[90%] max-w-xs glass p-2 rounded-[2.5rem] flex gap-2 shadow-2xl z-50">
-        <button class="flex-1 py-5 flex justify-center text-white bg-white/10 rounded-[2rem] shadow-inner"><i data-lucide="home"></i></button>
-        <button onclick="window.location.href='content.html'" class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="book-open"></i></button>
-        <button onclick="window.location.href='design.html'" class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="palette"></i></button>
-        <button onclick="logout()" class="flex-1 py-5 flex justify-center text-zinc-600"><i data-lucide="log-out"></i></button>
+    <nav class="bottom-bar">
+        <a href="index.html" class="nav-link active"><i class="fa-solid fa-house"></i></a>
+        <a href="market.html" class="nav-link"><i class="fa-solid fa-gem"></i></a>
+        <div style="width: 70px;"></div>
+        <a href="messages.html" class="nav-link"><i class="fa-solid fa-message"></i></a>
+        <div id="profileTrigger" class="nav-link"><i class="fa-solid fa-circle-user"></i></div>
     </nav>
 
     <script>
-        lucide.createIcons();
-        
-        window.onload = () => {
-            const auth = localStorage.getItem('nawi_token');
-            if (!auth) {
-                window.location.href = 'index.html';
-            }
-            document.getElementById('balance-display').innerText = "0";
-        };
+        let pressTimer;
+        const secretCode = "0001"; // Your Master Password
 
-        function logout() {
-            localStorage.removeItem('nawi_token');
-            window.location.href = 'index.html';
+        // 1. Long Press Logic on Profile
+        const trigger = document.getElementById('profileTrigger');
+        trigger.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            pressTimer = setTimeout(() => {
+                if (window.navigator.vibrate) window.navigator.vibrate(100);
+                document.getElementById('masterAuth').style.display = 'flex';
+            }, 4000); // 4 Seconds to trigger
+        });
+        trigger.addEventListener('touchend', () => clearTimeout(pressTimer));
+
+        // 2. Verification Logic
+        function verifyAccess() {
+            const input = document.getElementById('passCode').value;
+            if (input === secretCode) {
+                unlockMaster();
+            } else {
+                alert("ACCESS DENIED");
+                closeAuth();
+            }
         }
+
+        function unlockMaster() {
+            document.getElementById('masterAuth').style.display = 'none';
+            document.getElementById('mainBody').classList.add('master-mode');
+            document.getElementById('imperialSection').classList.remove('hidden');
+            document.getElementById('realm-label').innerText = "Imperial Command Center";
+            document.getElementById('realm-label').style.color = "#00ff41";
+            document.getElementById('status-light').classList.replace('bg-amber-500', 'bg-[#00ff41]');
+            document.getElementById('greeting').innerText = "WELCOME FOUNDER";
+            localStorage.setItem('session_type', 'MASTER');
+        }
+
+        function lockMaster() {
+            localStorage.removeItem('session_type');
+            location.reload();
+        }
+
+        function closeAuth() {
+            document.getElementById('masterAuth').style.display = 'none';
+            document.getElementById('passCode').value = '';
+        }
+
+        function handle7Node() {
+            if (localStorage.getItem('session_type') === 'MASTER') {
+                location.href = 'sys-log-cache-82.html';
+            } else {
+                const node = document.getElementById('node7');
+                node.style.transform = "rotate(360deg) scale(1.1)";
+                setTimeout(() => node.style.transform = "rotate(0) scale(1)", 500);
+            }
+        }
+
+        // On Load Check
+        window.onload = () => {
+            if(localStorage.getItem('session_type') === 'MASTER') unlockMaster();
+        };
     </script>
 </body>
 </html>
