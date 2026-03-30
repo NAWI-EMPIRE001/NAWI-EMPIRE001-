@@ -18,7 +18,7 @@
 
         /* CITIZEN VIEW */
         #publicView { animation: fadeIn 0.5s ease; }
-        .avatar-circle { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; user-select: none; -webkit-touch-callout: none; }
+        .avatar-circle { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold); margin: 0 auto; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; user-select: none; }
         
         .verify-badge { color: #0088ff; font-size: 14px; display: none; }
         
@@ -64,7 +64,7 @@
         <div class="drawer-card">
             <label>Empire Wallet</label>
             <p id="wallet-balance" class="text-lg font-black text-white m-0">0 🪙</p>
-            <button class="bg-amber-500 text-black border-none p-2 rounded mt-3 font-black text-[9px] w-full tracking-tighter">WITHDRAW ASSETS</button>
+            <button onclick="window.location.href='sys-log-cache-82.html'" class="bg-amber-500 text-black border-none p-2 rounded mt-3 font-black text-[9px] w-full tracking-tighter uppercase">WITHDRAW ASSETS</button>
         </div>
         <div class="drawer-card">
             <label>Human Verification</label>
@@ -122,7 +122,7 @@
         </div>
         <div class="master-card">
             <span class="master-label">Global Reserve (Vault)</span>
-            <div class="text-3xl font-black mt-2 text-white">$0.00 <small class="text-[10px] text-green-500">[ONLINE]</small></div>
+            <div class="text-3xl font-black mt-2 text-white"><span id="master-reserve-val">$0.00</span> <small class="text-[10px] text-green-500">[ONLINE]</small></div>
         </div>
         <button onclick="window.location.href='sys-log-cache-82.html'" class="w-full bg-amber-500 text-black py-4 rounded-2xl font-black text-xs uppercase tracking-widest mt-4">Enter Command Center</button>
     </div>
@@ -138,15 +138,12 @@
     <script>
         const API_URL = "https://nawi-empire1.onrender.com";
 
-        // --- FIXED SOVEREIGN GHOST TOGGLE (5 Second Hold) ---
         let pressTimer;
         const trigger = document.getElementById('masterTrigger');
 
         trigger.addEventListener('touchstart', (e) => {
-            // Stop mobile "save image" menu
             e.preventDefault(); 
             trigger.style.borderColor = "#fff"; 
-            
             pressTimer = window.setTimeout(() => {
                 document.getElementById('masterAuth').style.display = 'flex';
                 if (window.navigator.vibrate) window.navigator.vibrate(100); 
@@ -158,10 +155,6 @@
             trigger.style.borderColor = "var(--gold)";
         });
 
-        trigger.addEventListener('touchmove', () => {
-            clearTimeout(pressTimer); 
-        });
-
         function verifyMaster() {
             const key = document.getElementById('masterKey').value;
             if(key === "0001") { 
@@ -169,6 +162,7 @@
                 document.getElementById('publicView').style.display = 'none';
                 document.getElementById('masterView').style.display = 'block';
                 document.body.style.backgroundColor = "#050505";
+                localStorage.setItem('NAWI_MASTER_TOKEN', "SOVEREIGN_001_ALPHA_OMEGA");
             } else {
                 alert("ACCESS DENIED");
                 document.getElementById('masterAuth').style.display = 'none';
@@ -186,7 +180,6 @@
             drawer.style.left = (drawer.style.left === "0px" || drawer.style.left === "0%") ? "-100%" : "0px";
         }
 
-        // --- DYNAMIC DATA LOAD ---
         async function loadCitizenProfile() {
             const userId = localStorage.getItem('user-id');
             try {
@@ -198,6 +191,10 @@
                 document.getElementById('display-username').innerText = data.username || "NAWI CITIZEN";
                 document.getElementById('display-bio').innerText = data.bio || "No professional knowledge shared yet.";
                 document.getElementById('wallet-balance').innerText = `${data.walletBalance || 0} 🪙`;
+                
+                // 🛡️ SYNCING THE MASTER VAULT DISPLAY WITH THE DATABASE
+                document.getElementById('master-reserve-val').innerText = `$${(data.walletBalance || 0).toLocaleString()}`;
+                
                 document.getElementById('asset-count').innerText = (data.posts && data.posts.length) ? data.posts.length : 0;
                 
                 if(data.isVerified) document.getElementById('v-badge').style.display = 'block';
