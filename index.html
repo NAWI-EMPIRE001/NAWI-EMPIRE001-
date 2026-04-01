@@ -88,14 +88,14 @@
         <div class="authority-card">
             <div style="color:var (--gold); font-weight:900; font-size:10px; letter-spacing:4px;">EMPIRE MANDATE</div>
             <p class="order-text">"This is my order and my authority to protect the founders and this platform... follow the rules."</p>
-            <button onclick="unlock Empire ()" class="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-black uppercase text-[10px]">Unlock Ecosystem</button>
+            <button onclick="unlockEmpire ()" class="w-full bg-[#D4AF37] text-black py-4 rounded-xl font-black uppercase text-[10px]">Unlock Ecosystem</button>
         </div>
     </div>
 
     <div id="masterAuth">
         <i class="fa-solid fa-shield-halved text-[#00ff41] text-5xl mb-6"></i>
         <input type="password" id="passCode" maxlength="4" placeholder="••••">
-        <button onclick="verify Access ()" class="text-[#00ff41] font-black text-[10px] uppercase tracking-widest">Verify ID</button>
+        <button onclick="verifyAccess ()" class="text-[#00ff41] font-black text-[10px] uppercase tracking-widest">Verify ID</button>
     </div>
 
     <div id="hubOverlay">
@@ -195,7 +195,7 @@
             }
         }
 
-        Function  unlockMaster() {
+        functional  unlockMaster() {
             document.getElementById('masterAuth').style.display = 'none';
             document.getElementById('mainBody').classList.add('master-mode');
             document.getElementById('r-label').innerText = "Master Control Room";
@@ -204,10 +204,10 @@
             localStorage.setItem('auth', 'MASTER');
         }
 
-        a sync functional loadFeed() {
-            trying {
-                constt response = a wait fetch(`${API_URL}/api/get-posts`);
-                ifresponse.ok)thrownew Error('Sync Failed');
+        asyncfunctional loadFeed() {
+            try {
+                constt responseawait fetch(`${API_URL}/api/get-posts`);
+                ifresponse.ok)thrownew access ('Sync Failed');
                 
                 constt posts = a wait response.json();
                 constt container = document.querySelector('.feed-container');
