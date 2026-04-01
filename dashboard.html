@@ -1,21 +1,25 @@
-// --- 🧭 IMPERIAL ORIENTATION SYSTEM ---
-
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const isNewUser = urlParams.get('new');
-
-    if (isNewUser) {
-        showEmpireOrientation();
+// <script>
+    // --- 🧭 IMPERIAL ORIENTATION SYSTEM ---
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isNewUser = urlParams.get('new');
+        if (isNewUser) { showEmpireOrientation(); }
     }
-}
 
-function showEmpireOrientation() {
-    const guideBox = document.createElement('div');
-    guideBox.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.95); z-index: 10000;
-        display: flex; align-items: center; justify-content: center;
-    `;
+    function showEmpireOrientation() {
+        const guideBox = document.createElement('div');
+        guideBox.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center;`;
+        guideBox.innerHTML = `
+            <div class="authority-card">
+                <h2 class="text-amber-500 font-black mb-4">WELCOME TO THE EMPIRE</h2>
+                <p class="text-[10px] mb-6">You have been granted 10 Empire Coins as a foundation bonus.</p>
+                <button onclick="this.parentElement.parentElement.remove()" class="bg-amber-500 text-black px-8 py-3 rounded-full font-bold">START MY JOURNEY</button>
+            </div>
+        `;
+        document.body.appendChild(guideBox);
+    }
+</script>
+
 
     guideBox.innerHTML = `
         <div style="width: 85%; max-width: 400px; background: #0a0a0a; border: 1px solid #D4AF37; border-radius: 20px; padding: 30px; text-align: center;">
