@@ -1,4 +1,4 @@
-require('dotenv').config(); // ✅ FIXED: Added so Render can read your MONGO_URI securely
+require('dotenv').config(); 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -18,7 +18,6 @@ app.use(express.static(path.join(__dirname, '/')));
 
 // Multer for HD Content Handling
 const storage = multer.memoryStorage();
-// ✅ FIXED: Connected the 'storage' variable to the upload tool
 const upload = multer({ 
     storage: storage, 
     limits: { fileSize: 50 * 1024 * 1024 } 
@@ -233,8 +232,8 @@ app.post('/api/admin/self-destruct', (req, res) => {
 app.get('*', (req, res) => { res.sendFile(path.join(__dirname, 'index.html')); });
 
 const PORT = process.env.PORT || 10000;
-// ✅ FIXED: Changed to use a variable. Ensure 'MONGO_URI' is set in Render Environment Variables.
-const DB_URL = process.env.MONGO_URI || 'YOUR_MONGODB_URI_HERE'; 
+// ✅ FIXED: Using the specific lowercase connection string you provided.
+const DB_URL = "mongodb+srv://NAWI-EMPIRE001:NAWI-EMPIRE001@nawi-empire001.zwidxex.mongodb.net/NAWI_DB?retryWrites=true&w=majority";
 
 mongoose.connect(DB_URL)
     .then(() => {
