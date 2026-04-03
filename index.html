@@ -49,19 +49,10 @@
             border-radius: 15px; padding: 15px; z-index: 10000; box-shadow: 0 10px 40px rgba(0,0,0,1);
         }
 
-        /* --- UI COMPONENTS --- */
-        .gold-7-badge {
-            display: inline-flex; align-items: center; justify-content: center;
-            background: linear-gradient(45deg, #D4AF37, #F9D71C); color: black;
-            font-weight: 900; font-size: 8px; width: 14px; height: 14px;
-            border-radius: 3px; margin-left: 5px; box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-        }
-
-        .feed-container { padding: 15px; padding-bottom: 120px; display: none; }
+        .feed-container { padding: 15px; padding-bottom: 150px; display: none; }
         .post-card { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 30px; margin-bottom: 25px; overflow: hidden; transition: 0.3s; }
-        .ad-card { border: 2px solid rgba(212, 175, 55, 0.2); }
 
-        /* --- NAVIGATION --- */
+        /* --- NAVIGATION FIX --- */
         .node-7-trigger {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
             width: 70px; height: 70px; background: white; color: black; border-radius: 50%;
@@ -70,7 +61,7 @@
             box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); cursor: pointer;
         }
         .bottom-bar {
-            position: fixed; bottom: 0; width: 100%; height: 85px; background: #050505;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 85px; background: #050505;
             display: none; justify-content: space-around; align-items: center;
             border-top: 1px solid #111; z-index: 5000;
         }
@@ -102,16 +93,16 @@
     <div id="live-portal-overlay">
         <h2 class="text-amber-500 font-black italic tracking-tighter mb-10">SELECT DESTINATION</h2>
         <div class="grid grid-cols-1 gap-6 w-full max-w-xs">
-            <button onclick="location.href='studio.html'" class="relative bg-zinc-900 p-6 rounded-[30px] border border-zinc-800">
+            <button onclick="location.href='studio.html'" class="relative bg-zinc-900 p-6 rounded-[30px] border border-zinc-800 text-left">
                 <p class="text-[8px] text-zinc-500 uppercase font-black mb-1">Pillar 4</p>
                 <h3 class="text-sm font-black uppercase">Live Studio</h3>
                 <span class="absolute top-4 right-4 w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
             </button>
-            <button onclick="location.href='games.html'" class="bg-zinc-900 p-6 rounded-[30px] border border-zinc-800">
+            <button onclick="location.href='games.html'" class="bg-zinc-900 p-6 rounded-[30px] border border-zinc-800 text-left">
                 <p class="text-[8px] text-zinc-500 uppercase font-black mb-1">Pillar 5</p>
                 <h3 class="text-sm font-black uppercase">Gaming Arena</h3>
             </button>
-            <button onclick="location.href='kitchen.html'" class="bg-zinc-900 p-6 rounded-[30px] border border-zinc-800">
+            <button onclick="location.href='kitchen.html'" class="bg-zinc-900 p-6 rounded-[30px] border border-zinc-800 text-left">
                 <p class="text-[8px] text-zinc-500 uppercase font-black mb-1">Pillar 3</p>
                 <h3 class="text-sm font-black uppercase">Kitchen Live</h3>
             </button>
@@ -125,7 +116,7 @@
             <h1 class="text-xl font-black italic">NAWI SOCIAL</h1>
         </div>
         <div class="flex gap-4">
-            <i class="fa-solid fa-plus text-zinc-700" onclick="location.href='create-post.html'"></i>
+            <i class="fa-solid fa-plus text-zinc-400 text-xl" onclick="location.href='create-post.html'"></i>
             <div class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
                 <i class="fa-solid fa-bell text-amber-500 text-xs"></i>
             </div>
@@ -133,21 +124,6 @@
     </header>
 
     <main class="feed-container" id="empire-feed">
-        <div class="ad-card bg-zinc-900 rounded-[35px] p-1 mb-8">
-            <div class="p-3 flex justify-between items-center">
-                <span class="text-[8px] font-black bg-amber-500 text-black px-3 py-1 rounded-full uppercase">Empire Transmission</span>
-                <i class="fa-solid fa-ellipsis-vertical text-zinc-500 mr-2"></i>
-            </div>
-            <div class="rounded-[30px] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" class="w-full aspect-video object-cover">
-            </div>
-            <div class="p-4">
-                <h4 class="text-xs font-black text-white mb-1 uppercase">Promoted: Diamondback 231</h4>
-                <p class="text-[10px] text-zinc-400 leading-tight">Elite Graphic Design Services. Access the 3D Logo Vault now.</p>
-                <button class="w-full mt-4 bg-white text-black py-3 rounded-2xl font-black text-[10px] uppercase">Enter Transaction</button>
-            </div>
-        </div>
-        
         <div id="feed-loader" class="text-center py-10">
             <i class="fa-solid fa-7 fa-spin text-amber-500 text-2xl"></i>
             <p class="text-[8px] text-zinc-600 mt-2 uppercase tracking-widest">Accessing Ledger...</p>
@@ -158,16 +134,16 @@
 
     <nav class="bottom-bar" id="main-nav">
         <a href="index.html" class="text-amber-500 text-2xl"><i class="fa-solid fa-house"></i></a>
-        <a href="market.html" class="text-zinc-800 text-2xl"><i class="fa-solid fa-bag-shopping"></i></a>
+        <a href="market.html" class="text-zinc-600 text-2xl"><i class="fa-solid fa-bag-shopping"></i></a>
         <div style="width: 75px;"></div>
-        <a href="inbox.html" class="text-zinc-800 text-2xl"><i class="fa-solid fa-message"></i></a>
-        <a href="profile.html" class="text-zinc-800 text-2xl" id="p-trigger"><i class="fa-solid fa-circle-user"></i></a>
+        <a href="inbox.html" class="text-zinc-600 text-2xl"><i class="fa-solid fa-message"></i></a>
+        <a href="profile.html" class="text-zinc-600 text-2xl" id="p-trigger"><i class="fa-solid fa-circle-user"></i></a>
     </nav>
 
     <script>
-        const API_URL = "https://nawi-empire1.onrender.com";
+        // FIXED: Using relative paths so the connection works regardless of host
+        const API_URL = ""; 
 
-        // 🛡️ UNLOCK FLOW
         function unlockEmpire() {
             document.getElementById('auth-gate').style.opacity = '0';
             setTimeout(() => {
@@ -180,11 +156,9 @@
             }, 800);
         }
 
-        // 🖼️ PORTAL LOGIC
         function openPortal() { document.getElementById('live-portal-overlay').style.display = 'flex'; }
         function closePortal() { document.getElementById('live-portal-overlay').style.display = 'none'; }
 
-        // 📱 ALERT LOGIC
         function showEmpireAlert(text) {
             const box = document.getElementById('imperial-alert');
             document.getElementById('alert-text').innerText = text;
@@ -192,10 +166,9 @@
             setTimeout(() => { box.style.display = 'none'; }, 5000);
         }
 
-        // 🕵️ MASTER LOGIN (3 Sec Long Press on Profile)
+        // 🕵️ MASTER LOGIN (0001)
         const trigger = document.getElementById('p-trigger');
         let pressTimer;
-
         trigger.addEventListener('pointerdown', () => {
             pressTimer = setTimeout(() => {
                 const pass = prompt("ENTER MASTER DECREE:");
@@ -208,39 +181,40 @@
         });
         trigger.addEventListener('pointerup', () => clearTimeout(pressTimer));
 
-        // 📥 LIVE FEED FETCH
+        // 📥 FIXED FEED FETCH
         async function loadHomeFeed() {
             try {
-                const response = await fetch(`${API_URL}/api/get-posts`);
+                // Connection Bridge Corrected: /api/get-feed
+                const response = await fetch(`${API_URL}/api/get-feed`);
                 const posts = await response.json();
                 const feed = document.getElementById('empire-feed');
-                document.getElementById('feed-loader').remove();
+                if(document.getElementById('feed-loader')) document.getElementById('feed-loader').remove();
 
                 posts.forEach(post => {
                     const postHTML = `
-                        <div class="post-card border-b border-zinc-800 pb-6 mb-6">
+                        <div class="post-card border-b border-zinc-900 pb-6 mb-6">
                             <div class="p-5 flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full bg-zinc-800 border border-amber-500/20"></div>
+                                <div class="w-10 h-10 rounded-full bg-zinc-800 border border-amber-500/10"></div>
                                 <div>
-                                    <p class="text-[9px] font-black uppercase text-amber-500">${post.isVerified ? 'NODE 001 VERIFIED' : 'CITIZEN'}</p>
-                                    <h3 class="text-xs font-bold">${post.authorName || 'Victor Johnson'}</h3>
+                                    <p class="text-[8px] font-black uppercase text-amber-500">${post.isMasterPost ? 'FOUNDER NODE' : 'CITIZEN'}</p>
+                                    <h3 class="text-xs font-bold text-white">${post.authorName || 'Citizen'}</h3>
                                 </div>
                             </div>
                             <div class="px-2">
-                                <img src="${post.mediaUrl}" class="w-full object-cover aspect-square rounded-[25px] border border-zinc-900" onerror="this.src='https://via.placeholder.com/400?text=Empire+Image'">
+                                <img src="${post.mediaUrl}" class="w-full object-cover aspect-square rounded-[25px] border border-zinc-900" onerror="this.src='https://via.placeholder.com/400?text=Asset+Loading...'">
                             </div>
                             <div class="p-5">
                                 <p class="text-[11px] text-zinc-400 mb-4">${post.description}</p>
                                 <div class="flex justify-between items-center">
-                                    <button class="text-amber-500 font-black text-[9px] uppercase border border-amber-500/30 px-4 py-2 rounded-full">Support 7</button>
-                                    ${post.price ? `<span class="text-white font-bold text-xs">${post.price} 🪙</span>` : ''}
+                                    <button class="text-amber-500 font-black text-[9px] uppercase border border-amber-500/20 px-6 py-2 rounded-full bg-amber-500/5">Support 7</button>
+                                    <span class="text-white font-bold text-xs">${post.priceInCoins || 0} 🪙</span>
                                 </div>
                             </div>
                         </div>`;
                     feed.insertAdjacentHTML('beforeend', postHTML);
                 });
             } catch (err) {
-                document.getElementById('feed-loader').innerHTML = '<p class="text-[8px] text-zinc-600">DATABASE SYNCING...</p>';
+                document.getElementById('feed-loader').innerHTML = '<p class="text-[8px] text-zinc-600 uppercase">SYNCING WITH LEDGER...</p>';
             }
         }
     </script>
