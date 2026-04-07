@@ -1,23 +1,24 @@
 /* NAWI-EMPIRE MASTER STYLESHEET 
-   Theme: Luxury Professional / Dark Mode
-   Authority: 7 Pillars Control
-   Updated: 2026 Sovereign Edition
+   Unified Sovereign Edition: April 2026
+   Architecture: 7 Pillars Professional Ecosystem
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Cinzel:wght@700&display=swap');
 
 :root {
     --gold: #D4AF37;
     --gold-light: #FDFC97;
     --black: #050505;
-    --neon: #00ff41; /* Master Mode Identifier */
-    --card-bg: #111111;
-    --glass: rgba(255, 255, 255, 0.03);
+    --matte-black: #0A0A0A;
+    --neon: #00ff41; 
+    --glass: rgba(255, 255, 255, 0.05);
     --border: rgba(212, 175, 55, 0.2);
     --text-main: #FFFFFF;
     --text-dim: #888888;
+    --charcoal: #121212;
 }
 
+/* --- 1. CORE ARCHITECTURE --- */
 * { 
     margin: 0; 
     padding: 0; 
@@ -25,202 +26,178 @@
     -webkit-tap-highlight-color: transparent; 
 }
 
-body { 
+body, html { 
     background: var(--black); 
     color: var(--text-main); 
-    font-family: 'Inter', sans-serif; 
+    font-family: 'Inter', 'Segoe UI', sans-serif; 
     overflow-x: hidden; 
     line-height: 1.6;
 }
 
-/* --- 1. THE REEL FEED (CITIZEN VIEW) --- */
-.feed-wrapper { 
-    width: 100%; 
-    height: 100vh; 
-    overflow-y: scroll; 
-    scroll-snap-type: y mandatory; 
-    scrollbar-width: none; 
+/* --- 2. THE 7 PILLARS SIDEBAR (MOBILE OPTIMIZED) --- */
+.empire-sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    height: 100vh;
+    width: 60px;
+    background: var(--matte-black);
+    border-right: 1px solid var(--gold);
+    display: flex;
+    flex-direction: column;
+    transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 9999;
+    overflow: hidden;
 }
 
-.feed-wrapper::-webkit-scrollbar { display: none; }
+.empire-sidebar:hover, .empire-sidebar:active { width: 180px; }
 
-.content-card { 
-    height: 100vh; 
-    width: 100%; 
-    scroll-snap-align: start; 
-    position: relative; 
-    background: #000; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+.sidebar-header {
+    padding: 20px 10px;
+    border-bottom: 1px solid var(--glass);
 }
 
-.content-overlay { 
-    position: absolute; 
-    bottom: 90px; 
-    left: 20px; 
-    z-index: 10; 
-    width: 75%; 
-    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-}
-
-.content-overlay h3 {
+.mini-seal, .gold-seal-mini {
+    width: 35px; height: 35px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
     color: var(--gold);
-    font-weight: 900;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
+    display: flex;
+    align-items: center; justify-content: center;
+    font-weight: bold; font-size: 0.7rem; margin: 0 auto;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-.side-actions { 
-    position: absolute; 
-    right: 15px; 
-    bottom: 120px; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 25px; 
-    align-items: center; 
-}
-
-.side-actions div { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.side-actions i { font-size: 26px; color: white; transition: 0.3s; }
-.side-actions span { font-size: 11px; font-weight: 700; color: white; }
-
-/* --- 2. THE NAVIGATION HUB --- */
-.bottom-nav { 
-    position: fixed; 
-    bottom: 0; 
-    width: 100%; 
-    height: 80px; 
-    background: rgba(0,0,0,0.9); 
-    backdrop-filter: blur(15px);
-    border-top: 1px solid #1a1a1a; 
-    display: flex; 
-    justify-content: space-around; 
-    align-items: center; 
-    padding-bottom: 20px; 
-    z-index: 1000; 
-}
-
-.nav-btn { 
-    color: #555; 
-    text-decoration: none; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 5px;
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: var(--text-dim);
     transition: 0.3s;
+    white-space: nowrap;
 }
 
-.nav-btn i { font-size: 20px; }
-.nav-btn p { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-.nav-btn.active { color: var(--gold); }
+.nav-item .icon { font-size: 1.4rem; margin-right: 20px; min-width: 24px; }
+.nav-item .label { opacity: 0; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; transition: 0.3s; }
+.empire-sidebar:hover .label { opacity: 1; }
 
-.plus-btn { 
-    width: 50px; 
-    height: 50px; 
-    background: linear-gradient(135deg, var(--gold), #fdfc97); 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    color: black; 
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-    margin-top: -35px;
-    border: 4px solid var(--black);
+.nav-item:hover, .nav-item.active { color: var(--gold); background: var(--glass); }
+.nav-item.active { border-left: 3px solid var(--gold); box-shadow: inset 10px 0 15px -10px var(--gold); }
+
+/* --- 3. CINEMATIC PORTAL & ENTRANCE --- */
+.empire-portal {
+    min-height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+    position: relative; padding: 20px;
 }
 
-/* --- 3. THE IMPERIAL MASTER SECTION (SOVEREIGN VIEW) --- */
+.cursor-glow {
+    position: fixed;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(212,175,55,0.15) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none; transform: translate(-50%, -50%); z-index: 1;
+}
 
-/* The Secret Trigger */
+.gold-title {
+    color: var(--gold); font-size: 2.5rem; letter-spacing: 5px;
+    text-shadow: 0 0 20px rgba(212,175,55,0.4); text-align: center;
+}
+
+.entrance-animation { animation: fadeInScale 2s ease-out forwards; }
+@keyframes fadeInScale {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* --- 4. LUXURY OVERLAYS (MODALS & OATHS) --- */
+.glass-overlay, .oath-overlay, .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(12px);
+    display: flex; justify-content: center; align-items: center; z-index: 10000;
+}
+
+.luxury-card, .oath-scroll-box, .luxury-popup {
+    background: linear-gradient(145deg, #1a1a1a, #000);
+    padding: 30px; border: 1px solid var(--gold); border-radius: 20px;
+    text-align: center; width: 90%; max-width: 450px;
+    box-shadow: 0 10px 50px rgba(212, 175, 55, 0.3);
+}
+
+.gold-glow { color: var(--gold); text-shadow: 0 0 15px var(--gold); }
+
+/* --- 5. KITCHEN LIVE & HD STREAMING DASHBOARD --- */
+.kitchen-live-container { padding-left: 60px; min-height: 100vh; display: flex; flex-direction: column; }
+
+.status-indicator { color: #ff4d4d; font-weight: bold; font-size: 0.8rem; animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.stream-grid {
+    flex-grow: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px;
+}
+
+.video-card {
+    background: #1a1a1a; border: 1px solid var(--glass);
+    border-radius: 12px; position: relative; overflow: hidden; aspect-ratio: 9/16;
+}
+
+.self-view { border: 1px solid var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+
+.gifting-dock {
+    background: var(--glass); border-radius: 20px 20px 0 0;
+    padding: 20px; border-top: 1px solid var(--gold);
+}
+
+.gift-btn {
+    background: #1a1a1a; border: 1px solid var(--glass);
+    border-radius: 10px; padding: 10px; cursor: pointer; transition: 0.3s;
+}
+.gift-btn:active { transform: scale(0.9); border-color: var(--gold); }
+
+/* --- 6. IMPERIAL MASTER CONTROLS --- */
 #masterTrigger {
-    -webkit-touch-callout: none !important; /* Disables default "save image" menu on iOS */
-    -webkit-user-select: none !important;    /* Disables text selection */
-    user-select: none !important;
-    touch-action: none;                     /* Stops scrolling during long press */
-    cursor: pointer;
-    transition: transform 0.3s ease, border-color 0.3s ease;
-    border: 2px solid var(--gold);
+    user-select: none; touch-action: none; cursor: pointer;
+    transition: 0.3s; border: 2px solid var(--gold);
 }
 
-#masterTrigger:active {
-    transform: scale(0.95);
-    border-color: #ffffff;
-}
-
-/* Master Mode UI States */
 .master-mode-active {
     background: radial-gradient(circle at top, #111 0%, #000 100%) !important;
     border: 1px solid var(--neon) !important;
 }
 
-#masterAuth {
-    backdrop-filter: blur(15px) saturate(180%);
-    -webkit-backdrop-filter: blur(15px) saturate(180%);
-    background-color: rgba(0, 0, 0, 0.85);
-    display: none; /* Controlled by JS */
-    z-index: 9999;
-}
-
-/* Imperial Status Glow */
-.status-online {
-    box-shadow: 0 0 10px var(--neon);
-    animation: pulseGlow 2s infinite;
-}
-
+.status-online { box-shadow: 0 0 10px var(--neon); animation: pulseGlow 2s infinite; }
 @keyframes pulseGlow {
-    0% { opacity: 1; box-shadow: 0 0 5px var(--neon); }
+    0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--neon); }
     50% { opacity: 0.7; box-shadow: 0 0 15px var(--neon); }
-    100% { opacity: 1; box-shadow: 0 0 5px var(--neon); }
 }
 
-/* --- 4. THE 7 PILLARS DRAWER & COMPONENTS --- */
-.pillars-drawer { 
-    position: fixed; 
-    top: 0; 
-    right: -100%; 
-    width: 80%; 
-    height: 100%; 
-    background: var(--black); 
-    z-index: 2000; 
-    transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
-    padding: 30px 20px; 
-    border-left: 1px solid var(--border); 
+/* --- 7. CITIZEN FEED & NAVIGATION HUB --- */
+.feed-wrapper { width: 100%; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+.feed-wrapper::-webkit-scrollbar { display: none; }
+
+.bottom-nav { 
+    position: fixed; bottom: 0; width: 100%; height: 80px; 
+    background: rgba(0,0,0,0.9); backdrop-filter: blur(15px);
+    border-top: 1px solid #1a1a1a; display: flex; 
+    justify-content: space-around; align-items: center; z-index: 1000; 
 }
 
-.pillars-drawer.open { right: 0; }
-
-.drawer-header {
-    color: var(--gold);
-    font-size: 12px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-weight: 900;
-    margin-bottom: 30px;
-    padding-left: 15px;
+.plus-btn { 
+    width: 50px; height: 50px; 
+    background: linear-gradient(135deg, var(--gold), #fdfc97); 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+    color: black; margin-top: -35px; border: 4px solid var(--black);
 }
 
-.pillar-item { 
-    display: flex; 
-    align-items: center; 
-    padding: 18px 15px; 
-    background: var(--glass);
-    border-radius: 12px;
-    margin-bottom: 10px;
-    color: white; 
-    text-decoration: none; 
-    border: 1px solid transparent;
-    transition: 0.3s;
+.empire-btn, .enter-btn {
+    background: var(--gold); color: black; border: none; padding: 12px 30px;
+    font-weight: bold; cursor: pointer; transition: 0.4s; text-transform: uppercase;
 }
+.empire-btn:hover { box-shadow: 0 0 20px var(--gold); transform: translateY(-2px); }
 
-.pillar-item:active {
-    background: rgba(212, 175, 55, 0.05);
-    border-color: var(--gold);
-}
+/* --- 8. EMPIRE LEGEND & INFO ITEMS --- */
+.empire-legend { background: #050505; border: 1px solid var(--gold); padding: 25px; border-radius: 10px; }
+.legend-item { background: var(--glass); border: 1px solid rgba(212, 175, 55, 0.3); margin-bottom: 10px; overflow: hidden; transition: 0.3s; }
+.legend-item.active { border-color: var(--gold); }
+.legend-item.active .item-body { max-height: 200px; padding: 15px; }
 
-.pillar-item i { 
-    margin-right: 20px; 
-    color: var(--gold); 
-    font-size: 20px;
-    width: 25px; 
-    text-align: center;
-}
+.item-body { max-height: 0; transition: 0.5s ease-out; }
