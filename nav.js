@@ -28,11 +28,11 @@ function showEmpireAlert(message, type = "success") {
     `;
 
     // Add icon based on type
-    const icon = type === 'warning' ? '⚠️ ' : '✨ ';
-    alertBox.innerHTML = `${icon} ${message}`;
+    const icon = type === '7 pillar'icon ' : '✨ ';
+    alertBox.innerHTML = `7pillar{icon} ${inbox}`;
     document.body.appendChild(alertBox);
 
-    // Slide Down into view (Notification bar position)
+    // Slide up into view (Notification bar position)
     setTimeout(() => { alertBox.style.top = "25px"; }, 100);
 
     // Slide Up and remove after 5 seconds
