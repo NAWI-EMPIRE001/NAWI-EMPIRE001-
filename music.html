@@ -3,178 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWI-EMPIRE | GLOBAL MUSIC HUB</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>NAWI-EMPIRE | Sovereign Audio Hub</title>
+    
+    <!-- UI Stack -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --card: #111; --glass: rgba(255,255,255,0.05); }
-        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 120px; }
+        :root { --gold: #D4AF37; --black: #050505; --graphite: #0A0A0A; --green: #00ff64; }
+        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 110px; }
 
-        /* --- VIDEO BROADCAST PLAYER --- */
-        #main-player { width: 100%; height: 220px; background: #000; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        .studio-header { padding: 25px 20px; text-align: center; }
-        .studio-header h1 { font-size: 14px; letter-spacing: 5px; color: var(--gold); text-transform: uppercase; margin: 0; }
-
-        .promo-banner { background: linear-gradient(45deg, #111, #1a1a1a); margin: 0 15px 20px; padding: 20px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; }
-        .btn-boost { background: var(--gold); color: black; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 11px; text-transform: uppercase; }
-
-        /* --- MUSIC LISTS --- */
-        .hub-section { padding: 0 15px; margin-top: 25px; }
-        .section-header { color: var(--gold); font-size: 11px; font-weight: 900; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; display: flex; justify-content: space-between; border-left: 3px solid var(--gold); padding-left: 10px; }
-        
-        .track-card { background: var(--card); border: 1px solid #1a1a1a; padding: 15px; border-radius: 18px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; transition: 0.2s; }
-        .track-card:active { background: #1a1a1a; transform: scale(0.97); }
-        
-        .track-thumb { width: 45px; height: 45px; background: #222; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 18px; border: 1px solid #333; }
-        .track-info { flex: 1; }
-        .track-title { font-size: 13px; font-weight: 800; display: block; color: #fff; }
-        .track-artist { font-size: 10px; color: #666; }
-        .earn-tag { background: rgba(0, 255, 100, 0.1); color: #00ff64; padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; }
-
-        /* --- MP3 PRE-LISTEN PLAYER (FIXED) --- */
-        #player-box { 
-            position: fixed; bottom: 20px; left: 15px; right: 15px; 
-            background: rgba(15, 15, 15, 0.98); border: 1px solid var(--gold);
-            border-radius: 20px; padding: 18px; backdrop-filter: blur(15px);
-            z-index: 2000; display: none; box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        /* --- THE BROADCAST SCREEN (Aurora-231 Mode) --- */
+        #broadcast-monitor {
+            width: 100%; height: 250px; background: #000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            position: sticky; top: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
-        .progress-bar { width: 100%; height: 4px; background: #333; border-radius: 10px; margin: 12px 0; overflow: hidden; }
-        .progress-fill { width: 0%; height: 100%; background: var(--gold); }
+
+        .visual-wave {
+            display: flex; align-items: flex-end; gap: 3px; height: 30px;
+        }
+        .wave-bar {
+            width: 3px; height: 10px; background: var(--gold);
+            animation: bounce 1s infinite ease-in-out;
+        }
+        @keyframes bounce { 0%, 100% { height: 5px; } 50% { height: 30px; } }
+
+        /* --- CONTENT GRID --- */
+        .hub-container { padding: 20px; display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media(min-width: 1024px) { .hub-container { grid-template-columns: 1fr 350px; } }
+
+        .track-item {
+            background: #0f0f0f; border: 1px solid #1a1a1a;
+            border-radius: 15px; padding: 15px; display: flex;
+            align-items: center; gap: 15px; cursor: pointer;
+            transition: 0.3s; margin-bottom: 10px;
+        }
+        .track-item:hover { border-color: var(--gold); background: #151515; }
+        .track-thumb { width: 50px; height: 50px; background: #1a1a1a; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--gold); }
+
+        /* --- PROMOTION SIDEBAR --- */
+        .promo-card {
+            background: linear-gradient(145deg, #111, #050505);
+            border: 1px solid var(--gold); border-radius: 25px;
+            padding: 25px; height: fit-content;
+        }
+
+        /* --- MASTER CONTROLLER (Bottom Player) --- */
+        .master-audio-bar {
+            position: fixed; bottom: 0; width: 100%; height: 90px;
+            background: rgba(8, 8, 8, 0.98); border-top: 1px solid #222;
+            backdrop-filter: blur(20px); display: flex; align-items: center;
+            padding: 0 20px; z-index: 2000; box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+
+        .progress-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #222;
+        }
+        #p-fill { width: 0%; height: 100%; background: var(--gold); transition: 0.1s; box-shadow: 0 0 10px var(--gold); }
     </style>
 </head>
 <body>
 
-    <div id="main-player">
-        <div id="player-placeholder" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center;">
-            <i class="fa-solid fa-tower-broadcast" style="font-size:30px; color:var(--gold); margin-bottom:10px;"></i>
-            <p style="font-size:9px; color:#555; font-weight:900; letter-spacing:3px;">EMPIRE BROADCAST SYSTEM ONLINE</p>
+    <!-- Monitor Viewport -->
+    <div id="broadcast-monitor">
+        <div id="monitor-content" class="text-center">
+            <div class="visual-wave mb-4 justify-center">
+                <div class="wave-bar" style="animation-delay: 0.1s"></div>
+                <div class="wave-bar" style="animation-delay: 0.2s"></div>
+                <div class="wave-bar" style="animation-delay: 0.3s"></div>
+                <div class="wave-bar" style="animation-delay: 0.4s"></div>
+                <div class="wave-bar" style="animation-delay: 0.5s"></div>
+            </div>
+            <p class="text-[9px] font-black tracking-[5px] text-zinc-500 uppercase">Pillar 6 | Global Broadcast Active</p>
         </div>
     </div>
 
-    <div class="studio-header">
-        <h1>7 PILLARS MUSIC PRODUCTION</h1>
+    <div class="hub-container">
+        <!-- Track Ledger -->
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-['Cinzel'] text-amber-500 text-lg">Empire Originals</h2>
+                <span class="text-[9px] font-bold text-zinc-500 uppercase">Lossless / 44.1kHz</span>
+            </div>
+
+            <!-- Track 1: MP3 Local -->
+            <div class="track-item" onclick="SovereignAudio.playMp3('Empire Anthem', 'Sovereign Studio', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">
+                <div class="track-thumb"><i class="fa-solid fa-compact-disc text-lg"></i></div>
+                <div class="flex-grow">
+                    <h4 class="text-sm font-bold">Empire Anthem (Vol. 1)</h4>
+                    <p class="text-[10px] text-zinc-500">Master Authority Production</p>
+                </div>
+                <div class="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">HQ</div>
+            </div>
+
+            <!-- Track 2: YouTube Video -->
+            <div class="track-item" onclick="SovereignAudio.playVideo('490_83iI_8E', 'Visual Broadcast #001')">
+                <div class="track-thumb"><i class="fa-solid fa-play text-xs"></i></div>
+                <div class="flex-grow">
+                    <h4 class="text-sm font-bold">Official Broadcast #001</h4>
+                    <p class="text-[10px] text-zinc-500">Trending Empire Visuals</p>
+                </div>
+                <div class="text-[10px] font-black text-amber-500 border border-amber-500/30 px-3 py-1 rounded-full">+1 🪙</div>
+            </div>
+        </section>
+
+        <!-- Promotion Panel -->
+        <aside>
+            <div class="promo-card">
+                <span class="text-[9px] font-black text-amber-500 tracking-widest block mb-2 uppercase">Promotion Engine</span>
+                <h3 class="text-lg font-bold mb-4">Boost Your Track</h3>
+                <div class="bg-black/50 border border-dashed border-zinc-800 h-32 rounded-xl mb-4 flex items-center justify-center text-[10px] text-zinc-600">
+                    AD PREVIEW READY
+                </div>
+                <p class="text-[11px] text-zinc-500 leading-relaxed mb-6">Promote your track across the 7-Pillar ecosystem for 48 hours.</p>
+                <button class="w-full bg-amber-500 text-black py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition" onclick="SovereignAudio.initiatePromo()">
+                    Launch Campaign (10 🪙)
+                </button>
+            </div>
+        </aside>
     </div>
 
-    <div class="promo-banner">
-        <h2 style="color:var(--gold); font-size:14px; margin:0; letter-spacing:2px;">BOOST YOUR TRACK</h2>
-        <p style="font-size:10px; color:#777; margin:5px 0;">Reach the Global Empire Audience</p>
-        <button class="btn-boost" onclick="alert('P2P Gateway: Music Promotion Initiated.')">Promote My Music (10 🪙)</button>
-    </div>
-
-    <div class="hub-section">
-        <div class="section-header"><span>Empire Originals</span></div>
+    <!-- The Master Controller -->
+    <div class="master-audio-bar">
+        <div class="progress-container"><div id="p-fill"></div></div>
         
-        <div class="track-card" onclick="initiateMp3('Empire Anthem (Vol. 1)', 'NAWI-EMPIRE STUDIO', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">
-            <div class="track-thumb"><i class="fa-solid fa-compact-disc"></i></div>
-            <div class="track-info">
-                <span class="track-title">Empire Anthem</span>
-                <span class="track-artist">Sovereign Grade HQ</span>
+        <div class="flex items-center gap-4 w-full">
+            <div class="w-12 h-12 bg-zinc-900 rounded-lg flex items-center justify-center border border-zinc-800">
+                <i class="fa-solid fa-music text-amber-500 text-sm"></i>
             </div>
-            <div class="earn-tag">PRE-LISTEN</div>
-        </div>
-
-        <div class="track-card" onclick="initiateMp3('Borno State Legacy', '7 Pillars Heritage', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3')">
-            <div class="track-thumb"><i class="fa-solid fa-crown"></i></div>
-            <div class="track-info">
-                <span class="track-title">Borno Legacy</span>
-                <span class="track-artist">Cultural Modern Beats</span>
+            <div class="flex-grow">
+                <h5 id="active-title" class="text-xs font-bold truncate w-40">Not Playing</h5>
+                <p id="active-artist" class="text-[9px] text-zinc-500 uppercase">Select an Asset</p>
             </div>
-            <div class="earn-tag">PRE-LISTEN</div>
+            <div class="flex items-center gap-6">
+                <i class="fa-solid fa-backward-step text-zinc-700"></i>
+                <button onclick="SovereignAudio.toggle()" class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center">
+                    <i id="play-icon" class="fa-solid fa-play ml-1"></i>
+                </button>
+                <i class="fa-solid fa-forward-step text-zinc-700"></i>
+            </div>
         </div>
     </div>
 
-    <div class="hub-section">
-        <div class="section-header"><span>Global Broadcasts</span></div>
-        
-        <div class="track-card" onclick="loadVideo('490_83iI_8E', 'Empire Anthem', 'Main Broadcast')">
-            <div class="track-info">
-                <span class="track-title">Official Broadcast #001</span>
-                <span class="track-artist">Trending Empire Visuals</span>
-            </div>
-            <div class="earn-tag" style="color:var(--gold);">+1 🪙</div>
-        </div>
-
-        <div class="track-card" onclick="loadVideo('hVEpS76_Gbg', 'Wizkid', '7 Pillars')">
-            <div class="track-info">
-                <span class="track-title">Naira Dreams Visual</span>
-                <span class="track-artist">7 Pillars Global Radio</span>
-            </div>
-            <div class="earn-tag" style="color:var(--gold);">+1 🪙</div>
-        </div>
-    </div>
-
-    <a href="index.html" style="display:block; text-align:center; color:#444; margin:40px 0; text-decoration:none; font-size:10px; font-weight:900; letter-spacing:2px;">← BACK TO HEADQUARTERS</a>
-
-    <div id="player-box">
-        <div style="display:flex; align-items:center; gap:12px;">
-            <div style="flex:1;">
-                <b id="now-playing-title" style="font-size:13px; color:var(--gold); display:block;">None</b>
-                <span id="now-playing-artist" style="font-size:10px; color:#777;">Select a track</span>
-            </div>
-            <i class="fa-solid fa-xmark" onclick="closePlayer()" style="color:#555;"></i>
-        </div>
-        
-        <div class="progress-bar"><div id="p-bar" class="progress-fill"></div></div>
-
-        <div style="display:flex; justify-content:center; align-items:center; gap:30px;">
-            <i class="fa-solid fa-backward-step" style="color:#333"></i>
-            <i class="fa-solid fa-pause" id="main-play-icon" onclick="togglePlayback()" style="font-size:22px; color:var(--gold)"></i>
-            <i class="fa-solid fa-forward-step" style="color:#333"></i>
-        </div>
-    </div>
-
-    <audio id="empire-audio-engine" ontimeupdate="updateProgress()"></audio>
+    <audio id="core-audio-engine" ontimeupdate="SovereignAudio.onProgress()"></audio>
 
     <script>
-        const engine = document.getElementById('empire-audio-engine');
-        const playBtn = document.getElementById('main-play-icon');
-
-        // VIDEO LOGIC
-        function loadVideo(videoId, title, artist) {
-            closePlayer(); // Stop MP3 if video starts
-            const player = document.getElementById('main-player');
-            player.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1" allow="autoplay; encrypted-media"></iframe>`;
-        }
-
-        // MP3 LOGIC
-        function initiateMp3(title, artist, url) {
-            // Reset Video Player
-            document.getElementById('main-player').innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-                    <i class="fa-solid fa-compact-disc fa-spin" style="font-size:30px; color:var(--gold);"></i>
-                </div>`;
+        const SovereignAudio = {
+            engine: document.getElementById('core-audio-engine'),
+            monitor: document.getElementById('monitor-content'),
             
-            document.getElementById('player-box').style.display = 'block';
-            document.getElementById('now-playing-title').innerText = title;
-            document.getElementById('now-playing-artist').innerText = artist;
-            
-            engine.src = url;
-            engine.play();
-            playBtn.className = "fa-solid fa-pause";
-        }
+            playMp3: function(title, artist, url) {
+                // Clear Video from monitor
+                document.getElementById('broadcast-monitor').innerHTML = '<div id="monitor-content" class="text-center"><div class="visual-wave mb-4 justify-center"><div class="wave-bar" style="animation-delay: 0.1s"></div><div class="wave-bar" style="animation-delay: 0.2s"></div><div class="wave-bar" style="animation-delay: 0.3s"></div><div class="wave-bar" style="animation-delay: 0.4s"></div><div class="wave-bar" style="animation-delay: 0.5s"></div></div><p class="text-[9px] font-black tracking-[5px] text-zinc-500 uppercase">High-Fidelity Audio Active</p></div>';
+                
+                this.engine.src = url;
+                this.engine.play();
+                this.updateUI(title, artist, true);
+            },
 
-        function togglePlayback() {
-            if (engine.paused) {
-                engine.play();
-                playBtn.className = "fa-solid fa-pause";
-            } else {
-                engine.pause();
-                playBtn.className = "fa-solid fa-play";
+            playVideo: function(id, title) {
+                this.engine.pause();
+                const monitor = document.getElementById('broadcast-monitor');
+                monitor.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>`;
+                this.updateUI(title, "Empire Video Stream", false);
+                
+                // Payout logic: +1 Coin for viewing
+                console.log("Authority: Crediting 1 🪙 to Vault...");
+            },
+
+            updateUI: function(title, artist, isPlaying) {
+                document.getElementById('active-title').innerText = title;
+                document.getElementById('active-artist').innerText = artist;
+                document.getElementById('play-icon').className = isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
+            },
+
+            toggle: function() {
+                if(this.engine.paused) {
+                    this.engine.play();
+                    document.getElementById('play-icon').className = "fa-solid fa-pause";
+                } else {
+                    this.engine.pause();
+                    document.getElementById('play-icon').className = "fa-solid fa-play";
+                }
+            },
+
+            onProgress: function() {
+                const percent = (this.engine.currentTime / this.engine.duration) * 100;
+                document.getElementById('p-fill').style.width = percent + "%";
+            },
+
+            initiatePromo: function() {
+                const confirmed = confirm("AUTHORIZE P2P: Lock 10 🪙 for 48-Hour Broadcast Promotion?");
+                if(confirmed) {
+                    alert("Master Approval Received: Campaign Launching on Pillar 2 (Ads).");
+                }
             }
-        }
+        };
 
-        function updateProgress() {
-            const bar = document.getElementById('p-bar');
-            const percent = (engine.currentTime / engine.duration) * 100;
-            bar.style.width = percent + "%";
-        }
-
-        function closePlayer() {
-            engine.pause();
-            document.getElementById('player-box').style.display = 'none';
-        }
+        // Auto-Init
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Pillar 6 Synchronized: Sovereign Node Active.");
+        });
     </script>
 </body>
 </html>
