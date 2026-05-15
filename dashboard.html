@@ -27,7 +27,7 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
-        @media (min-width: 768px) { .pillar-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (min-width: 768px) { .pillar-grid { grid-template-columns: repeat(3, 1fr); } }
 
         .pillar-card {
             background: var(--matte);
@@ -42,12 +42,24 @@
             text-decoration: none;
             color: white;
             text-align: center;
+            position: relative;
         }
 
         .pillar-card:hover:not(.locked) {
             border-color: var(--gold);
             transform: translateY(-4px);
             background: rgba(212, 175, 55, 0.03);
+        }
+
+        /* Master Hub Specific Styling */
+        .master-hub-card {
+            background: linear-gradient(135deg, #0f0c02 0%, #050505 100%);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.05);
+        }
+        .master-hub-card:hover:not(.locked) {
+            border-color: var(--gold);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15);
         }
 
         .pillar-card i { font-size: 24px; margin-bottom: 12px; transition: 0.3s; }
@@ -107,6 +119,13 @@
 
         <!-- System Node Directory (Grid Setup) -->
         <div class="pillar-grid mb-6">
+            
+            <!-- THE MASTER SEVEN PILLARS HUB ICON -->
+            <a href="seven-pillars.html" id="pillar-seven-hub" class="pillar-card master-hub-card col-span-2 md:col-span-3">
+                <div class="absolute top-3 left-4 bg-amber-500/10 text-amber-500 text-[7px] font-black px-2 py-0.5 rounded border border-amber-500/20 uppercase tracking-widest">Core Command</div>
+                <i class="fa-solid fa-cubes text-amber-500 animate-pulse mt-4"></i>
+                <span class="text-white font-black">7 Pillars Master Hub</span>
+            </a>
             
             <a href="market.html" id="pillar-market" class="pillar-card locked">
                 <i class="fa-solid fa-shop text-zinc-600"></i>
