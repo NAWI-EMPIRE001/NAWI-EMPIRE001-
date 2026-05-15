@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NAWI-EMPIRE | Sovereign Ecosystem</title>
     
-    <!-- Unified Tech Stack -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
@@ -31,7 +30,7 @@
         .alpha-header {
             height: 70px; background: rgba(5,5,5,0.8); border-bottom: 1px solid #1a1a1a;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000; backdrop-blur: 10px;
+            padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000; backdrop-filter: blur(10px);
         }
 
         .master-grid {
@@ -73,7 +72,6 @@
 </head>
 <body>
 
-    <!-- 1. MANDATE SECURITY GATE -->
     <div id="auth-gate">
         <div class="authority-card">
             <div class="text-[10px] font-black text-amber-500 tracking-[0.4em] mb-4">MANDATE UNLOCKED</div>
@@ -84,7 +82,6 @@
         </div>
     </div>
 
-    <!-- 2. FOUNDER'S OATH -->
     <div id="oath-gate" class="oath-overlay" style="display:none;">
         <div class="authority-card">
             <h2 class="text-xl font-black text-amber-500 font-['Cinzel'] mb-6">CITIZEN OATH</h2>
@@ -99,7 +96,6 @@
         </div>
     </div>
 
-    <!-- 3. KITCHEN LIVE MODULE (PILLAR 3) -->
     <div id="kitchen-overlay">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-amber-500 font-black italic tracking-tighter">PILLAR 3: KITCHEN LIVE</h2>
@@ -115,19 +111,18 @@
         </div>
     </div>
 
-    <!-- 4. MASTER EXECUTIVE INTERFACE -->
     <header class="alpha-header">
         <div class="logo-section font-black text-amber-500 tracking-[0.3em] text-sm">NAWI-EMPIRE</div>
-        <div class="hidden md:flex gap-8">
-            <a href="market.html" class="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500">Market</a>
-            <a href="studio.html" class="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500">Studio</a>
-            <a href="games.html" class="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500">Gaming</a>
+        <div class="hidden md:flex gap-6 lg:gap-8">
+            <a href="market.html" class="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500 transition-colors">Market</a>
+            <a href="studio.html" class="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500 transition-colors">Studio</a>
+            <a href="games.html" class="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500 transition-colors">Gaming</a>
+            <a href="stylist.html" class="text-[9px] font-black uppercase tracking-widest text-zinc-500 hover:text-amber-500 transition-colors">Sovereign Stylist</a>
         </div>
-        <a href="dashboard.html" class="text-[9px] font-black bg-amber-500 text-black px-4 py-2 rounded-full">DASHBOARD</a>
+        <a href="dashboard.html" class="text-[9px] font-black bg-amber-500 text-black px-4 py-2 rounded-full hover:bg-white transition-all">DASHBOARD</a>
     </header>
 
     <div class="master-grid">
-        <!-- Left: Identity & Node Status -->
         <aside class="hidden lg:block border-r border-zinc-900 p-6">
             <div class="text-[9px] font-black text-zinc-600 uppercase mb-8 tracking-widest">Master Authority</div>
             <div class="bg-zinc-900/40 p-4 rounded-2xl border border-amber-500/10">
@@ -139,13 +134,11 @@
             </div>
         </aside>
 
-        <!-- Center: The Sovereign Feed -->
         <main class="p-4 overflow-y-auto" id="main-feed">
             <div class="bg-amber-500/5 border border-amber-500/20 p-4 rounded-2xl mb-8 text-center">
                 <span class="text-[10px] font-black text-amber-500 uppercase">P2P Gateway: Protected by NAWI-ESCROW</span>
             </div>
             
-            <!-- Feed Content -->
             <div id="dynamic-feed">
                 <div class="post-luxury">
                     <div class="flex items-center gap-3 mb-4">
@@ -160,11 +153,9 @@
             </div>
         </main>
 
-        <!-- Right: Sponsored Ads (Pillar 2) -->
         <aside class="hidden lg:block border-l border-zinc-900 p-6">
             <div class="text-[9px] font-black text-zinc-600 uppercase mb-8 tracking-widest">Empire Sponsored</div>
             <div id="sponsored-node" class="space-y-6">
-                <!-- Ad Slots -->
                 <div class="bg-zinc-900/20 border border-zinc-800 p-4 rounded-2xl">
                     <div class="w-full aspect-square bg-zinc-800 rounded-lg mb-3"></div>
                     <p class="text-[10px] font-black text-white">Diamondback 231</p>
@@ -174,12 +165,9 @@
         </aside>
     </div>
 
-    <!-- THE 7 NODES HUB (CENTRAL TRIGGER) -->
     <div class="node-7-hub" onclick="window.location.href='dashboard.html'">
         <span id="center-digit">7</span>
     </div>
-
-    <!-- NO NAVIGATION BAR (Handled by the 7 Hub and Header) -->
 
     <script src="nawi_empire_v1.js"></script>
     <script>
