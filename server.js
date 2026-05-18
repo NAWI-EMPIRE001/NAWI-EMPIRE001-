@@ -1,12 +1,12 @@
 /**
- * NAWI-EMPIRE MASTER SYSTEM ENGINE v3.5
+ * NAWI-EMPIRE MASTER SYSTEM ENGINE v3.7
  * FILE: server.js
- * EDITION: Sovereign Executive Architecture (Merged 2026 Build Update)
+ * EDITION: Sovereign Executive Architecture (Unified Production Build)
  * SYSTEMS CONNECTED: Aurora-231 Hardware Check, 7 Pillars Framework,
  * Sovereign P2P Escrow, $35M Daily Volume Ledger, Compliance Vault.
  */
 
-require('dotenv').config(); // Secures environment tokens safely from cloud orchestration
+require('dotenv').config(); 
 const express = require('express');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
@@ -16,14 +16,56 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
-// IMPORT MODULAR CONTROLLERS (Brought forward from your external infrastructure layout)
-const authController = require('./controllers/authController');
-const battleController = require('./controllers/battle');
-const borderControl = require('./controllers/border-control');
-const masterPayout = require('./controllers/master-payout');
-const p2pGateway = require('./controllers/p2p-gateway');
-
 const app = express();
+
+// ==========================================
+// CASE-SENSITIVE ADAPTIVE CONTROLLER MATRIX
+// (Guards against case mismatch crashes on Render)
+// ==========================================
+let authController, battleController, borderControl, masterPayout, p2pGateway;
+
+const safeLoad = (primaryPath, fallbackPath, moduleName) => {
+    try {
+        return require(primaryPath);
+    } catch (e) {
+        if (fallbackPath) {
+            try {
+                return require(fallbackPath);
+            } catch (err) {
+                console.warn(`⚠️ Warning: ${moduleName} missing at standard and fallback paths. Registering mock layer.`);
+                return null;
+            }
+        }
+        console.warn(`⚠️ Warning: ${moduleName} missing. Registering mock layer.`);
+        return null;
+    }
+};
+
+authController = safeLoad('./controllers/authController', './controllers/authcontroller', 'authController') || {
+    registerUser: (req, res) => res.status(503).json({ error: "Auth service initializing" }),
+    handleUserSession: (req, res) => res.status(503).json({ error: "Auth service initializing" })
+};
+
+battleController = safeLoad('./controllers/battle', null, 'battleController') || {
+    initializeBattleSession: (req, res) => res.status(503).json({ error: "Battle engine standby" }),
+    processStreamVoteGift: (req, res) => res.status(503).json({ error: "Gifting ledger offline" })
+};
+
+borderControl = safeLoad('./controllers/border-control', null, 'borderControl') || {
+    processIdentityUpload: (req, res) => res.status(503).json({ error: "Verification desk processing" }),
+    getVerificationStatus: (req, res) => res.status(503).json({ error: "Verification desk processing" })
+};
+
+masterPayout = safeLoad('./controllers/master-payout', null, 'masterPayout') || {
+    getPendingWithdrawals: (req, res) => res.status(503).json({ error: "Payout vault in standby" }),
+    authorizePayout: (req, res) => res.status(503).json({ error: "Payout vault in standby" })
+};
+
+p2pGateway = safeLoad('./controllers/p2p-gateway', null, 'p2pGateway') || {
+    serveGatewayPage: (req, res) => res.status(503).send("P2P core system reloading... Please refresh shortly."),
+    createP2POrder: (req, res) => res.status(503).json({ error: "P2P network syncing" }),
+    confirmP2PRelease: (req, res) => res.status(503).json({ error: "P2P network syncing" })
+};
 
 // ==========================================
 // 1. GLOBAL CONFIGURATIONS & ADVANCED MIDDLEWARE
@@ -45,18 +87,16 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static assets out of root and public directories natively
 app.use(express.static(path.join(__dirname, '/')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const storage = multer.memoryStorage();
-const upload = multer({ limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB Max Limit for 4K Premium Textures
+const upload = multer({ limits: { fileSize: 50 * 1024 * 1024 } });
 
 // ==========================================
 // 2. UNIFIED DATABASE CONFIGURATION MATRIX (SCHEMAS)
 // ==========================================
 
-// User Data & Metric Ledgers
 const UserSchema = new mongoose.Schema({
     userId: { type: String, required: true, unique: true },
     identity: {
@@ -92,7 +132,6 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
-// Universal Core Content & Pillar Media Channels
 const PostSchema = new mongoose.Schema({
     authorName: String,
     authorId: String,
@@ -108,7 +147,6 @@ const PostSchema = new mongoose.Schema({
 });
 const Post = mongoose.models.Post || mongoose.model('Post', PostSchema);
 
-// Apparel Studio Modular Geometry Asset Definition
 const ApparelAssetSchema = new mongoose.Schema({
     assetId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -138,7 +176,6 @@ const ApparelAssetSchema = new mongoose.Schema({
 });
 const ApparelAsset = mongoose.models.ApparelAsset || mongoose.model('ApparelAsset', ApparelAssetSchema);
 
-// Compliance Vault Registry 
 const ComplianceVaultSchema = new mongoose.Schema({
     entityName: { type: String, default: 'NAWI-EMPIRE' },
     registeredName: { type: String, default: 'Nsikak Akpan Warri' }, 
@@ -148,11 +185,10 @@ const ComplianceVaultSchema = new mongoose.Schema({
 });
 const ComplianceVault = mongoose.models.ComplianceVault || mongoose.model('ComplianceVault', ComplianceVaultSchema);
 
-// Daily High-Frequency Transaction Cap Record
 const DailyLedgerSchema = new mongoose.Schema({
     date: { type: String, required: true, unique: true },
     totalVolumeProcessedUsd: { type: Number, default: 0 },
-    maxLimitCapUsd: { type: Number, default: 35000000 } // Hardcapped $35 Million Limit Configuration
+    maxLimitCapUsd: { type: Number, default: 35000000 } 
 });
 const DailyLedger = mongoose.models.DailyLedger || mongoose.model('DailyLedger', DailyLedgerSchema);
 
@@ -299,8 +335,8 @@ const seedEmpire = async () => {
 // ==========================================
 
 // --- CORE IDENTITY CHANNELS ---
-app.post('/api/auth/register', authController.registerUser || ((req, res) => res.status(200).json({ success: true })));
-app.post('/api/auth/session', authController.handleUserSession || ((req, res) => res.status(200).json({ success: true })));
+app.post('/api/auth/register', (req, res, next) => authController.registerUser(req, res, next));
+app.post('/api/auth/session', (req, res, next) => authController.handleUserSession(req, res, next));
 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
@@ -341,8 +377,8 @@ app.post('/api/track-engagement', async (req, res) => {
 });
 
 // --- JURY ENGINE BATTLE STREAM ROUTES ---
-app.post('/api/battle/initialize', battleController.initializeBattleSession || ((req, res) => res.status(200).json({ success: true })));
-app.post('/api/battle/vote-gift', battleController.processStreamVoteGift || ((req, res) => res.status(200).json({ success: true })));
+app.post('/api/battle/initialize', (req, res, next) => battleController.initializeBattleSession(req, res, next));
+app.post('/api/battle/vote-gift', (req, res, next) => battleController.processStreamVoteGift(req, res, next));
 
 // --- APPAREL REPOSITORY REGISTRATIONS ---
 app.post('/api/studio/apparel/asset', async (req, res) => {
@@ -354,14 +390,14 @@ app.post('/api/studio/apparel/asset', async (req, res) => {
 });
 
 // --- BORDER CONTROL IDENTITY VERIFICATION HOOKS ---
-app.post('/api/border/upload-document', borderControl.processIdentityUpload || ((req, res) => res.status(200).json({ success: true })));
-app.get('/api/border/verify-status/:userId', borderControl.getVerificationStatus || ((req, res) => res.status(200).json({ success: true })));
+app.post('/api/border/upload-document', (req, res, next) => borderControl.processIdentityUpload(req, res, next));
+app.get('/api/border/verify-status/:userId', (req, res, next) => borderControl.getVerificationStatus(req, res, next));
 
 // --- FINANCIAL VAULTS & P2P LIQUIDITY ESCROW PORTS ---
-app.get('/p2p-bridge', p2pGateway.serveGatewayPage);
-app.post('/api/p2p/create-order', p2pGateway.createP2POrder);
-app.post('/api/p2p/confirm-release', p2pGateway.confirmP2PRelease);
-app.post('/api/request-withdrawal', p2pGateway.createP2POrder); // Backwards legacy wrapper compatibility link
+app.get('/p2p-bridge', (req, res, next) => p2pGateway.serveGatewayPage(req, res, next));
+app.post('/api/p2p/create-order', (req, res, next) => p2pGateway.createP2POrder(req, res, next));
+app.post('/api/p2p/confirm-release', (req, res, next) => p2pGateway.confirmP2PRelease(req, res, next));
+app.post('/api/request-withdrawal', (req, res, next) => p2pGateway.createP2POrder(req, res, next)); 
 
 app.post('/api/finance/escrow/create', async (req, res) => {
     try {
@@ -411,8 +447,8 @@ app.get('/api/ledger/volume-status', async (req, res) => {
 });
 
 // --- ADMINISTRATIVE & SOVEREIGN BYPASS SIGNATURE CHANNELS ---
-app.get('/api/master/pending-withdrawals', masterPayout.getPendingWithdrawals || ((req, res) => res.status(200).json({ success: true })));
-app.post('/api/master/authorize-payout', masterPayout.authorizePayout || ((req, res) => res.status(200).json({ success: true })));
+app.get('/api/master/pending-withdrawals', (req, res, next) => masterPayout.getPendingWithdrawals(req, res, next));
+app.post('/api/master/authorize-payout', (req, res, next) => masterPayout.authorizePayout(req, res, next));
 
 app.post('/api/admin/bypass', verifySovereignNodeHandshake, (req, res) => {
     res.status(200).json({
