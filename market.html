@@ -7,14 +7,13 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Cinzel:wght=700;900&display=swap" rel="stylesheet">
     
     <style>
         :root { 
             --gold: #D4AF37; 
             --black: #050505; 
             --matte: #0D0D0D; 
-            --glass: rgba(255, 255, 255, 0.03); 
             --border: #1a1a1a;
         }
         
@@ -23,8 +22,10 @@
             color: #E5E5E5; 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
-            padding-bottom: 100px;
+            padding-bottom: 140px;
             overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         /* --- 🏛️ EXECUTIVE HEADER --- */
@@ -46,7 +47,7 @@
             display: flex;
             align-items: center;
             margin-top: 20px;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.3s ease;
         }
         
         .search-container:focus-within {
@@ -117,16 +118,16 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.6;
+            opacity: 0.4;
             transition: 0.5s;
         }
-        .luxury-card:hover .preview-box img { opacity: 0.9; transform: scale(1.05); }
+        .luxury-card:hover .preview-box img { opacity: 0.8; transform: scale(1.03); }
 
         .merchant-badge {
             position: absolute;
             top: 15px;
             left: 15px;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             border: 1px solid var(--gold);
             color: var(--gold);
             font-size: 8px;
@@ -171,6 +172,18 @@
         }
 
         .gold-glow { text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+
+        /* --- 🛡️ TRUSTLESS ESCROW MODAL --- */
+        #escrow-modal {
+            position: fixed; 
+            inset: 0; 
+            background: rgba(5,5,5,0.95);
+            backdrop-filter: blur(15px); 
+            z-index: 10000; 
+            display: none;
+            align-items: center; 
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -179,77 +192,52 @@
         <div class="flex justify-between items-center">
             <div>
                 <h1 class="text-sm font-black text-amber-500 tracking-[0.4em] font-['Cinzel'] gold-glow uppercase">The Marketplace</h1>
-                <p class="text-[7px] text-zinc-600 font-black tracking-[0.2em] uppercase mt-1">Sovereign Asset Exchange</p>
+                <p class="text-[7px] text-zinc-600 font-black tracking-[0.2em] uppercase mt-1">Diamondback 231 Hub Node</p>
             </div>
             <div class="text-right">
-                <span class="text-[8px] text-green-500 font-black tracking-widest border border-green-500/20 px-2 py-1 rounded">LEDGER: ACTIVE</span>
+                <span class="text-[8px] text-zinc-500 block font-bold uppercase">Balance</span>
+                <span class="text-white font-black text-xs" id="display-balance">100.00 <i class="fa-solid fa-coins text-amber-500"></i></span>
             </div>
         </div>
         
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass text-zinc-700 mr-4 text-xs"></i>
-            <input type="text" placeholder="Search 3D Assets, Apparel, or Licenses..." class="bg-transparent border-none outline-none text-xs w-full text-zinc-300 placeholder:text-zinc-700 font-medium">
+            <input type="text" id="search-input" placeholder="Search Stylist Tools, Frameworks, Ads Slots..." class="bg-transparent border-none outline-none text-xs w-full text-zinc-300 placeholder:text-zinc-700 font-medium">
         </div>
     </header>
 
     <div class="flex gap-3 overflow-x-auto px-5 py-6 no-scrollbar">
-        <div class="pillar-chip active">All Assets</div>
-        <div class="pillar-chip">Pillar VII (Software)</div>
-        <div class="pillar-chip">Pillar II (Apparel)</div>
-        <div class="pillar-chip">3D Mesh Kits</div>
-        <div class="pillar-chip">Commercial Licenses</div>
+        <div class="pillar-chip active" onclick="filterCategory(this, 'all')">All Products</div>
+        <div class="pillar-chip" onclick="filterCategory(this, 'branding')">Diamondback 231</div>
+        <div class="pillar-chip" onclick="filterCategory(this, 'ads')">Ads Program</div>
+        <div class="pillar-chip" onclick="filterCategory(this, 'stylist')">Sovereign Stylist</div>
     </div>
 
-    <main class="asset-grid">
-        
-        <div class="luxury-card group">
-            <div class="preview-box">
-                <span class="merchant-badge"><i class="fa-solid fa-crown mr-1"></i> VERIFIED</span>
-                <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=1000">
+    <main class="asset-grid" id="product-container">
+        </main>
+
+    <div id="escrow-modal">
+        <div class="p-8 w-[88%] max-w-[400px] border border-zinc-800 rounded-[32px] text-center bg-black">
+            <i class="fa-solid fa-building-columns text-amber-500 text-3xl mb-4 animate-pulse"></i>
+            <h3 class="text-white font-black uppercase text-xs tracking-widest mb-2 font-['Cinzel']">Sovereign P2P Escrow</h3>
+            <p class="text-zinc-500 text-[11px] mb-6 leading-relaxed">Securing funds in trustless node ledger via <br><span class="text-white font-bold">DIAMONDBACK 231 CREATIVE SOLUTIONS</span></p>
+            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-900 text-left mb-6">
+                <p class="text-[8px] text-zinc-600 uppercase font-black">Target Asset</p>
+                <p class="text-zinc-200 text-xs font-bold font-mono text-amber-500" id="modal-item-name">-</p>
+                <div class="flex justify-between mt-3 pt-3 border-t border-zinc-900 text-xs">
+                    <span class="text-zinc-500">Escrow Value:</span>
+                    <span class="text-white font-black" id="modal-item-price">0.00</span>
+                </div>
             </div>
-            <div class="p-6">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-white font-bold text-sm tracking-wide">Sovereign OS Framework</h3>
-                    <span class="text-[9px] text-zinc-600 font-mono">#NE-772-231</span>
-                </div>
-                <p class="text-zinc-500 text-[10px] leading-relaxed mb-6 font-light">Full technical architecture for the 7 Pillars integration. Optimized for high-fidelity node environments.</p>
-                
-                <div class="flex justify-between items-center bg-black/50 p-4 rounded-2xl border border-zinc-900/50">
-                    <div>
-                        <span class="text-[8px] text-zinc-600 block uppercase font-black mb-1">Asset Value</span>
-                        <span class="text-white font-black text-sm">75.00 <i class="fa-solid fa-coins text-amber-500 ml-1"></i></span>
-                    </div>
-                    <button onclick="initiatePurchase(75.00, 'Sovereign OS Framework')" class="bg-white text-black px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500 transition-colors">Acquire</button>
-                </div>
+            <div class="flex gap-3">
+                <button onclick="closeEscrow()" class="w-1/2 bg-zinc-900 text-zinc-400 py-3 rounded-xl font-bold uppercase text-[10px] tracking-wider">Abort</button>
+                <button onclick="executeFinalTransaction()" class="w-1/2 bg-gradient-to-r from-amber-500 to-amber-600 text-black py-3 rounded-xl font-black uppercase text-[10px] tracking-wider">Authorize</button>
             </div>
         </div>
+    </div>
 
-        <div class="luxury-card group">
-            <div class="preview-box">
-                <span class="merchant-badge"><i class="fa-solid fa-shield mr-1"></i> OFFICIAL</span>
-                <img src="https://images.unsplash.com/photo-1552061073-e38053641372?auto=format&fit=crop&q=80&w=1000">
-            </div>
-            <div class="p-6">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="text-white font-bold text-sm tracking-wide">Diamondback Tactical Kit</h3>
-                    <span class="text-[9px] text-zinc-600 font-mono">#DB-231-001</span>
-                </div>
-                <p class="text-zinc-500 text-[10px] leading-relaxed mb-6 font-light">The "Sovereign Stylist" uniform package including physical distribution rights and 3D asset files.</p>
-                
-                <div class="flex justify-between items-center bg-black/50 p-4 rounded-2xl border border-zinc-900/50">
-                    <div>
-                        <span class="text-[8px] text-zinc-600 block uppercase font-black mb-1">Asset Value</span>
-                        <span class="text-white font-black text-sm">120.00 <i class="fa-solid fa-coins text-amber-500 ml-1"></i></span>
-                    </div>
-                    <button onclick="initiatePurchase(120.00, 'Diamondback Tactical Kit')" class="bg-zinc-800 text-zinc-500 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest cursor-not-allowed">Locked (T2)</button>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <div class="fixed bottom-[85px] w-full px-5">
-        <div class="bg-amber-500/5 border border-amber-500/10 rounded-xl py-2 text-center">
+    <div class="fixed bottom-[85px] w-full px-5 z-50">
+        <div class="bg-amber-500/5 border border-amber-500/10 rounded-xl py-2 text-center backdrop-blur-md">
             <p class="text-[8px] text-amber-500/60 font-black tracking-[0.2em] uppercase">
                 Secure Escrow Active | Auth: NAWI-EMPIRE001
             </p>
@@ -275,22 +263,152 @@
     </nav>
 
     <script>
-        // Purchase Protocol
-        function initiatePurchase(price, item) {
-            const confirmPurchase = confirm(`Initiate Sovereign P2P Escrow for: ${item}?\nValue: ${price.toFixed(2)} Coins`);
-            if (confirmPurchase) {
-                alert("Protocol Initialized. Connecting to Ledger...");
-                // Link your backend API here
+        // Real platform catalog array
+        const products = [
+            {
+                id: "DB-FRAME-231",
+                title: "Technical Luxury UI Framework",
+                category: "branding",
+                merchant: "DIAMONDBACK 231",
+                price: 75.00,
+                desc: "High-end matte black and 24k gold responsive UI vector template framework for custom digital interfaces.",
+                img: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: "ADS-BANNER-01",
+                title: "Main Stage Marketplace Banner Ad",
+                category: "ads",
+                merchant: "EMPIRE ADS ENGINE",
+                price: 45.00,
+                desc: "Secure programmatic ad space execution for 7 consecutive days on the main ecosystem dashboard.",
+                img: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: "STYL-BARB-KIT",
+                title: "Sovereign Stylist Pro Clipper Set",
+                category: "stylist",
+                merchant: "DIAMONDBACK 231",
+                price: 120.00,
+                desc: "Premium precision cordless grooming barbing kit featuring high-carbon diamond steel blades.",
+                img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=600"
+            },
+            {
+                id: "STYL-APRON-231",
+                title: "Matte Black Industrial Stylist Gown",
+                category: "stylist",
+                merchant: "DIAMONDBACK 231",
+                price: 35.00,
+                desc: "Waterproof, chemical-resistant high-end designer barber workspace uniform with specialized tool holster array.",
+                img: "https://images.unsplash.com/photo-1552061073-e38053641372?auto=format&fit=crop&q=80&w=600"
+            }
+        ];
+
+        let currentBalance = 100.00;
+        let selectedItem = null;
+        let activeCategory = 'all';
+
+        // Render platform grid elements dynamically
+        function renderProducts(items) {
+            const container = document.getElementById('product-container');
+            container.innerHTML = "";
+            
+            if(items.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-zinc-600 font-bold text-xs uppercase tracking-widest">
+                        No Assets Found Matching Query
+                    </div>`;
+                return;
+            }
+
+            items.forEach(product => {
+                container.innerHTML += `
+                    <div class="luxury-card">
+                        <div class="preview-box">
+                            <span class="merchant-badge"><i class="fa-solid fa-crown mr-1"></i> ${product.merchant}</span>
+                            <img src="${product.img}">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h3 class="text-white font-bold text-sm tracking-wide">${product.title}</h3>
+                                <span class="text-[9px] text-zinc-600 font-mono">#${product.id}</span>
+                            </div>
+                            <p class="text-zinc-500 text-[10px] leading-relaxed mb-6 font-light">${product.desc}</p>
+                            <div class="flex justify-between items-center bg-black/50 p-4 rounded-2xl border border-zinc-900/50">
+                                <div>
+                                    <span class="text-[8px] text-zinc-600 block uppercase font-black mb-1">Asset Value</span>
+                                    <span class="text-white font-black text-sm">${product.price.toFixed(2)} <i class="fa-solid fa-coins text-amber-500 ml-1"></i></span>
+                                </div>
+                                <button onclick="openEscrow('${product.title}', ${product.price})" class="bg-white text-black px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500 transition-colors">Acquire</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Live Category Filters
+        function filterCategory(element, cat) {
+            document.querySelectorAll('.pillar-chip').forEach(chip => chip.classList.remove('active'));
+            element.classList.add('active');
+            activeCategory = cat;
+            executeSearchAndFilter();
+        }
+
+        // Integrated Search Engine Setup
+        document.getElementById('search-input').addEventListener('input', function() {
+            executeSearchAndFilter();
+        });
+
+        function executeSearchAndFilter() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            
+            let filtered = products;
+            
+            // Apply chip classification first
+            if (activeCategory !== 'all') {
+                filtered = filtered.filter(p => p.category === activeCategory);
+            }
+            
+            // Apply text keyword matching
+            if (query !== "") {
+                filtered = filtered.filter(p => 
+                    p.title.toLowerCase().includes(query) || 
+                    p.desc.toLowerCase().includes(query) ||
+                    p.id.toLowerCase().includes(query)
+                );
+            }
+            
+            renderProducts(filtered);
+        }
+
+        // Sovereign Escrow Control Operations
+        function openEscrow(name, price) {
+            selectedItem = { name, price };
+            document.getElementById('modal-item-name').innerText = name;
+            document.getElementById('modal-item-price').innerText = price.toFixed(2) + " Coins";
+            document.getElementById('escrow-modal').style.display = 'flex';
+        }
+
+        function closeEscrow() {
+            document.getElementById('escrow-modal').style.display = 'none';
+        }
+
+        function executeFinalTransaction() {
+            if (currentBalance >= selectedItem.price) {
+                currentBalance -= selectedItem.price;
+                document.getElementById('display-balance').innerHTML = `${currentBalance.toFixed(2)} <i class="fa-solid fa-coins text-amber-500"></i>`;
+                closeEscrow();
+                alert(`SUCCESS:\nEscrow payment cleared via Diamondback 231 Creative Solutions.\nAsset allocated securely to database cluster.`);
+            } else {
+                alert("TRANSACTION BLOCKED:\nEcosystem ledger indicates insufficient currency reserves.");
+                closeEscrow();
             }
         }
 
-        // UI Filter Logic
-        document.querySelectorAll('.pillar-chip').forEach(chip => {
-            chip.addEventListener('click', function() {
-                document.querySelector('.pillar-chip.active').classList.remove('active');
-                this.classList.add('active');
-            });
-        });
+        // Trigger first build assembly
+        window.onload = () => {
+            renderProducts(products);
+        };
     </script>
 </body>
 </html>
