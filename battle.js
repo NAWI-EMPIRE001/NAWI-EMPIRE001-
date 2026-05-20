@@ -1,76 +1,67 @@
+// controllers/battles.js
 const mongoose = require('mongoose');
-const User = require('./models/User'); // Maps to NAWI_DB.users
-const KitchenMeal = require('./models/KitchenMeal'); // Maps to NAWI_DB.Kitchen-meals
-const VaultMeal = require('./models/VaultMeal'); // Maps to NAWI_VAULT.meals
-const DailyLedger = require('./models/DailyLedger'); // Maps to NAWI_DB.dailyledgers
 
-// SOVEREIGN BYPASS CONSTANTS
-const SOVEREIGN_ID = "NAWI-EMPIRE001"; // Your Master Admin ID
-const MASTER_PASS_NAME = "7 pillars";   // Your Social Media Authority Name
+// Absolute path tracking to your standardized production folder models
+const User = require('../models/User');               // Maps directly to NAWI_DB.users
+const Meal = require('../models/Meal');               // Unified kitchenmeals model 
+const Battle = require('../models/Battle');           // Maps directly to NAWI_DB.gaming_battles
 
-// UNIFIED BOX BATTLE SCHEMA DEFINITION
-const BattleSchema = new mongoose.Schema({
-    battleId: { type: String, required: true, unique: true },
-    participants: [{ 
-        userId: String, 
-        username: String, 
-        coinsReceived: { type: Number, default: 0 } 
-    }],
-    timer: { type: Number, default: 300 }, // 5 Minutes in seconds
-    isActive: { type: Boolean, default: true },
-    section: { type: String, default: 'Gaming' } // Can dynamically be 'Gaming' or 'Kitchen'
-});
-
-// Avoid compile overwrite errors if model already compiled in server.js
-const Battle = mongoose.models.Battle || mongoose.model('Battle', BattleSchema);
+// SOVEREIGN BYPASS SECURE PLATFORM CONSTANTS
+const SOVEREIGN_ID = "NAWI-EMPIRE001"; 
+const MASTER_PASS_NAME = "7 pillars";   
 
 /**
- * CODE 2 - PART A: INITIALIZE OR JOIN ACTIVE SESSION
- * Sets up the jury anchor metrics for both structural zones.
+ * 🎮 AUTOMATED ENGINE 1: INITIALIZE OR JOIN ACTIVE CHALLENGE ARENA
+ * Enforces the zero-balance guardrail rule: Users cannot battle without active platform footprints.
  */
 exports.initializeBattleSession = async (req, res) => {
     try {
-        const { userId, mealId, sectionType } = req.body;
-        const currentSection = sectionType || 'Kitchen';
+        const { challengerId, opponentId, sectionType } = req.body;
+        const currentSection = sectionType || 'Gaming';
 
-        // 1. SOVEREIGN BYPASS CHECK: Full structural access
-        if (userId === SOVEREIGN_ID) {
+        // 1. MASTER SOVEREIGN BYPASS SECURITY OVERRIDE
+        if (challengerId === SOVEREIGN_ID) {
             return res.status(200).json({
                 success: true,
-                message: `Sovereign Authority Verified: Welcome, [${MASTER_PASS_NAME}]. All ecosystem protocols bypassed.`,
+                message: `Sovereign Authority Verified: Welcome, [${MASTER_PASS_NAME}]. All platform gates bypassed.`,
                 bypass_active: true,
                 arena_status: "MASTER_OVERRIDE_ENABLED"
             });
         }
 
-        // 2. Fetch tracking details from live frontend repository
-        const activeMeal = await KitchenMeal.findById(mealId);
-        if (!activeMeal) return res.status(404).json({ success: false, message: "Challenge arena target missing." });
-
-        // 3. Initialize or sync with the Automated Jury Watch-Node in NAWI_VAULT
-        let juryTracker = await VaultMeal.findOne({ mealId: mealId });
-        if (!juryTracker) {
-            juryTracker = new VaultMeal({
-                mealId: mealId,
-                title: activeMeal.title,
-                host_chef: activeMeal.chef_id,
-                total_watch_time_mins: 0,
-                hype_score: 0,
-                token_votes_count: 0,
-                battle_date: new Date().toISOString().split('T')[0],
-                is_challenge_validated: false,
-                category_scope: currentSection
-            });
-            await juryTracker.save();
+        // 2. ZERO BALANCE & VERIFICATION CHECK (Guardrail Security Engine)
+        const player = await User.findOne({ userId: challengerId });
+        if (!player) {
+            return res.status(404).json({ success: false, message: "User account footprint not found on the platform." });
         }
 
-        return res.status(200).json({
+        // Check if user balance is zero before allowing the match challenge to broadcast
+        const coinsBalance = parseFloat(player.wallet.empire_coins || 0);
+        if (coinsBalance <= 0) {
+            return res.status(403).json({ 
+                success: false, 
+                message: "Action Denied: You cannot challenge other citizens or stream with a zero balance. Recharge your Empire Wallet." 
+            });
+        }
+
+        // 3. GENERATE THE SECURE ANTI-SCAM ENTRY RECORD IN MONGO_DB
+        const newBattle = new Battle({
+            challenger_id: challengerId,
+            opponent_id: opponentId,
+            status: 'PENDING',
+            wager_type: 'XP_AND_RANK_ONLY', // Strict non-gambling configuration
+            empire_coin_check_passed: true
+        });
+
+        await newBattle.save();
+
+        return res.status(201).json({
             success: true,
-            message: "Automated Jury Engine attached to stream session.",
+            message: "Anti-Scam Arena Battle Session successfully initiated.",
             arena: {
-                title: juryTracker.title,
-                current_hype: juryTracker.hype_score,
-                validated: juryTracker.is_challenge_validated,
+                battle_id: newBattle._id,
+                status: newBattle.status,
+                wager_protocol: newBattle.wager_type,
                 section: currentSection
             }
         });
@@ -81,60 +72,55 @@ exports.initializeBattleSession = async (req, res) => {
 };
 
 /**
- * CODE 1 FEATURE & CODE 2 INTEGRATION: REAL-TIME GIFT SYNC ROUTE
- * Automatically translates sent token gifts into Automated Jury Hype progress.
+ * 🎁 AUTOMATED ENGINE 2: LIVE STREAM GIFT SYNC SYSTEM
+ * Translates live gift tokens directly into verified trust metrics for target profiles.
  */
 exports.sendBattleGift = async (req, res) => {
     try {
-        const { battleId, targetUserId, giftValue, senderUserId, mealId } = req.body;
+        const { battleId, senderUserId, receiverUserId, giftType, empireCoinsSpent, mealId } = req.body;
         const isSovereign = (senderUserId === SOVEREIGN_ID);
 
-        // Find the active box battle record
-        const battle = await Battle.findOne({ battleId });
-        if (!battle) return res.status(404).json({ success: false, message: "Box Battle instance not found." });
+        // 1. ENFORCE WALLET BALANCE LOCKUP
+        if (!isSovereign) {
+            const sender = await User.findOne({ userId: senderUserId });
+            if (!sender || parseFloat(sender.wallet.empire_coins || 0) < empireCoinsSpent) {
+                return res.status(403).json({ success: false, message: "Insufficient internal token resources to execute gift." });
+            }
 
-        const participant = battle.participants.find(p => p.userId === targetUserId);
-        if (participant) {
-            // Apply token update (Maximize instantly if you are testing via your admin pass)
-            participant.coinsReceived += isSovereign ? 10000 : giftValue;
-            await battle.save();
+            // Deduct from sender wallet, add directly to creator total earnings
+            await User.findOneAndUpdate({ userId: senderUserId }, { $inc: { "wallet.empire_coins": -empireCoinsSpent } });
+            await User.findOneAndUpdate({ userId: receiverUserId }, { 
+                $inc: { 
+                    "wallet.empire_coins": empireCoinsSpent,
+                    "wallet.total_earned_to_date": empireCoinsSpent
+                } 
+            });
         }
 
-        // Forward token gift weight directly into the Automated Jury Metrics
-        if (mealId) {
-            let juryTracker = await VaultMeal.findOne({ mealId });
-            if (juryTracker) {
-                // Gifts heavily accelerate the hype validation metrics
-                juryTracker.token_votes_count += 1;
-                juryTracker.hype_score += isSovereign ? 100 : (giftValue * 2); 
-                
-                // Evaluate auto-conclusion check right inside the gift transaction
-                if (juryTracker.hype_score >= 100 && !juryTracker.is_challenge_validated) {
-                    juryTracker.is_challenge_validated = true;
-                    
-                    // Update active storefront status map
-                    await KitchenMeal.findByIdAndUpdate(mealId, {
-                        $set: { "trust_and_security.is_verified_seller": true }
-                    });
+        // 2. SYNC BATTLE STATUS IF APPLICABLE
+        if (battleId) {
+            await Battle.findByIdAndUpdate(battleId, { $set: { status: 'ACTIVE' } });
+        }
 
-                    // Reward matching activity points to sender automatically
-                    if (!isSovereign) {
-                        await User.findByIdAndUpdate(senderUserId, {
-                            $inc: { current_xp: 25 },
-                            $set: { "daily_tasks.$[elem].completed": true }
-                        }, {
-                            arrayFilters: [{ "elem.task_id": "TASK_KITCHEN_01" }]
-                        });
-                    }
+        // 3. EVALUATE AUTOMATED SELLER VERIFICATION GATES (IF KITCHEN LIVESTREAM)
+        if (mealId) {
+            const activeMeal = await Meal.findById(mealId);
+            if (activeMeal) {
+                // Gifts directly accelerate high-end status progression
+                if (empireCoinsSpent >= 50) {
+                    await Meal.findByIdAndUpdate(mealId, {
+                        $set: { 
+                            "trust_and_security.is_verified_seller": true,
+                            "trust_and_security.audit_status": "APPROVED"
+                        }
+                    });
                 }
-                await juryTracker.save();
             }
         }
 
         return res.status(200).json({ 
             success: true, 
-            message: "Gift synchronized across engine ledgers.",
-            currentStandings: battle.participants 
+            message: "Empire Coin Gift successfully verified and synchronized across structural node ledgers."
         });
 
     } catch (error) {
@@ -143,70 +129,40 @@ exports.sendBattleGift = async (req, res) => {
 };
 
 /**
- * CODE 2 - PART B: MANUAL/AUTOMATED JURY METRIC LOGGING
- * Monitors baseline streams, handles leveling scaling, and tracks the hidden daily values.
+ * 🏅 AUTOMATED ENGINE 3: BATTLE CONCLUSION & ADVANCEMENT PROCESSING
+ * Hands out rank levels and XP status validation without using real money payouts.
  */
 exports.processJuryInteraction = async (req, res) => {
     try {
-        const { userId, mealId, watchTimeIncrement, actionType } = req.body;
-        const isSovereign = (userId === SOVEREIGN_ID);
+        const { battleId, winnerId } = req.body;
 
-        let juryTracker = await VaultMeal.findOne({ mealId: mealId });
-        let activeMeal = await KitchenMeal.findById(mealId);
-        
-        if (!juryTracker || !activeMeal) {
-            return res.status(404).json({ success: false, message: "Active structural tracking nodes missing." });
+        const activeBattle = await Battle.findById(battleId);
+        if (!activeBattle) {
+            return res.status(404).json({ success: false, message: "Target challenge validation instance missing." });
         }
 
-        if (isSovereign) {
-            juryTracker.hype_score = 100;
-            juryTracker.total_watch_time_mins += 100;
-        } else {
-            juryTracker.total_watch_time_mins += watchTimeIncrement;
-            
-            if (actionType === "TOKEN_VOTE") {
-                juryTracker.token_votes_count += 1;
-                juryTracker.hype_score += 5;
-            } else if (actionType === "STREAM_COMMENT") {
-                juryTracker.hype_score += 1;
-            }
+        if (activeBattle.status === 'COMPLETED') {
+            return res.status(400).json({ success: false, message: "This world challenge has already been concluded." });
         }
 
-        // Evaluate milestone targets
-        if (juryTracker.hype_score >= 100 && !juryTracker.is_challenge_validated) {
-            juryTracker.is_challenge_validated = true;
-            
-            activeMeal.trust_and_security = { is_verified_seller: true };
-            await activeMeal.save();
+        // Lock down the winner and update state to match Code 2 requirements
+        activeBattle.status = 'COMPLETED';
+        activeBattle.winner_id = winnerId;
+        await activeBattle.save();
 
-            if (!isSovereign) {
-                await User.findByIdAndUpdate(userId, {
-                    $inc: { current_xp: 25 },
-                    $set: { "daily_tasks.$[elem].completed": true }
-                }, {
-                    arrayFilters: [{ "elem.task_id": "TASK_KITCHEN_01" }]
-                });
+        // Increment platform experience parameters to push user towards the worldwide monetization gate
+        await User.findOneAndUpdate({ userId: winnerId }, {
+            $inc: { 
+                "metrics.activity_score": 50,
+                "metrics.daily_streak": 1 
             }
-
-            // INVISIBLE LEDGER VALIDATION: Trigger secret metrics check on milestone upgrade
-            const todayStr = new Date().toISOString().split('T')[0];
-            let ledger = await DailyLedger.findOne({ date: todayStr });
-            if (ledger) {
-                ledger.totalVolumeProcessedUsd += 35; // Process system layer value silently
-                await ledger.save();
-            }
-        }
-
-        await juryTracker.save();
+        });
 
         return res.status(200).json({
             success: true,
-            message: juryTracker.is_challenge_validated ? "Worldwide Challenge Concluded. Winner Validated." : "Jury metric recorded.",
-            metrics: {
-                hype_score: juryTracker.hype_score,
-                total_watch_time: juryTracker.total_watch_time_mins,
-                challenge_complete: juryTracker.is_challenge_validated
-            }
+            message: "Worldwide Gaming Challenge Concluded. Winner parameters upgraded.",
+            status: "COMPLETED",
+            validated_winner: winnerId
         });
 
     } catch (error) {
