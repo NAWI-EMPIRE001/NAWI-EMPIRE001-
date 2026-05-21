@@ -3,27 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PROFILE | NAWI-EMPIRE</title>
+    <title>IDENTITY PLATFORM | NAWI-EMPIRE</title>
     
+    <!-- Frontend Core Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     
+    <!-- Sovereign Visual Engine Core Styling -->
     <style>
-        :root { --gold: #D4AF37; --black: #050505; --matte: #0A0A0A; --green: #00ff64; }
-        body { background: var(--black); color: white; font-family: 'Inter', sans-serif; padding-bottom: 100px; overflow-x: hidden; }
+        :root {
+            --obsidian: #050505;
+            --titanium-dark: #0D0D0D;
+            --matte: #0A0A0A;
+            --titanium-border: rgba(212, 175, 55, 0.15);
+            --polished-gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.15);
+            --system-green: #00ff64;
+        }
 
-        /* --- EXECUTIVE LAYOUT GLASS TIER --- */
-        .premium-card {
+        body {
+            background-color: var(--obsidian);
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            padding-bottom: 100px;
+            overflow-x: hidden;
+        }
+
+        .sovereign-card {
             background: linear-gradient(145deg, #0f0f0f 0%, #050505 100%);
-            border: 1px solid rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--titanium-border);
             border-radius: 24px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.9);
         }
 
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF3B0 0%, var(--polished-gold) 50%, #8A6F27 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .avatar-frame {
-            width: 120px; height: 120px;
-            border: 2px solid var(--gold);
+            width: 120px;
+            height: 120px;
+            border: 2px solid var(--polished-gold);
             border-radius: 50%;
             padding: 5px;
             background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
@@ -35,14 +58,14 @@
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
+            gap: 6px;
             margin-top: 10px;
         }
         .portfolio-item {
             aspect-ratio: 1/1;
             background: #0d0d0d;
             border: 1px solid #151515;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
         }
 
@@ -50,17 +73,37 @@
         #settingsDrawer {
             position: fixed; top: 0; left: -100%;
             width: 85%; max-width: 350px; height: 100%;
-            background: var(--matte); border-right: 1px solid var(--gold);
+            background: var(--matte); border-right: 1px solid var(--polished-gold);
             z-index: 100; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 30px 20px;
             box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+        }
+
+        .pillar-node {
+            background: #0A0A0A;
+            border: 1px solid #1A1A1A;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pillar-node:hover {
+            border-color: var(--polished-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .tier-card {
+            transition: all 0.3s ease;
+        }
+        .tier-card.active-tier {
+            border-color: var(--system-green);
+            background: rgba(0, 255, 100, 0.02);
         }
         
         /* --- SECRET COMMAND TERMINAL SHIELD --- */
         .hidden-terminal {
             display: none;
             background: linear-gradient(180deg, #0c0c0c 0%, #020202 100%);
-            border: 2px dashed var(--gold);
+            border: 2px dashed var(--polished-gold);
             animation: borderGlow 4s infinite alternate;
         }
 
@@ -74,19 +117,26 @@
             -webkit-user-select: none;
             user-select: none;
         }
+
+        /* Custom Scrollbar for Premium Feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #1A1A1A; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--polished-gold); }
     </style>
 </head>
-<body class="p-4 md:p-8 flex flex-col items-center justify-start min-h-screen">
+<body class="p-3 md:p-8">
 
+    <!-- SETTINGS CONTROL DRAWER -->
     <div id="settingsDrawer">
         <div class="flex justify-between items-center mb-10">
             <span class="text-[10px] font-black text-amber-500 tracking-[0.3em] uppercase">System Settings</span>
-            <i class="fa-solid fa-xmark text-zinc-600 text-xl cursor-pointer hover:text-white" onclick="ProfileController.toggleSettings()"></i>
+            <i class="fa-solid fa-xmark text-zinc-600 text-xl cursor-pointer hover:text-white" onclick="SovereignProfile.toggleSettings()"></i>
         </div>
         
         <div class="bg-zinc-900/40 p-5 rounded-2xl border-l-4 border-amber-500 mb-6">
             <label class="text-[8px] text-zinc-500 uppercase font-black tracking-widest">Empire Wallet balance</label>
-            <p id="wallet-balance" class="text-2xl font-black text-white mt-1">0.00 🪙</p>
+            <p id="wallet-balance-drawer" class="text-2xl font-black text-white mt-1">0.00 🪙</p>
             <button onclick="window.location.href='/p2p-bridge'" class="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-black py-3 rounded-xl font-black text-[10px] uppercase tracking-wider transition">Withdraw Assets</button>
         </div>
 
@@ -97,109 +147,293 @@
         </div>
     </div>
 
-    <div class="w-full max-w-md relative">
-        
-        <header class="w-full py-4 flex justify-between items-center mb-4">
-            <i class="fa-solid fa-bars-staggered text-amber-500 text-xl cursor-pointer" onclick="ProfileController.toggleSettings()"></i>
-            <span class="text-[10px] font-black text-zinc-600 tracking-[0.3em] uppercase">Identity Vault</span>
-            <i class="fa-solid fa-gear text-zinc-600 cursor-pointer" onclick="ProfileController.toggleSettings()"></i>
-        </header>
-
-        <div class="w-full premium-card p-6 relative overflow-hidden mb-6">
-            <div class="absolute -right-10 -top-10 text-zinc-900/20 opacity-25 pointer-events-none font-['Cinzel'] text-9xl font-black">N</div>
-
-            <div class="flex justify-between items-center mb-6">
-                <span id="display-rank" class="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-3 py-1 rounded-full font-black tracking-widest uppercase">
-                    Apprentice Designer
-                </span>
-                <div class="flex items-center gap-1.5">
-                    <i class="fa-solid fa-coins text-amber-500 text-xs"></i>
-                    <span id="display-coins" class="text-xs font-black font-mono text-zinc-300">0 🪙</span>
-                </div>
+    <!-- TOP SYSTEM STATUS WATERMARK -->
+    <div class="max-w-7xl mx-auto mb-6 flex flex-col sm:flex-row items-center justify-between p-4 sovereign-card rounded-2xl border-zinc-800 bg-zinc-950/40 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981] animate-pulse"></div>
+            <span class="text-[10px] font-black uppercase tracking-widest text-zinc-400 font-mono">NODE AUTH: SECURE_CORE_AURORA-231</span>
+        </div>
+        <div class="flex items-center gap-6 mt-2 sm:mt-0">
+            <i class="fa-solid fa-bars-staggered text-amber-500 text-lg cursor-pointer" onclick="SovereignProfile.toggleSettings()"></i>
+            <div class="text-[9px] text-zinc-500 font-bold font-mono tracking-wider uppercase">
+                System Watermark: <span class="text-amber-500">PROTECTED_BY_DIAMONDBACK231_AUTHORITY</span>
             </div>
+            <i class="fa-solid fa-gear text-zinc-600 cursor-pointer" onclick="SovereignProfile.toggleSettings()"></i>
+        </div>
+    </div>
 
-            <div class="flex flex-col items-center text-center mt-4 mb-6">
-                <div class="relative group no-select">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-amber-500 to-yellow-600 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                    <div class="avatar-frame cursor-pointer active:scale-95 transition transform duration-150" id="masterTrigger">
-                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=256&auto=format&fit=crop" 
-                             class="w-full h-full rounded-full object-cover relative border-2 border-zinc-900 grayscale" id="profile-img">
+    <!-- MAIN PROFILE WORKSPACE GRID -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT PANEL: IDENTITY PROFILE SIGNATURE -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="sovereign-card rounded-3xl p-6 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 text-zinc-900/10 pointer-events-none font-['Cinzel'] text-9xl font-black">N</div>
+                
+                <div class="flex justify-between items-center mb-4">
+                    <span id="display-rank" class="text-[9px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-3 py-1 rounded-full font-black tracking-widest uppercase">
+                        Apprentice Designer
+                    </span>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-coins text-amber-500 text-xs"></i>
+                        <span id="display-coins" class="text-xs font-black font-mono text-zinc-300">0 EMPR</span>
                     </div>
                 </div>
-                
-                <div class="flex items-center justify-center gap-2 mt-4">
-                    <h1 id="display-username" class="text-xl font-black uppercase tracking-tight">Citizen Node</h1>
-                    <i class="fa-solid fa-circle-check text-blue-500 hidden" id="v-badge"></i>
+
+                <!-- Avatar Visual Frame (Long Press Trigger) -->
+                <div class="flex flex-col items-center text-center mt-4">
+                    <div class="relative group no-select">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-amber-500 to-yellow-600 rounded-full blur opacity-20 group-hover:opacity-50 transition duration-500"></div>
+                        <div class="avatar-frame cursor-pointer active:scale-95 transition transform duration-150" id="masterTrigger">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=256&auto=format&fit=crop" 
+                                 class="w-full h-full rounded-full object-cover relative border-2 border-zinc-900 grayscale" id="profile-img">
+                            <span class="absolute bottom-1 right-1 bg-emerald-500 text-black text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Online</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-center gap-2 mt-4">
+                        <h2 id="display-username" class="text-xl font-black uppercase tracking-tight font-['Cinzel'] gold-gradient-text">Citizen Node</h2>
+                        <i class="fa-solid fa-circle-check text-blue-500 hidden" id="v-badge"></i>
+                    </div>
+                    <p class="text-[9px] text-zinc-500 uppercase tracking-widest mt-1">Ecosystem Infrastructure Developer</p>
+                    <div class="mt-3 bg-zinc-900/80 px-4 py-1.5 rounded-full border border-zinc-800 text-[10px] font-mono text-amber-400 font-bold">
+                        Identity: diamondback231
+                    </div>
                 </div>
-                <p class="text-[10px] text-zinc-500 uppercase tracking-widest mt-1">Ecosystem Infrastructure Developer</p>
+
+                <!-- Vault Metrics Ledger -->
+                <div class="mt-6 bg-black/60 p-5 rounded-2xl border border-zinc-900">
+                    <span class="text-[9px] uppercase tracking-widest text-zinc-400 font-black">Ecosystem Token Balance</span>
+                    <div class="text-3xl font-black mt-1 tracking-tight text-white font-mono flex items-center gap-2">
+                        <span>🪙</span> <span id="wallet-balance-display">0.00</span>
+                    </div>
+                    <p class="text-[9px] text-zinc-500 mt-2 italic"><i class="fa-solid fa-shield-halved text-emerald-500 mr-1"></i> Sovereign Activity Yield Engine operational.</p>
+                </div>
+
+                <!-- Activity Metrics Counter -->
+                <div class="flex justify-center gap-10 mt-6 border-t border-zinc-900 pt-4">
+                    <div class="text-center">
+                        <span id="asset-count" class="block font-black text-base text-zinc-200">0</span>
+                        <span class="text-[8px] text-zinc-600 uppercase font-black tracking-wider">Renders</span>
+                    </div>
+                    <div class="text-center">
+                        <span id="trade-count" class="block font-black text-base text-zinc-200">0</span>
+                        <span class="text-[8px] text-zinc-600 uppercase font-black tracking-wider">P2P Trades</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block font-black text-base text-emerald-400">100%</span>
+                        <span class="text-[8px] text-zinc-600 uppercase font-black tracking-wider">Reputation</span>
+                    </div>
+                </div>
+
+                <!-- Hard-Bound Recovery Safeguards Monitor -->
+                <div class="mt-6 pt-4 border-t border-zinc-900 space-y-2">
+                    <span class="text-[9px] uppercase tracking-widest text-zinc-500 font-black block">Dual-Channel Safety Vectors</span>
+                    <div class="flex items-center justify-between text-xs bg-zinc-950 p-3 rounded-xl border border-zinc-900">
+                        <span class="text-zinc-400 font-medium"><i class="fa-solid fa-phone mr-2 text-zinc-600"></i> Registration Mobile</span>
+                        <span class="font-mono font-bold text-zinc-300 text-[11px]">[Bound Securely]</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-zinc-950 p-3 rounded-xl border border-zinc-900">
+                        <span class="text-zinc-400 font-medium"><i class="fa-solid fa-envelope mr-2 text-zinc-600"></i> Registration Email</span>
+                        <span class="font-mono font-bold text-zinc-300 text-[11px]">[Bound Securely]</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex justify-center gap-10 mt-6 border-y border-zinc-900 py-4">
-                <div class="text-center">
-                    <span id="asset-count" class="block font-black text-base text-zinc-200">0</span>
-                    <span class="text-[8px] text-zinc-600 uppercase font-black tracking-wider">Renders</span>
+            <!-- LEVEL-UP VERIFICATION SYSTEM INTERFACE -->
+            <div class="sovereign-card rounded-3xl p-6">
+                <div class="mb-4">
+                    <h3 class="text-xs font-black uppercase tracking-widest text-amber-500">System Verification Tiers</h3>
+                    <p class="text-[10px] text-zinc-500">Activity-based progression thresholds</p>
                 </div>
-                <div class="text-center">
-                    <span id="trade-count" class="block font-black text-base text-zinc-200">0</span>
-                    <span class="text-[8px] text-zinc-600 uppercase font-black tracking-wider">P2P Trades</span>
-                </div>
-                <div class="text-center">
-                    <span class="block font-black text-base text-emerald-400">100%</span>
-                    <span class="text-[8px] text-zinc-600 uppercase font-black tracking-wider">Reputation</span>
+
+                <div class="space-y-3">
+                    <div id="tier-card-1" class="tier-card p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 flex items-start gap-3">
+                        <div class="mt-1 bg-zinc-900 p-2 rounded-lg text-amber-400"><i class="fa-solid fa-user-shield"></i></div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-black uppercase tracking-wide">Tier 1: Casual Citizen</span>
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
+                            </div>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">Day 1 Activation complete via 10-second front-facing biological Video Lock signature.</p>
+                        </div>
+                    </div>
+
+                    <div id="tier-card-2" class="tier-card p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 flex items-start gap-3">
+                        <div class="mt-1 bg-zinc-900 p-2 rounded-lg text-cyan-400"><i class="fa-solid fa-store"></i></div>
+                        <div>
+                            <span class="text-xs font-black uppercase tracking-wide text-zinc-300">Tier 2: Verified Merchant</span>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">Automated monitoring tracks structural age and compliance metrics without escrow bypass.</p>
+                        </div>
+                    </div>
+
+                    <div id="tier-card-3" class="tier-card p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 flex items-start gap-3">
+                        <div class="mt-1 bg-zinc-900 p-2 rounded-lg text-purple-400"><i class="fa-solid fa-gem"></i></div>
+                        <div>
+                            <span class="text-xs font-black uppercase tracking-wide text-zinc-300">Tier 3: Sovereign Challenger</span>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">Unlocks elite challenge loops (e.g., 27" smart workstation). Requires corporate CAC verification documents.</p>
+                            <button onclick="SovereignProfile.triggerTier3Submission()" class="mt-2 bg-amber-500 text-black text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-md hover:bg-amber-600 transition">Submit Corporate Docs</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="w-full mb-6">
-            <div class="flex justify-between items-center py-2 mb-2">
-                <span class="text-[9px] font-black text-amber-500 tracking-widest uppercase border-l-2 border-amber-500 pl-3">Studio Showcase</span>
-                <i class="fa-solid fa-table-cells-large text-zinc-700 text-sm"></i>
+        <!-- RIGHT PANEL: THE 7 PILLARS COMPONENT INTERFACE & PORTFOLIO -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- THE 7 PILLARS INFRASTRUCTURE -->
+            <div class="sovereign-card rounded-3xl p-6">
+                <div class="mb-6">
+                    <h3 class="text-sm font-black uppercase tracking-widest text-amber-500 font-['Cinzel']">The 7 Pillars Infrastructure</h3>
+                    <p class="text-xs text-zinc-400 mt-1">Interactive operational matrix. Click any structural node tool block below to execute real-time payload mapping configurations.</p>
+                </div>
+
+                <!-- 7 Pillars Grid Architecture Mapping -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <!-- PILLAR 1: MARKETPLACE -->
+                    <div onclick="SovereignProfile.routeToPillar('MARKETPLACE', 'The Global Marketplace for every item and product. Secure digital asset hosting and escrow-protected transactions.')" class="pillar-node p-5 rounded-2xl cursor-pointer group">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20 group-hover:border-amber-500/40 transition">
+                                <i class="fa-solid fa-cart-shopping text-xl text-amber-500"></i>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-600 font-black uppercase tracking-widest">Pillar 01</span>
+                        </div>
+                        <h4 class="text-sm font-black uppercase tracking-wide text-zinc-200">Global Marketplace</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1 leading-relaxed">Framework for secure digital asset hosting, transactions, and global trade.</p>
+                    </div>
+
+                    <!-- PILLAR 2: ADS PROGRAM -->
+                    <div onclick="SovereignProfile.routeToPillar('ADS_PROGRAM', 'Ads program manager global advertising for all the 7 pillars tools. Metric engines and targeted tracking blocks.')" class="pillar-node p-5 rounded-2xl cursor-pointer group">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-red-500/10 p-3 rounded-xl border border-red-500/20 group-hover:border-red-500/40 transition">
+                                <i class="fa-solid fa-rectangle-ad text-xl text-red-400"></i>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-600 font-black uppercase tracking-widest">Pillar 02</span>
+                        </div>
+                        <h4 class="text-sm font-black uppercase tracking-wide text-zinc-200">Ads Program Manager</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1 leading-relaxed">Internal visibility engine managing targeted system campaigns and traffic matrices.</p>
+                    </div>
+
+                    <!-- PILLAR 3: GAMING STUDIO -->
+                    <div onclick="SovereignProfile.routeToPillar('GAMING_STUDIO', 'Global Gaming videos live streaming battle for all top games in the world. Interactive tracking application nodes.')" class="pillar-node p-5 rounded-2xl cursor-pointer group">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-purple-500/10 p-3 rounded-xl border border-purple-500/20 group-hover:border-purple-500/40 transition">
+                                <i class="fa-solid fa-gamepad text-xl text-purple-400"></i>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-600 font-black uppercase tracking-widest">Pillar 03</span>
+                        </div>
+                        <h4 class="text-sm font-black uppercase tracking-wide text-zinc-200">Gaming Studio</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1 leading-relaxed">Interactive node hosting streaming battle servers, engagement tracking, and game nodes.</p>
+                    </div>
+
+                    <!-- PILLAR 4: LIVE STREAM -->
+                    <div onclick="SovereignProfile.routeToPillar('LIVE_STREAM', 'Real-time media infrastructure for decentralized broadcasting across the sovereign matrix.')" class="pillar-node p-5 rounded-2xl cursor-pointer group">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-blue-500/10 p-3 rounded-xl border border-blue-500/20 group-hover:border-blue-500/40 transition">
+                                <i class="fa-solid fa-video text-xl text-blue-400"></i>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-600 font-black uppercase tracking-widest">Pillar 04</span>
+                        </div>
+                        <h4 class="text-sm font-black uppercase tracking-wide text-zinc-200">Live Stream Infrastructure</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1 leading-relaxed">High-definition content pipelines and communication matrix configurations.</p>
+                    </div>
+
+                    <!-- PILLAR 5: LOGISTICS MATRIX -->
+                    <div onclick="SovereignProfile.routeToPillar('LOGISTICS', 'Decentralized automated supply-chain routing engines for digital and structural tracking.')" class="pillar-node p-5 rounded-2xl cursor-pointer group">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-cyan-500/10 p-3 rounded-xl border border-cyan-500/20 group-hover:border-cyan-500/40 transition">
+                                <i class="fa-solid fa-truck-fast text-xl text-cyan-400"></i>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-600 font-black uppercase tracking-widest">Pillar 05</span>
+                        </div>
+                        <h4 class="text-sm font-black uppercase tracking-wide text-zinc-200">Logistics & Escrow Fleet</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1 leading-relaxed">Global validation networks mapping secure real-time physical fulfillment nodes.</p>
+                    </div>
+
+                    <!-- PILLAR 6: P2P BRIDGE BRIDGEWAY -->
+                    <div onclick="SovereignProfile.routeToPillar('P2P_BRIDGE', 'Liquidity settlement layer routing cross-border assets via structural P2P verification.')" class="pillar-node p-5 rounded-2xl cursor-pointer group">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20 group-hover:border-emerald-500/40 transition">
+                                <i class="fa-solid fa-money-bill-transfer text-xl text-emerald-400"></i>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-600 font-black uppercase tracking-widest">Pillar 06</span>
+                        </div>
+                        <h4 class="text-sm font-black uppercase tracking-wide text-zinc-200">Fintech P2P Bridge</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1 leading-relaxed">Secure gateway enabling cross-border validation and currency asset processing.</p>
+                    </div>
+
+                    <!-- PILLAR 7: THE CORE SEALS FOUNDATION -->
+                    <div onclick="SovereignProfile.routeToPillar('CORE_FOUNDATION', 'Sovereign database and security cluster hosting user credentials globally.')" class="pillar-node p-5 rounded-2xl cursor-pointer group sm:col-span-2">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-zinc-800 p-3 rounded-xl border border-zinc-700 group-hover:border-amber-500/40 transition">
+                                <i class="fa-solid fa-cubes text-xl text-amber-500"></i>
+                            </div>
+                            <span class="text-[9px] font-mono text-zinc-500 font-black uppercase tracking-widest">Pillar 07</span>
+                        </div>
+                        <h4 class="text-sm font-black uppercase tracking-wide text-zinc-200">Ecosystem Infrastructure Base</h4>
+                        <p class="text-[11px] text-zinc-500 mt-1 leading-relaxed">The bedrock global matrix supporting decentralized databases and user state synchronization across clusters.</p>
+                    </div>
+                </div>
             </div>
-            <div class="portfolio-grid" id="portfolio-display">
-                </div>
-        </div>
 
-        <div id="executive-terminal" class="w-full hidden-terminal rounded-3xl p-6 mb-8 no-select">
-            <div class="flex items-center gap-3 border-b border-amber-500/20 pb-4 mb-4">
-                <i class="fa-solid fa-crown text-amber-500 text-xl"></i>
-                <div>
-                    <h3 class="text-amber-500 font-black font-['Cinzel'] tracking-widest text-sm uppercase">Sovereign Overlord Node</h3>
-                    <p class="text-[8px] text-zinc-500 uppercase tracking-widest font-mono">Status: Linked to Aurora-231 Core Matrix</p>
+            <!-- STUDIO SHOWCASE DESIGN PANEL -->
+            <div class="sovereign-card rounded-3xl p-6">
+                <div class="flex justify-between items-center py-2 mb-2">
+                    <span class="text-[10px] font-black text-amber-500 tracking-widest uppercase border-l-2 border-amber-500 pl-3">Studio Showcase</span>
+                    <i class="fa-solid fa-table-cells-large text-zinc-700 text-sm"></i>
+                </div>
+                <div class="portfolio-grid" id="portfolio-display">
+                    <!-- Loaded dynamically via dynamic data-matrix synchronization -->
                 </div>
             </div>
 
-            <p class="text-[11px] text-zinc-400 italic mb-4 leading-relaxed">
-                "Always tell the founders that this is my order and my authority to protect them and this platform, we're not here to collect your money, the only thing that we need is for them to follow the rules of this platform."
-            </p>
-
-            <div class="space-y-2 mt-4">
-                <div class="bg-zinc-950 border border-zinc-900 p-3 rounded-xl flex justify-between items-center">
-                    <span class="text-[10px] uppercase tracking-wider font-bold text-zinc-500">System Escalations Queue</span>
-                    <span class="text-[9px] font-black font-mono text-amber-500 bg-amber-500/10 px-2 py-1 rounded">AWAITING MASTER SIGNATURE</span>
+            <!-- SECRET COMMAND TERMINAL SHIELD -->
+            <div id="executive-terminal" class="w-full hidden-terminal rounded-3xl p-6 no-select">
+                <div class="flex items-center gap-3 border-b border-amber-500/20 pb-4 mb-4">
+                    <i class="fa-solid fa-crown text-amber-500 text-xl"></i>
+                    <div>
+                        <h3 class="text-amber-500 font-black font-['Cinzel'] tracking-widest text-sm uppercase">Sovereign Overlord Node</h3>
+                        <p class="text-[8px] text-zinc-500 uppercase tracking-widest font-mono">Status: Linked to Aurora-231 Core Matrix</p>
+                    </div>
                 </div>
-                
-                <div class="grid grid-cols-2 gap-2 mt-2">
-                    <button onclick="window.location.href='/api/master/pending-withdrawals?adminId=NAWI-EMPIRE001'" class="bg-amber-500 hover:bg-amber-600 text-black font-black text-[9px] uppercase tracking-widest py-3 rounded-xl shadow-lg transition">
-                        Authorize Claim Queue
-                    </button>
-                    <button onclick="ProfileController.triggerEcosystemReset()" class="bg-zinc-900 hover:bg-red-950 text-red-500 border border-zinc-800 font-black text-[9px] uppercase tracking-widest py-3 rounded-xl transition">
-                        System State Cache Flush
-                    </button>
+
+                <p class="text-[11px] text-zinc-400 italic mb-4 leading-relaxed">
+                    "Always tell the founders that this is my order and my authority to protect them and this platform, we're not here to collect your money, the only thing that we need is for them to follow the rules of this platform."
+                </p>
+
+                <div class="space-y-2 mt-4">
+                    <div class="bg-zinc-950 border border-zinc-900 p-3 rounded-xl flex justify-between items-center">
+                        <span class="text-[10px] uppercase tracking-wider font-bold text-zinc-500">System Escalations Queue</span>
+                        <span class="text-[9px] font-black font-mono text-amber-500 bg-amber-500/10 px-2 py-1 rounded">AWAITING MASTER SIGNATURE</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <button onclick="window.location.href='/api/master/pending-withdrawals?adminId=NAWI-EMPIRE001'" class="bg-amber-500 hover:bg-amber-600 text-black font-black text-[9px] uppercase tracking-widest py-3 rounded-xl shadow-lg transition">
+                            Authorize Claim Queue
+                        </button>
+                        <button onclick="SovereignProfile.triggerEcosystemReset()" class="bg-zinc-900 hover:bg-red-950 text-red-500 border border-zinc-800 font-black text-[9px] uppercase tracking-widest py-3 rounded-xl transition">
+                            System State Cache Flush
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- PERSISTENT NAVIGATION CONSOLE -->
     <nav class="fixed bottom-0 left-0 w-full bg-black/90 border-t border-zinc-900 flex justify-around p-5 z-50 backdrop-blur-xl">
-        <a href="index.html" class="text-zinc-600"><i class="fa-solid fa-house text-xl"></i></a>
-        <a href="market.html" class="text-zinc-600"><i class="fa-solid fa-store text-xl"></i></a>
-        <a href="create-post.html" class="text-zinc-400"><i class="fa-solid fa-circle-plus text-3xl"></i></a>
-        <a href="dashboard.html" class="text-zinc-600"><i class="fa-solid fa-chart-line text-xl"></i></a>
+        <a href="index.html" class="text-zinc-600 hover:text-amber-500 transition"><i class="fa-solid fa-house text-xl"></i></a>
+        <a href="market.html" class="text-zinc-600 hover:text-amber-500 transition"><i class="fa-solid fa-store text-xl"></i></a>
+        <a href="create-post.html" class="text-zinc-400 hover:scale-110 transition"><i class="fa-solid fa-circle-plus text-3xl"></i></a>
+        <a href="dashboard.html" class="text-zinc-600 hover:text-amber-500 transition"><i class="fa-solid fa-chart-line text-xl"></i></a>
         <a href="profile.html" class="text-amber-500"><i class="fa-solid fa-user text-xl"></i></a>
     </nav>
 
+    <!-- Unified Sovereign Controller Logic Layer -->
     <script>
-        const ProfileController = {
+        const SovereignProfile = {
             longPressTimer: null,
             requiredDuration: 3000, 
             masterId: "NAWI-EMPIRE001",
@@ -213,6 +447,7 @@
 
             bindGatekeeperEvents: function() {
                 const triggerItem = document.getElementById('masterTrigger');
+                if (!triggerItem) return;
 
                 triggerItem.addEventListener('mousedown', (e) => this.startCounter(e));
                 triggerItem.addEventListener('mouseup', () => this.cancelCounter());
@@ -247,10 +482,14 @@
                 if (authenticationKey === this.masterSecretKey) {
                     
                     document.getElementById('executive-terminal').style.display = 'block';
-                    document.getElementById('display-username').innerText = "NAWI-EMPIRE001";
-                    document.getElementById('display-username').className = "text-xl font-black uppercase tracking-widest text-amber-500 font-['Cinzel']";
+                    
+                    const usernameField = document.getElementById('display-username');
+                    usernameField.innerText = "NAWI-EMPIRE001";
+                    usernameField.className = "text-xl font-black uppercase tracking-widest text-amber-500 font-['Cinzel']";
+                    
                     document.getElementById('display-rank').innerText = "SYSTEM FOUNDER • NODE 001";
                     document.getElementById('profile-img').classList.remove('grayscale');
+                    document.getElementById('v-badge').classList.remove('hidden');
                     
                     alert("Welcome back, [7 pillars]. Sovereign administrative console exposed.");
                     document.getElementById('executive-terminal').scrollIntoView({ behavior: 'smooth' });
@@ -261,7 +500,16 @@
 
             toggleSettings: function() {
                 const drawer = document.getElementById('settingsDrawer');
-                drawer.style.left = (drawer.style.left === "0px" || drawer.style.left === "") ? "-100%" : "0px";
+                if (!drawer) return;
+                drawer.style.left = (drawer.style.left === "0px") ? "-100%" : "0px";
+            },
+
+            routeToPillar: function(pillarId, telemetryText) {
+                alert(`Routing Handshake Initialized for ${pillarId} Matrix...\nPayload context: ${telemetryText}`);
+            },
+
+            triggerTier3Submission: function() {
+                alert("Opening Corporate Gateway Secure Channel... Please prepare your CAC certification files.");
             },
 
             syncProfile: async function() {
@@ -273,7 +521,8 @@
                     
                     if(data) {
                         document.getElementById('display-username').innerText = data.username || "Citizen Node";
-                        document.getElementById('wallet-balance').innerText = `${(data.walletBalance || 0).toLocaleString()} 🪙`;
+                        document.getElementById('wallet-balance-drawer').innerText = `${(data.walletBalance || 0).toLocaleString()} 🪙`;
+                        document.getElementById('wallet-balance-display').innerText = (data.walletBalance || 0).toLocaleString();
                         document.getElementById('display-coins').innerText = `${(data.walletBalance || 0).toLocaleString()} EMPR`;
                         document.getElementById('asset-count').innerText = data.posts ? data.posts.length : 0;
                         document.getElementById('trade-count').innerText = data.tradesCount || 0;
@@ -282,6 +531,9 @@
                             document.getElementById('v-badge').classList.remove('hidden');
                             document.getElementById('display-rank').innerText = "SYSTEM FOUNDER • NODE 001";
                             document.getElementById('profile-img').classList.remove('grayscale');
+                            
+                            const tierCard = document.getElementById('tier-card-3');
+                            if (tierCard) tierCard.classList.add('active-tier');
                         }
 
                         // Render Dynamic Portfolio Cards safely
@@ -298,6 +550,8 @@
                     }
                 } catch (err) {
                     console.log("Local sync framework active. Populating cache profiles...");
+                    // Graceful fallback for layout integrity if offline
+                    document.getElementById('portfolio-display').innerHTML = `<div class="col-span-3 text-center py-8 text-xs text-zinc-600 uppercase font-bold tracking-widest">No active portfolio renders logged</div>`;
                 }
             },
 
@@ -309,7 +563,7 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            ProfileController.init();
+            SovereignProfile.init();
         });
     </script>
 </body>
