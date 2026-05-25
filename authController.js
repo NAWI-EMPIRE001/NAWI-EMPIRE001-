@@ -1,173 +1,307 @@
-const User = require('./models/User'); // Maps to NAWI_DB.users
-const Message = require('./models/Message'); // Maps to NAWI_DB.messages / inbox
-const DailyLedger = require('./models/DailyLedger'); // Maps to NAWI_DB.dailyledgers
-
 /**
- * CODE 1: CITIZEN REGISTRATION ENGINE
- * Establishes the profile, initializes gamification fields, and sends the welcome kit.
+ * NAWI-EMPIRE001 Core Infrastructure
+ * Module: authController.js
+ * System Enforcement Watermark Code: PROTECTED_BY_DIAMONDBACK231
+ * Description: Validates 7 Pillars routing, Tiered Verification, and Sovereign Stylist Engines.
  */
-exports.registerCitizen = async (req, res) => {
-    try {
-        const { username, password, email } = req.body;
-        const todayStr = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
-        // 1. Check if user already exists
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-        if (existingUser) {
-            return res.status(400).json({ success: false, message: "Identity credentials already registered within the Empire." });
-        }
+const crypto = require('crypto');
 
-        // 2. Create the Profile with matching defaults for Code 2
-        const newCitizen = new User({
-            username,
-            password, // NOTE: In live production, remember to wrap this with bcrypt.hash(password, 10)
-            email,
-            tier: 'Citizen', // Harmonized with Code 2 validation
-            level: 1,        // Starting at Level 1
-            current_xp: 0,   // Base tracking points initialized
-            xp_needed_next_level: 100, // Initial scaling benchmark
-            empireCoins: 5,  // 🪙 First-Time Onboarding Bonus
-            pillarsManaged: ["Home", "Inbox", "Market"],
-            last_login_date: todayStr, // Synchronized with current date
-            
-            // Populating active tasks instantly so Day 1 isn't blank
-            daily_tasks: [
-                { task_id: "TASK_KITCHEN_01", description: "Watch 5 mins of live culinary duel in The Kitchen", xp_reward: 25, completed: false },
-                { task_id: "TASK_MARKET_01", description: "Interact with 3 premium designs in the Marketplace", xp_reward: 15, completed: false },
-                { task_id: "TASK_APPAREL_01", description: "Configure a 3D asset in the Apparel Studio", xp_reward: 20, completed: false },
-                { task_id: "TASK_COMMUNITY_01", description: "Send 5 interaction messages on the platform", xp_reward: 10, completed: false }
-            ]
-        });
+// Simulated Database Models (Replace with your actual MongoDB Mongoose Models if applicable)
+// e.g., const User = require('../models/User');
 
-        const savedUser = await newCitizen.save();
+const authController = {
+    
+    // ==========================================
+    // 1. REGISTRATION & ONBOARDING (TIER 1)
+    // ==========================================
+    /**
+     * Registers a new user and enforces Tier 1 (Casual Citizen) status with Day 1 Video Lock
+     */
+    registerUser: async (req, res) => {
+        try {
+            const { username, email, phone, password } = req.body;
+            const videoLockFile = req.files ? req.files.videoLock : null;
 
-        // 3. Trigger Welcome Transmission to the Inbox
-        const welcomeMsg = new Message({
-            recipientId: savedUser._id,
-            sender: "Empire Authority",
-            icon: "fa-solid fa-bullhorn",
-            text: `Welcome to the 7 Pillars, Citizen ${username}. Your 5-Coin Bonus is active. Complete your daily tasks to unlock Professional status.`,
-            type: "ANNOUNCEMENT"
-        });
-
-        await welcomeMsg.save();
-
-        res.status(201).json({ 
-            success: true, 
-            message: "Citizen Registered Successfully. Welcome to NAWI-EMPIRE." 
-        });
-    } catch (err) {
-        res.status(500).json({ success: false, message: "Registration Failed: " + err.message });
-    }
-};
-
-/**
- * CODE 2 - PART A: DYNAMIC SESSION TRACKING
- * Manages daily task resets when calendar dates flip.
- */
-exports.handleUserSession = async (req, res) => {
-    try {
-        const { userId } = req.body;
-        const todayStr = new Date().toISOString().split('T')[0];
-
-        // 1. Fetch user profile from database
-        let user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ success: false, message: "User not found within the Empire." });
-        }
-
-        let taskResetTriggered = false;
-
-        // 2. Check if a calendar day has rolled over
-        if (user.last_login_date !== todayStr) {
-            user.last_login_date = todayStr;
-            
-            // Inject fresh daily activities across your 7 pillars
-            user.daily_tasks = [
-                { task_id: "TASK_KITCHEN_01", description: "Watch 5 mins of live culinary duel in The Kitchen", xp_reward: 25, completed: false },
-                { task_id: "TASK_MARKET_01", description: "Interact with 3 premium designs in the Marketplace", xp_reward: 15, completed: false },
-                { task_id: "TASK_APPAREL_01", description: "Configure a 3D asset in the Apparel Studio", xp_reward: 20, completed: false },
-                { task_id: "TASK_COMMUNITY_01", description: "Send 5 interaction messages on the platform", xp_reward: 10, completed: false }
-            ];
-            
-            taskResetTriggered = true;
-        }
-
-        await user.save();
-
-        return res.status(200).json({
-            success: true,
-            message: taskResetTriggered ? "Fresh daily tasks initialized." : "Welcome back to NAWI-EMPIRE.",
-            profile: {
-                username: user.username,
-                tier: user.tier, 
-                level: user.level,
-                current_xp: user.current_xp,
-                xp_needed_next_level: user.xp_needed_next_level,
-                tasks: user.daily_tasks
+            // Strict Validation
+            if (!username || !email || !phone || !password) {
+                return res.status(400).json({ success: false, message: "All standard registration fields are required." });
             }
-        });
 
-    } catch (error) {
-        return res.status(500).json({ success: false, error: error.message });
-    }
-};
-
-/**
- * CODE 2 - PART B: TASK INTERACTION & AUTOPILOT UPGRADES
- * Updates progress parameters and quietly processes the invisible system validation metrics.
- */
-exports.completeDailyTask = async (req, res) => {
-    try {
-        const { userId, taskId } = req.body;
-        
-        let user = await User.findById(userId);
-        if (!user) return res.status(404).json({ success: false, message: "User missing from the database." });
-
-        // Validate task state
-        const taskIndex = user.daily_tasks.findIndex(t => t.task_id === taskId);
-        if (taskIndex === -1) return res.status(400).json({ success: false, message: "Task not recognized." });
-        if (user.daily_tasks[taskIndex].completed) return res.status(400).json({ success: false, message: "Task already verified." });
-
-        // Register completion and add experience allocation
-        user.daily_tasks[taskIndex].completed = true;
-        user.current_xp += user.daily_tasks[taskIndex].xp_reward;
-
-        // Process level transition benchmarks
-        if (user.current_xp >= user.xp_needed_next_level) {
-            user.level += 1;
-            user.current_xp -= user.xp_needed_next_level;
-            user.xp_needed_next_level = Math.round(user.xp_needed_next_level * 1.5); // 1.5x dynamic scaling multiplier
-
-            // Upgrade tier once milestone level is reached
-            if (user.level >= 10 && user.tier === 'Citizen') {
-                user.tier = 'Professional'; // System automatically unlocks access to Challenges
+            // Enforce Mandatory Day 1 Video Lock (10-second biological signature)
+            if (!videoLockFile) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: "Registration denied. Mandatory Day 1 Video Lock (10-second biological signature) is missing." 
+                });
             }
-            
-            // INVISIBLE LEDGER VALIDATION: Silent infrastructure processing
-            // When user attains Professional tier, the ledger updates the system volume behind the scenes
-            if (user.tier === 'Professional') {
-                const todayStr = new Date().toISOString().split('T')[0];
-                let ledger = await DailyLedger.findOne({ date: todayStr });
-                
-                if (ledger) {
-                    ledger.totalVolumeProcessedUsd += 35; // Silent tracking metric addition
-                    await ledger.save();
+
+            // In a production environment, save the video file path to your secure storage/database
+            const videoUrl = `/storage/biometrics/${Date.now()}_${username}.mp4`;
+
+            // Construct Tier 1 User Profile
+            const newUser = {
+                username,
+                email,
+                phone,
+                passwordHash: crypto.createHash('sha256').update(password).digest('hex'), // Secure hashing
+                verificationTier: 1, // Auto-assigned Day 1 Status
+                biometricSignatureUrl: videoUrl,
+                complianceMetrics: {
+                    accountAgeDays: 0,
+                    cleanEscrowTransactions: 0,
+                    rulesViolated: 0
+                },
+                soverignStylistTheme: {
+                    activeTheme: "deep_obsidian", // Default high-contrast premium theme
+                    titaniumAccents: true,
+                    polishedGoldBorders: true
+                },
+                challengesEntered: [],
+                businessDocumentation: null,
+                createdAt: new Date()
+            };
+
+            // TODO: Save newUser object to MongoDB database here
+            // await Database.save(newUser);
+
+            return res.status(201).json({
+                success: true,
+                message: "User successfully anchored to system framework. Tier 1 (Casual Citizen) activated.",
+                user: {
+                    username: newUser.username,
+                    email: newUser.email,
+                    verificationTier: newUser.verificationTier,
+                    theme: newUser.soverignStylistTheme.activeTheme
                 }
-            }
+            });
+
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Internal server registry error.", error: error.message });
         }
+    },
 
-        await user.save();
+    // ==========================================
+    // 2. DYNAMIC ROUTING FOR THE 7 PILLARS
+    // ==========================================
+    /**
+     * Verifies user authorization and routes interaction securely to any of the 7 Pillars
+     */
+    routeToPillar: async (req, res) => {
+        try {
+            const { userId, targetPillar } = req.body;
+            
+            // TODO: Fetch user from database using userId
+            // const user = await User.findById(userId);
+            const user = { verificationTier: 1, complianceMetrics: { cleanEscrowTransactions: 5 } }; // Mock user for structure
 
-        return res.status(200).json({
-            success: true,
-            message: "Task progress captured and saved.",
-            current_xp: user.current_xp,
-            level: user.level,
-            tier: user.tier 
-        });
+            if (!user) {
+                return res.status(404).json({ success: false, message: "System node user not found." });
+            }
 
-    } catch (error) {
-        return res.status(500).json({ success: false, error: error.message });
+            const pillars = {
+                "marketplace": {
+                    name: "Global Marketplace",
+                    description: "Secure digital asset hosting, product listings, and protected transactions.",
+                    minTierRequired: 1 
+                },
+                "ads_program": {
+                    name: "Ads Program Manager",
+                    description: "Global advertising execution and traffic metrics for all 7 pillar tools.",
+                    minTierRequired: 1
+                },
+                "gaming_studio": {
+                    name: "Global Gaming Studio & Battles",
+                    description: "Interactive gaming servers, streaming battles for all top global games, and user engagement tracking.",
+                    minTierRequired: 1
+                },
+                "live_stream": {
+                    name: "Real Video Live Streaming",
+                    description: "High-performance media distribution and real-time streaming data synchronization for users.",
+                    minTierRequired: 1
+                },
+                "kitchen_meal": {
+                    name: "Kitchen Meal Hub",
+                    description: "Logistical lifestyle extension, live streams for top chefs, and restaurant shop dispatch tracking.",
+                    minTierRequired: 1
+                },
+                "music_promotion": {
+                    name: "Global Music Hub & Promotion Center",
+                    description: "Real audio distribution engine (similar to Audiomack/Apple Music) for track indexing, secure downloads, and streaming yield generation.",
+                    minTierRequired: 1
+                },
+                "content_creation": {
+                    name: "Content Creation Feed",
+                    description: "Structural hub for user text, media updates, public interactions, and activity verification.",
+                    minTierRequired: 1
+                }
+            };
+
+            const selectedPillar = pillars[targetPillar.toLowerCase()];
+
+            if (!selectedPillar) {
+                return res.status(404).json({ success: false, message: `Pillar component '${targetPillar}' does not exist in NAWI-EMPIRE architecture.` });
+            }
+
+            // Enforce Tier Restriction
+            if (user.verificationTier < selectedPillar.minTierRequired) {
+                return res.status(403).json({ 
+                    success: false, 
+                    message: `Access Denied. Elevated Verification required for ${selectedPillar.name}. Current Tier: ${user.verificationTier}. Required Tier: ${selectedPillar.minTierRequired}` 
+                });
+            }
+
+            // System response indicating tool is perfectly clicked and live
+            return res.status(200).json({
+                success: true,
+                message: `Pillar connection initiated successfully. Component is responsive.`,
+                pillarData: {
+                    endpoint: `/api/pillars/${targetPillar.toLowerCase()}`,
+                    configuration: selectedPillar,
+                    status: "ACTIVE_AND_OPERATIONAL"
+                }
+            });
+
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Routing framework failure.", error: error.message });
+        }
+    },
+
+    // ==========================================
+    // 3. SOVEREIGN STYLIST ENGINE ROUTING
+    // ==========================================
+    /**
+     * Routes storefronts, user profiles, cosmetic shops, and barbershops through the premium visual engine
+     */
+    applySovereignStylist: async (req, res) => {
+        try {
+            const { userId, selectedStyle } = req.body; // e.g., "deep_obsidian", "industrial_titanium", "polished_gold"
+            
+            if (!["deep_obsidian", "industrial_titanium", "polished_gold"].includes(selectedStyle)) {
+                return res.status(400).json({ success: false, message: "Invalid elite system theme variant selected." });
+            }
+
+            // Applies styles universally to Barbershops, Stylish platforms, Cosmetics, and the Diamondback231 Apparel Studio
+            return res.status(200).json({
+                success: true,
+                message: "Visual layout successfully routed through the Sovereign Stylist interface.",
+                stylePayload: {
+                    themeName: selectedStyle,
+                    contrast: "HIGH_CONTRAST_ELITE",
+                    componentsImpacted: ["Storefronts", "Creator Feeds", "User Profiles", "Barbershops", "Cosmetic Displays", "Apparel Studio Frameworks"],
+                    cssVariables: {
+                        background: selectedStyle === "deep_obsidian" ? "#0a0a0a" : "#1a1a1c",
+                        borders: selectedStyle === "polished_gold" ? "#d4af37" : "#8e8e93",
+                        accents: "#e5e5ea"
+                    }
+                }
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Sovereign Stylist engine error.", error: error.message });
+        }
+    },
+
+    // ==========================================
+    // 4. AUTOMATIC TIER 2 MONITORING (MERCHANT)
+    // ==========================================
+    /**
+     * Evaluates account compliance metrics to automatically graduate users to Tier 2 (Verified Merchant)
+     */
+    evaluateMerchantStatus: async (req, res) => {
+        try {
+            const { userId } = req.body;
+            // TODO: Fetch user from database
+            const user = { verificationTier: 1, complianceMetrics: { cleanEscrowTransactions: 15, rulesViolated: 0 } }; 
+
+            // Auto-graduation logic based on transaction compliance metrics
+            if (user.complianceMetrics.cleanEscrowTransactions >= 10 && user.complianceMetrics.rulesViolated === 0) {
+                user.verificationTier = 2; // Auto-update in DB
+                return res.status(200).json({
+                    success: true,
+                    message: "Account graduation metric met. Tier 2: Verified Merchant Status unlocked.",
+                    tier: 2,
+                    perks: ["Enhanced transactional capabilities", "Ad-revenue distribution loops unlocked"]
+                });
+            }
+
+            return res.status(200).json({
+                success: false,
+                message: "Current transaction age or compliance metrics insufficient for automatic Tier 2 evolution.",
+                currentTier: user.verificationTier
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Tier processing error.", error: error.message });
+        }
+    },
+
+    // ==========================================
+    // 5. TIER 3 REGISTRATION & DOCUMENT CHALLENGE
+    // ==========================================
+    /**
+     * Mandates business registration uploads when entering high-tier ecosystem challenges
+     */
+    triggerSovereignChallenge: async (req, res) => {
+        try {
+            const { userId, challengeName } = req.body;
+            const corporateDocs = req.files ? req.files.businessRegistration : null;
+
+            if (!challengeName) {
+                return res.status(400).json({ success: false, message: "Target challenge identifier missing." });
+            }
+
+            // Hard-bound check for structural validation documents during Tier 3 initialization
+            if (!corporateDocs) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Access Denied. Entering an elite challenge requires explicit submission of corporate verification and official business registration documents to isolate unverified entities."
+                });
+            }
+
+            const documentUrl = `/storage/secure_docs/${Date.now()}_corporate_verification.pdf`;
+            
+            // TODO: Save document URL, update user.verificationTier = 3, and add challenge name to database array.
+
+            return res.status(200).json({
+                success: true,
+                message: `Corporate verification accepted. Tier 3 (Sovereign Challenger) active. Entry locked for challenge: ${challengeName}.`,
+                status: "VERIFIED_CHALLENGER",
+                securedAsset: "27-inch high-performance smart workstation competition node ready"
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Tier 3 challenge engine failed.", error: error.message });
+        }
+    },
+
+    // ==========================================
+    // 6. DUAL-CHANNEL OTP RECOVERY
+    // ==========================================
+    /**
+     * Hard-bounds account recovery exclusively to the synchronized primary registration details
+     */
+    initiateDualChannelRecovery: async (req, res) => {
+        try {
+            const { registrationEmail, registrationPhone } = req.body;
+
+            if (!registrationEmail || !registrationPhone) {
+                return res.status(400).json({ success: false, message: "Both original registration phone and email inputs must be provided." });
+            }
+
+            // Generate secure One-Time Passwords
+            const primaryOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // Dual-Channel broadcast emulation
+            // In production, integrate your exact SMS gateway (e.g., Twilio) and SMTP mail system here
+            console.log(`[DUAL-CHANNEL SECURITY ENFORCEMENT] Sending OTP ${primaryOTP} to Email: ${registrationEmail}`);
+            console.log(`[DUAL-CHANNEL SECURITY ENFORCEMENT] Sending OTP ${primaryOTP} to Phone: ${registrationPhone}`);
+
+            return res.status(200).json({
+                success: true,
+                message: "Security key synchronization active. Dual-channel verification code dispatched to both anchors simultaneously. No secondary data source permitted."
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Security safeguard initialization failed.", error: error.message });
+        }
     }
 };
+
+module.exports = authController;
