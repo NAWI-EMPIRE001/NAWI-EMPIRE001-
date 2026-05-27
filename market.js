@@ -1,11 +1,13 @@
 /**
- * NAWI-EMPIRE | MASTER MARKET CORE SYSTEM (V3)
+ * ==========================================================================
+ * NAWI-OS | THE SOVEREIGN EXCHANGE REAL-TIME OPERATIONS ENGINE
  * Authority ID: NAWI-EMPIRE001
- * Protocols: Forensic Stamping | P2P Escrow Handshake | Pillar Filters
+ * Protocols: Forensic Stamping | P2P Escrow Handshake | WebSockets Sync
+ * ==========================================================================
  */
 
 const marketController = {
-    // System Target Config Endpoints
+    // Core API Configuration Endpoints
     config: {
         productsApi: '/api/marketplace/products',
         vaultApi: '/api/user/balance?id=NAWI-EMPIRE001',
@@ -13,7 +15,7 @@ const marketController = {
         currency: 'Coins'
     },
 
-    // Global Ecosystem Runtime Ledger States
+    // Global Sovereign State Ledger Values
     state: {
         currentBalance: 100.00,
         selectedItem: null,
@@ -25,18 +27,52 @@ const marketController = {
      * 1. SYSTEM INITIALIZATION BOOTLOADER
      */
     init: function() {
-        console.log("Sovereign Node: Initializing Combined Alpha-Market Protocols...");
+        console.log("⚡ Sovereign Node: Initializing Unified Exchange Protocols...");
         
-        // Setup Live Events Lookups
         this.bindEvents();
-        
-        // Sync Wallet Balance and Inventory Nodes
-        this.refreshUserWalletBalance();
+        this.initializeExchangeSocketChannel();
         this.fetchMarketAssets();
     },
 
     /**
-     * 2. DESCRIPTOR EVENT LISTENER STRUCTURING
+     * 2. REAL-TIME WEBSOCKET PIPELINE MANAGEMENT
+     */
+    initializeExchangeSocketChannel: function() {
+        if (typeof window.nawiSocket !== "undefined") {
+            console.log("🔒 P2P Shield: WebSocket Channel Pipeline Secured.");
+
+            // Listen for live broadcasted balance state adjustments
+            window.nawiSocket.on("balanceStateUpdate", (data) => {
+                if (data && typeof data.balance !== "undefined") {
+                    this.state.currentBalance = parseFloat(data.balance);
+                    this.updateWalletUIDisplay();
+                }
+            });
+
+            // Listen for incoming transaction confirmations from the distributed ledger
+            window.nawiSocket.on("escrowContractSettled", (contractData) => {
+                this.appendSettledContractLog(contractData.id, contractData.title, contractData.price);
+                
+                if (this.state.selectedItem && this.state.selectedItem.id === contractData.id) {
+                    console.log("SUCCESS: Asset allocated securely to database cluster.");
+                    this.state.selectedItem = null;
+                }
+            });
+
+            // Listen for structural transaction denials
+            window.nawiSocket.on("escrowContractRejected", (errorData) => {
+                alert(`TRANSACTION BLOCKED:\nLedger node rejected request: ${errorData.reason}`);
+                this.closeEscrow();
+            });
+
+        } else {
+            console.warn("⚠️ WebSocket Core offline. Activating localized verification safe-mode fallbacks.");
+            this.updateWalletUIDisplay();
+        }
+    },
+
+    /**
+     * 3. DOM EVENT INTERCEPTORS & BINDINGS
      */
     bindEvents: function() {
         const searchInput = document.getElementById('search-input');
@@ -44,32 +80,17 @@ const marketController = {
             searchInput.addEventListener('input', () => this.executeSearchAndFilter());
         }
 
-        // Handle structural category tab clicks dynamically
-        const chips = document.querySelectorAll('.pillar-chip');
-        chips.forEach(chip => {
-            chip.addEventListener('click', (e) => {
-                chips.forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                
-                // Extract category flags or map numbers
-                const text = chip.innerText.toLowerCase();
-                let catSelection = 'all';
-                
-                if (text.includes('diamondback') || text.includes('branding')) catSelection = 'branding';
-                else if (text.includes('ads')) catSelection = 'ads';
-                else if (text.includes('stylist')) catSelection = 'stylist';
-                
-                this.state.activeCategory = catSelection;
-                this.executeSearchAndFilter();
-            });
-        });
+        // Expose critical pipeline handles directly to window workspace context for layout triggers
+        window.openEscrow = (name, price, id) => this.openEscrow(name, price, id);
+        window.closeEscrow = () => this.closeEscrow();
+        window.executeFinalTransaction = () => this.executeFinalTransaction();
     },
 
     /**
-     * 3. INVENTORY SYNC RUNTIME MANAGEMENT
+     * 4. SOVEREIGN ASSET INVENTORY RECOVERY
      */
     fetchMarketAssets: async function() {
-        const container = document.getElementById('product-container') || document.getElementById('marketplace-grid');
+        const container = document.getElementById('product-container');
         if (container) {
             container.innerHTML = `<div class="col-span-full text-center py-20 opacity-50 italic tracking-widest text-xs">SCANNING SOVEREIGN LEDGER...</div>`;
         }
@@ -79,56 +100,67 @@ const marketController = {
             if (response.ok) {
                 this.state.allProducts = await response.json();
             } else {
-                throw new Error("Server API Unresponsive. Activating built-in operational node backups.");
+                throw new Error("Active channel cluster fallback protocol needed.");
             }
         } catch (error) {
-            console.warn("System Ledger Note:", error.message);
+            console.log("System Ledger Safe-Mode: Populating Premium 7 Pillars Blueprint Items.");
             
-            // Standard Master Database Fallback Array Matching User Operations
+            // Explicitly aligned catalog items matching the 7 Structural Pillars
             this.state.allProducts = [
                 {
-                    id: "DB-FRAME-231",
-                    title: "Technical Luxury UI Framework",
-                    category: "branding",
-                    merchant: "DIAMONDBACK 231",
+                    id: "DB-FORGE-231",
+                    title: "Technical Luxury UI Framework Vector",
+                    category: "forge",
+                    merchant: "THE DIAMONDBACK FORGE",
                     price: 75.00,
-                    pillar: 7,
+                    pillar: 6,
                     isForensicStamped: true,
-                    desc: "High-end matte black and 24k gold responsive UI vector template framework for custom digital interfaces.",
+                    desc: "High-end matte black and 24k gold responsive UI master design asset template framework.",
                     img: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=600"
                 },
                 {
-                    id: "ADS-BANNER-01",
-                    title: "Main Stage Marketplace Banner Ad",
-                    category: "ads",
-                    merchant: "EMPIRE ADS ENGINE",
+                    id: "VIS-ENGINE-01",
+                    title: "Main Stage Marketplace Banner Ad Placement",
+                    category: "visibility",
+                    merchant: "THE VISIBILITY ENGINE",
                     price: 45.00,
-                    pillar: 5,
+                    pillar: 3,
                     isForensicStamped: false,
-                    desc: "Secure programmatic ad space execution for 7 consecutive days on the main ecosystem dashboard.",
+                    desc: "Secure programmatic promotion traffic router space for 7 consecutive days on network dashboard feeds.",
                     img: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=600"
                 },
                 {
-                    id: "STYL-BARB-KIT",
-                    title: "Sovereign Stylist Pro Clipper Set",
-                    category: "stylist",
-                    merchant: "DIAMONDBACK 231",
+                    id: "NEXUS-CLIPP-02",
+                    title: "Sovereign Stylist Pro Transformation Kit",
+                    category: "nexus",
+                    merchant: "THE AESTHETIC NEXUS",
                     price: 120.00,
-                    pillar: 2,
+                    pillar: 5,
                     isForensicStamped: true,
-                    desc: "Premium precision cordless grooming barbing kit featuring high-carbon diamond steel blades.",
+                    desc: "Premium precision cordless grooming setup featuring high-carbon diamond grade steel blades.",
                     img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&q=80&w=600"
                 },
                 {
-                    id: "STYL-APRON-231",
-                    title: "Matte Black Industrial Stylist Gown",
-                    category: "stylist",
-                    merchant: "DIAMONDBACK 231",
+                    id: "NEXUS-GARMENT-04",
+                    title: "Matte Black Industrial Workspace Uniform",
+                    category: "nexus",
+                    merchant: "THE AESTHETIC NEXUS",
                     price: 35.00,
-                    pillar: 2,
+                    pillar: 5,
                     isForensicStamped: true,
-                    desc: "Waterproof, chemical-resistant high-end designer barber workspace uniform with specialized tool holster array.",
+                    desc: "Waterproof, chemical-resistant corporate luxury stylist workspace protection armor with tool holsters.",
                     img: "https://images.unsplash.com/photo-1552061073-e38053641372?auto=format&fit=crop&q=80&w=600"
+                },
+                {
+                    id: "SONIC-LEDGER-07",
+                    title: "Premium Studio Audio Track Master Block",
+                    category: "sonic",
+                    merchant: "THE SONIC LEDGER",
+                    price: 90.00,
+                    pillar: 7,
+                    isForensicStamped: true,
+                    desc: "High-performance encrypted digital track allocation package providing micro-yield validation for stems.",
+                    img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=600"
                 }
             ];
         }
@@ -137,7 +169,7 @@ const marketController = {
     },
 
     /**
-     * 4. ADVANCED PATTERN FILTER MATRIX ENGINE
+     * 5. MATRIX FILTER ENGINE
      */
     executeSearchAndFilter: function() {
         const searchInput = document.getElementById('search-input');
@@ -145,12 +177,10 @@ const marketController = {
         
         let filtered = this.state.allProducts;
         
-        // Filter Criterion Step 1: Active Category Classifications
         if (this.state.activeCategory !== 'all') {
             filtered = filtered.filter(p => p.category === this.state.activeCategory);
         }
         
-        // Filter Criterion Step 2: String Token Query Lookups
         if (query !== "") {
             filtered = filtered.filter(p => 
                 p.title.toLowerCase().includes(query) || 
@@ -164,11 +194,10 @@ const marketController = {
     },
 
     /**
-     * 5. HIGH-FIDELITY UX ASSET DOM RENDERING
+     * 6. HIGH-FIDELITY ASSET CARD GENERATOR
      */
     renderProducts: function(items) {
-        // Universal Container Resolver to prevent page injection structural blockages
-        const container = document.getElementById('product-container') || document.getElementById('marketplace-grid');
+        const container = document.getElementById('product-container');
         if (!container) return;
         
         container.innerHTML = "";
@@ -176,20 +205,20 @@ const marketController = {
         if (items.length === 0) {
             container.innerHTML = `
                 <div class="col-span-full text-center py-12 text-zinc-600 font-bold text-xs uppercase tracking-widest">
-                    No Assets Found Matching Query
+                    No High-End Assets Located Inside Specified Node
                 </div>`;
             return;
         }
 
         items.forEach(product => {
-            // Unify properties seamlessly from database fields or offline fallback states
-            const productImg = product.img || product.assetUrl || 'placeholder.jpg';
-            const productTitle = product.title || product.name || 'Sovereign Asset';
-            const productPillarInfo = product.pillar ? `<span class="text-[9px] text-zinc-600 font-mono">PILLAR ${product.pillar}</span>` : '';
-            const stampBadge = product.isForensicStamped ? `<span class="merchant-badge"><i class="fa-solid fa-shield-halved mr-1"></i> FORENSIC STAMPED</span>` : `<span class="merchant-badge"><i class="fa-solid fa-crown mr-1"></i> ${product.merchant}</span>`;
+            const productImg = product.img || 'placeholder.jpg';
+            const productTitle = product.title || 'Sovereign Asset';
+            const stampBadge = product.isForensicStamped ? 
+                `<span class="merchant-badge"><i class="fa-solid fa-shield-halved mr-1"></i> FORENSIC STAMPED</span>` : 
+                `<span class="merchant-badge"><i class="fa-solid fa-crown mr-1"></i> ${product.merchant}</span>`;
 
             container.innerHTML += `
-                <div class="luxury-card" onclick="marketController.viewAssetDetail('${product.id}')">
+                <div class="luxury-card">
                     <div class="preview-box">
                         ${stampBadge}
                         <img src="${productImg}" alt="${productTitle}">
@@ -201,14 +230,14 @@ const marketController = {
                         </div>
                         <p class="text-zinc-500 text-[10px] leading-relaxed mb-4 font-light">${product.desc}</p>
                         <div class="mb-4 flex gap-2 items-center">
-                            ${productPillarInfo}
+                            <span class="text-[9px] text-zinc-600 font-mono tracking-wider uppercase">Pillar Node Axis: ${product.category}</span>
                         </div>
-                        <div class="flex justify-between items-center bg-black/50 p-4 rounded-2xl border border-zinc-900/50" onclick="event.stopPropagation()">
+                        <div class="flex justify-between items-center bg-black/40 p-4 rounded-2xl border border-zinc-900/50">
                             <div>
                                 <span class="text-[8px] text-zinc-600 block uppercase font-black mb-1">Asset Value</span>
                                 <span class="text-white font-black text-sm">${product.price.toFixed(2)} <i class="fa-solid fa-coins text-amber-500 ml-1"></i></span>
                             </div>
-                            <button onclick="marketController.openEscrow('${productTitle.replace(/'/g, "\\'")}', ${product.price}, '${product.id}')" class="bg-white text-black px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500 transition-colors">Acquire</button>
+                            <button onclick="window.openEscrow('${productTitle.replace(/'/g, "\\'")}', ${product.price}, '${product.id}')" class="bg-white text-black px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-amber-500 transition-colors">Acquire</button>
                         </div>
                     </div>
                 </div>
@@ -217,7 +246,7 @@ const marketController = {
     },
 
     /**
-     * 6. TRUSTLESS P2P ESCROW PIPELINE PROCEDURES
+     * 7. P2P ESCROW HANDSHAKE PIPELINE PROCEDURES
      */
     openEscrow: function(name, price, id) {
         this.state.selectedItem = { name, price, id };
@@ -229,16 +258,30 @@ const marketController = {
         if (nameDisplay) nameDisplay.innerText = name;
         if (priceDisplay) priceDisplay.innerText = `${price.toFixed(2)} ${this.config.currency}`;
         if (modalView) modalView.style.display = 'flex';
+        
+        console.log(`🔒 Escrow Request Initialized for node: ${id}`);
     },
 
     closeEscrow: function() {
         const modalView = document.getElementById('escrow-modal');
         if (modalView) modalView.style.display = 'none';
+        this.state.selectedItem = null;
     },
 
     executeFinalTransaction: async function() {
         if (!this.state.selectedItem) return;
 
+        // Route live calls directly to backend sockets if cluster handshake is online
+        if (typeof window.nawiSocket !== "undefined") {
+            window.nawiSocket.emit("authorizeEscrowRelease", {
+                contractId: this.state.selectedItem.id,
+                value: this.state.selectedItem.price
+            });
+            this.closeEscrow();
+            return;
+        }
+
+        // Secure Client Standalone Fallback Verification Flow Logic
         try {
             const response = await fetch(this.config.escrowApi, {
                 method: 'POST',
@@ -246,35 +289,29 @@ const marketController = {
                 body: JSON.stringify({
                     itemId: this.state.selectedItem.id,
                     price: this.state.selectedItem.price,
-                    userId: "NAWI-EMPIRE001",
-                    authorityCode: "EMPIRE-001",
-                    timestamp: new Date().toISOString()
+                    userId: "NAWI-EMPIRE001"
                 })
             });
-
             const data = await response.json();
 
             if (data.success) {
                 this.state.currentBalance = data.newBalance || (this.state.currentBalance - this.state.selectedItem.price);
                 this.updateWalletUIDisplay();
+                this.appendSettledContractLog(this.state.selectedItem.id, this.state.selectedItem.name, this.state.selectedItem.price);
                 this.closeEscrow();
-                alert(`SUCCESS:\nEscrow payment cleared securely via Diamondback 231 Creative Solutions.\nAsset status updated on server cluster ledger.`);
-                if(data.transactionId) {
-                    window.location.href = `/escrow-tracker.html?id=${data.transactionId}`;
-                }
+                alert(`SUCCESS:\nEscrow payment cleared securely via Diamondback 231 Creative Solutions.`);
             } else {
-                alert(`TRANSACTION DENIED:\n${data.message || "Ledger processing mismatch."}`);
+                alert(`TRANSACTION DENIED:\n${data.message}`);
                 this.closeEscrow();
             }
-
         } catch (error) {
-            console.warn("P2P Handshake Gateway offline. Processing through standalone client verification verification run...");
-            
+            // Local Memory Processing Loop
             if (this.state.currentBalance >= this.state.selectedItem.price) {
                 this.state.currentBalance -= this.state.selectedItem.price;
                 this.updateWalletUIDisplay();
+                this.appendSettledContractLog(this.state.selectedItem.id, this.state.selectedItem.name, this.state.selectedItem.price);
+                alert(`SUCCESS [LOCAL DISPATCH]:\nEscrow payment cleared locally via Diamondback 231 Creative Solutions.`);
                 this.closeEscrow();
-                alert(`SUCCESS [LOCAL DISPATCH]:\nEscrow payment cleared locally via Diamondback 231 Creative Solutions.\nAsset allocated securely to client environment state.`);
             } else {
                 alert("TRANSACTION BLOCKED:\nEcosystem ledger indicates insufficient currency reserves.");
                 this.closeEscrow();
@@ -283,34 +320,49 @@ const marketController = {
     },
 
     /**
-     * 7. DATA RECONCILIATION WALLET UTILITIES
+     * 8. SYSTEM SYNC DATA UTILITIES
      */
-    refreshUserWalletBalance: async function() {
-        try {
-            const response = await fetch(this.config.vaultApi);
-            if (response.ok) {
-                const data = await response.json();
-                this.state.currentBalance = data.balance;
-            }
-        } catch (e) {
-            // Retain execution baseline state defaults gracefully
-        }
-        this.updateWalletUIDisplay();
-    },
-
     updateWalletUIDisplay: function() {
-        const balanceDisplay = document.getElementById('display-balance') || document.getElementById('vault-balance');
+        const balanceDisplay = document.getElementById('display-balance');
         if (balanceDisplay) {
-            balanceDisplay.innerHTML = `${this.state.currentBalance.toFixed(2)} <i class="fa-solid fa-coins text-amber-500 ml-1"></i>`;
+            balanceDisplay.innerHTML = `${this.state.currentBalance.toFixed(2)} <i class="fa-solid fa-coins text-amber-500 ml-0.5"></i>`;
+        }
+
+        const ledgerDisplay = document.getElementById('ledger-user-balance');
+        if (ledgerDisplay) {
+            ledgerDisplay.innerText = `${this.state.currentBalance.toFixed(2)} EC`;
         }
     },
 
-    viewAssetDetail: function(id) {
-        console.log(`Routing through asset interface master module layer for asset token ID: ${id}`);
-        // To deploy full layout details screen workspace, uncomment the tracking redirection script below:
-        // window.location.href = `/asset-master-view.html?id=${id}`;
+    appendSettledContractLog: function(contractId, assetTitle, assetCost) {
+        const logContainer = document.getElementById('escrow-logs-container');
+        const noActiveMsg = document.getElementById('no-active-escrow-msg');
+        
+        if (noActiveMsg) noActiveMsg.remove();
+
+        if (logContainer) {
+            const contractMarkup = document.createElement("div");
+            contractMarkup.className = "bg-emerald-950/20 border border-emerald-500/20 rounded-lg p-3 text-[10px]";
+            contractMarkup.innerHTML = `
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-emerald-400 font-bold tracking-wider">🔒 CONTRACT SETTLED</span>
+                    <span class="text-zinc-600 font-mono">#${contractId}</span>
+                </div>
+                <span class="text-zinc-400 block truncate">${assetTitle}</span>
+                <span class="text-zinc-500 block mt-1">Value Transferred: <strong class="text-white">${parseFloat(assetCost).toFixed(2)} EC</strong></span>
+            `;
+            logContainer.prepend(contractMarkup);
+        }
     }
 };
 
-// Fire engine systems setup instantly upon structural DOM layout resolution
+// Global mapping function hooks to enable HTML layout chip clicks safely
+window.filterCategory = function(element, cat) {
+    document.querySelectorAll('.pillar-chip').forEach(chip => chip.classList.remove('active'));
+    element.classList.add('active');
+    marketController.state.activeCategory = cat;
+    marketController.executeSearchAndFilter();
+};
+
+// Fire systems instantly when standard layout finishes drawing
 document.addEventListener('DOMContentLoaded', () => marketController.init());
