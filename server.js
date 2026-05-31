@@ -1,7 +1,3 @@
-# server.js
-
-```javascript
-require('dotenv').config();
 
 // =========================================================
 // NAWI-EMPIRE MASTER SYSTEM ENGINE v7.0
