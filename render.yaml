@@ -1,0 +1,35 @@
+# Exported from Render on 2026-06-04T23:34:06Z
+version: "1"
+projects:
+- name: NAWI-EMPIRE001
+  environments:
+  - name: NAWI-EMPIRE001
+    services:
+    - type: web
+      name: NAWI-EMPIRE001
+      runtime: node
+      repo: https://github.com/RobbieCraig/NAWI-EMPIRE
+      plan: free
+      envVars:
+      - key: client.key
+        sync: false
+      - key: SEED_FOUNDER_PASSWORD
+        sync: false
+      - key: SEED_FOUNDER_EMAIL
+        sync: false
+      - key: SEED_FOUNDER
+        sync: false
+      - key: NODE_SECRET_KEY
+        sync: false
+      - key: NODE_ENV
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: MONGO_URI
+        sync: false
+      region: oregon
+      buildCommand: npm install
+      startCommand: node server.js
+      autoDeployTrigger: commit
+      previews:
+        generation: automatic
