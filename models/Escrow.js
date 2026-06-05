@@ -4,32 +4,42 @@ const mongoose = require('mongoose');
 
 const EscrowSchema = new mongoose.Schema({
 
+    platform_watermark: {
+        type: String,
+        default: 'PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001',
+        immutable: true
+    },
+
     transactionId: {
         type: String,
         unique: true,
-        required: true
-    },
-
-    buyerId: {
-        type: String,
         required: true,
         index: true
     },
 
-    sellerId: {
-        type: String,
+    buyer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        index: true
+    },
+
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
         index: true
     },
 
     productId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
         default: null
     },
 
-    description: {
-        type: String,
-        default: ''
+    relatedTransaction: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Transaction'
     },
 
     amount: {
@@ -40,7 +50,12 @@ const EscrowSchema = new mongoose.Schema({
 
     currency: {
         type: String,
-        default: 'EMPIRE_COINS'
+        default: 'EC'
+    },
+
+    description: {
+        type: String,
+        default: ''
     },
 
     status: {
@@ -51,24 +66,10 @@ const EscrowSchema = new mongoose.Schema({
             'RELEASED',
             'DISPUTED',
             'REFUNDED',
-            'CANCELLED'
+            'CANCELLED',
+            'UNDER_REVIEW'
         ],
         default: 'PENDING'
-    },
-
-    disputeReason: {
-        type: String,
-        default: ''
-    },
-
-    releasedAt: {
-        type: Date,
-        default: null
-    },
-
-    refundedAt: {
-        type: Date,
-        default: null
     },
 
     buyerConfirmation: {
@@ -81,19 +82,52 @@ const EscrowSchema = new mongoose.Schema({
         default: false
     },
 
+    disputeReason: {
+        type: String,
+        default: ''
+    },
+
+    disputeOpenedAt: {
+        type: Date
+    },
+
+    releasedAt: {
+        type: Date
+    },
+
+    refundedAt: {
+        type: Date
+    },
+
     forensicStamp: {
-        type: Boolean,
-        default: true
+        isForensicStamped: {
+            type: Boolean,
+            default: true
+        },
+
+        trustProtocol: {
+            type: String,
+            default: 'DIAMONDBACK-231-ESCROW-SHIELD'
+        },
+
+        assetFingerprint: {
+            type: String,
+            default: ''
+        }
     },
 
     escrowMetadata: {
+
         sourcePillar: {
             type: String,
             enum: [
-                'THE_SOVEREIGN_EXCHANGE',
-                'THE_DIAMONDBACK_FORGE',
-                'THE_AESTHETIC_NEXUS',
-                'THE_CULINARY_MATRIX',
+                'ARENA_NODE',
+                'SOVEREIGN_EXCHANGE',
+                'VISIBILITY_ENGINE',
+                'CULINARY_MATRIX',
+                'AESTHETIC_NEXUS',
+                'DIAMONDBACK_FORGE',
+                'SONIC_LEDGER',
                 'GENERAL'
             ],
             default: 'GENERAL'
@@ -102,31 +136,32 @@ const EscrowSchema = new mongoose.Schema({
         nodeAuthority: {
             type: String,
             default: 'NAWI-EMPIRE001'
-        },
-
-        trustProtocol: {
-            type: String,
-            default: 'DIAMONDBACK-231-ESCROW-SHIELD'
         }
     },
 
     auditTrail: [{
-        action: String,
-        actorId: String,
+        action: {
+            type: String
+        },
+
+        actorId: {
+            type: String
+        },
+
+        notes: {
+            type: String
+        },
+
         timestamp: {
             type: Date,
             default: Date.now
         }
-    }],
+    }]
 
-    watermark: {
-        type: String,
-        default: 'PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001'
-    }
-
-}, {
-    timestamps: true,
-    collection: 'escrows'
+},
+{
+    collection: 'escrows',
+    timestamps: true
 });
 
 module.exports = mongoose.model('Escrow', EscrowSchema);
