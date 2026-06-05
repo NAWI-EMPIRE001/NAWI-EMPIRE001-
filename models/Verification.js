@@ -1,11 +1,37 @@
 const mongoose = require('mongoose');
 
-const verificationSchema = new mongoose.Schema(
-{
+const VerificationSchema = new mongoose.Schema({
+
+    platform_watermark: {
+        type: String,
+        default: 'PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001',
+        immutable: true
+    },
+
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+
+    verificationLevel: {
+        type: Number,
+        default: 1
+    },
+
+    merchantVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    businessVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    biometricVerified: {
+        type: Boolean,
+        default: false
     },
 
     verificationType: {
@@ -41,6 +67,49 @@ const verificationSchema = new mongoose.Schema(
 
     selfieImage: String,
 
+    scamRiskScore: {
+        type: Number,
+        default: 0
+    },
+
+    sevenPillarAccess: {
+
+        ARENA_NODE: {
+            type: Boolean,
+            default: true
+        },
+
+        SOVEREIGN_EXCHANGE: {
+            type: Boolean,
+            default: true
+        },
+
+        VISIBILITY_ENGINE: {
+            type: Boolean,
+            default: true
+        },
+
+        CULINARY_MATRIX: {
+            type: Boolean,
+            default: true
+        },
+
+        AESTHETIC_NEXUS: {
+            type: Boolean,
+            default: true
+        },
+
+        DIAMONDBACK_FORGE: {
+            type: Boolean,
+            default: true
+        },
+
+        SONIC_LEDGER: {
+            type: Boolean,
+            default: true
+        }
+    },
+
     status: {
         type: String,
         enum: [
@@ -63,12 +132,14 @@ const verificationSchema = new mongoose.Schema(
     },
 
     reviewedAt: Date
+
 },
 {
-    timestamps: true
+    timestamps: true,
+    collection: 'verifications'
 });
 
 module.exports = mongoose.model(
     'Verification',
-    verificationSchema
+    VerificationSchema
 );
