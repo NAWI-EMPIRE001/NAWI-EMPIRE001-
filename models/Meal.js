@@ -1,91 +1,291 @@
-// models/Meal.js
 const mongoose = require('mongoose');
 
 const MealSchema = new mongoose.Schema({
-    // Security & Platform Trust Architecture
+
+    // ==============================
+    // PLATFORM SECURITY WATERMARK
+    // ==============================
     platform_watermark: {
         type: String,
-        default: "PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001",
-        immutable: true // Cannot be changed or deleted by users
+        default: 'PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001',
+        immutable: true
     },
-    seller_id: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', 
-        required: true 
-    },
-    
-    // Core Product Information
-    product_name: { 
-        type: String, 
+
+    // ==============================
+    // OWNER INFORMATION
+    // ==============================
+    seller_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
-        trim: true 
+        index: true
     },
-    category: { 
-        type: String, 
-        default: "Kitchen Meal",
-        enum: ['Kitchen Meal', 'Canteen', 'Local Shop', 'Raw Food', 'Cooked Meal', 'Spices', 'International', 'Breakfast', 'Lunch', 'Dinner', 'Snacks', 'Drinks']
+
+    // ==============================
+    // PRODUCT DETAILS
+    // ==============================
+    product_name: {
+        type: String,
+        required: true,
+        trim: true
     },
+
+    category: {
+        type: String,
+        enum: [
+            'Kitchen Meal',
+            'Canteen',
+            'Restaurant',
+            'Cooked Meal',
+            'Raw Food',
+            'Spices',
+            'Breakfast',
+            'Lunch',
+            'Dinner',
+            'Snacks',
+            'Drinks',
+            'International'
+        ],
+        default: 'Kitchen Meal'
+    },
+
     description: {
         type: String,
         required: true,
-        maxlength: 500,
-        default: "Premium quality selection from NAWI-EMPIRE culinary marketplace."
+        maxlength: 1000
     },
-    price: { 
-        type: Number, 
-        required: true 
-    }, 
-    currency: { 
-        type: String, 
-        default: "🪙 Empire Coins" 
-    }, 
-    market: { type: String, default: "Worldwide" },
-    tier: { type: String, default: "7 Pillars Elite" },
-    origin_vault: { type: String, default: "NAWI-EMPIRE001" },
-    
-    // Interactive Media Assets for Android / iPhone uploads
+
     images: {
         type: [String],
-        default: ['https://via.placeholder.com/300x200?text=Imperial+Meal+Asset']
+        default: []
     },
-    
-    // Financial Rules, Currencies, and Logistics Modules
+
+    // ==============================
+    // PRICING
+    // ==============================
+    price: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+
+    currency: {
+        type: String,
+        default: 'EC'
+    },
+
     pricing_and_logistics: {
-        base_price_usd: { type: Number, required: true },
-        currency_support: { type: [String], default: ["USD", "NGN", "GBP", "EUR", "EMPIRE_COINS"] },
-        transaction_type: { type: String, default: "P2P Escrow" },
-        shipping_scope: { type: String, default: "Worldwide" },
-        stock_status: { 
-            type: String, 
-            enum: ['In Stock', 'AVAILABLE', 'OUT_OF_STOCK'], 
-            default: "In Stock" 
+
+        base_price_usd: {
+            type: Number,
+            default: 0
+        },
+
+        currency_support: {
+            type: [String],
+            default: [
+                'EC',
+                'USD',
+                'NGN',
+                'GBP',
+                'EUR'
+            ]
+        },
+
+        transaction_type: {
+            type: String,
+            default: 'P2P_ESCROW'
+        },
+
+        shipping_scope: {
+            type: String,
+            default: 'WORLDWIDE'
+        },
+
+        stock_status: {
+            type: String,
+            enum: [
+                'AVAILABLE',
+                'LOW_STOCK',
+                'OUT_OF_STOCK'
+            ],
+            default: 'AVAILABLE'
         }
     },
-    
-    // Item Classifications & Specifications
+
+    // ==============================
+    // INVENTORY
+    // ==============================
+    inventory: {
+
+        quantity_available: {
+            type: Number,
+            default: 0
+        },
+
+        low_stock_alert: {
+            type: Boolean,
+            default: false
+        }
+    },
+
+    // ==============================
+    // SPECIFICATIONS
+    // ==============================
     specifications: {
-        volume_weight: { type: String, default: "" },
-        packaging: { type: String, default: "" },
-        shelf_life: { type: String, default: "" },
-        dietary_labels: { type: [String], default: ["Vegan", "Gluten-Free", "Non-GMO"] }
-    },
-    
-    // System Integrity, Audits, and Antiscam Flags
-    trust_and_security: {
-        is_verified_seller: { type: Boolean, default: true },
-        safety_clearance: { type: String, default: "PASSED" },
-        audit_status: { 
-            type: String, 
-            enum: ['PENDING_AUDIT', 'APPROVED', 'REJECTED'], 
-            default: 'PENDING_AUDIT' 
+
+        volume_weight: {
+            type: String,
+            default: ''
+        },
+
+        packaging: {
+            type: String,
+            default: ''
+        },
+
+        shelf_life: {
+            type: String,
+            default: ''
+        },
+
+        dietary_labels: {
+            type: [String],
+            default: []
         }
     },
-    
-    createdAt: { 
-        type: Date, 
-        default: Date.now 
+
+    // ==============================
+    // LIVE STUDIO SYSTEM
+    // ==============================
+    live_studio: {
+
+        is_live_featured: {
+            type: Boolean,
+            default: false
+        },
+
+        live_stream_id: {
+            type: String,
+            default: ''
+        },
+
+        chef_name: {
+            type: String,
+            default: ''
+        }
     },
-    last_updated: { type: String, default: "2026-05-20" }
-}, { collection: 'kitchenmeals' }); // Direct connection route to your live MongoDB collection
+
+    // ==============================
+    // VISIBILITY ENGINE
+    // ==============================
+    visibility_engine: {
+
+        promoted: {
+            type: Boolean,
+            default: false
+        },
+
+        ad_campaign_id: {
+            type: String,
+            default: ''
+        }
+    },
+
+    // ==============================
+    // ESCROW PROTECTION
+    // ==============================
+    escrow_protection: {
+
+        enabled: {
+            type: Boolean,
+            default: true
+        },
+
+        escrow_protocol: {
+            type: String,
+            default: 'DIAMONDBACK-231-ESCROW-SHIELD'
+        }
+    },
+
+    // ==============================
+    // FORENSIC STAMPING
+    // ==============================
+    forensic_stamp: {
+
+        isForensicStamped: {
+            type: Boolean,
+            default: true
+        },
+
+        assetFingerprint: {
+            type: String,
+            default: ''
+        }
+    },
+
+    // ==============================
+    // TRUST & SECURITY
+    // ==============================
+    trust_and_security: {
+
+        is_verified_seller: {
+            type: Boolean,
+            default: false
+        },
+
+        safety_clearance: {
+            type: String,
+            default: 'PENDING'
+        },
+
+        audit_status: {
+            type: String,
+            enum: [
+                'PENDING_AUDIT',
+                'APPROVED',
+                'REJECTED'
+            ],
+            default: 'PENDING_AUDIT'
+        }
+    },
+
+    // ==============================
+    // RATINGS
+    // ==============================
+    ratings: {
+
+        average_rating: {
+            type: Number,
+            default: 0
+        },
+
+        total_reviews: {
+            type: Number,
+            default: 0
+        }
+    },
+
+    // ==============================
+    // PILLAR METADATA
+    // ==============================
+    pillar_metadata: {
+
+        source_pillar: {
+            type: String,
+            default: 'CULINARY_MATRIX'
+        },
+
+        node_authority: {
+            type: String,
+            default: 'NAWI-EMPIRE001'
+        }
+    }
+
+},
+{
+    collection: 'kitchenmeals',
+    timestamps: true
+});
 
 module.exports = mongoose.model('Meal', MealSchema);
