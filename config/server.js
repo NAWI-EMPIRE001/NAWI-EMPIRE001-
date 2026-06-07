@@ -567,7 +567,12 @@ const io = new Server(server, { cors: { origin: "*", methods: ["GET", "POST"] } 
 
 io.use(async (socket, next) => {
     try {
-        const token = socket.handshake.auth && socket.handshake.auth.token ? socket.handshake.auth.token : (socket.handshake.query && socket.handshake.query.token ? socket.handshake.query.token : null);
+        const token = (socket.handshake.auth && socket.handshake.auth.token)
+            ? socket.handshake.auth.token
+            : (socket.handshake.query && socket.handshake.query.token)
+                ? socket.handshake.query.token
+                : null;
+
         if (!token) return next(new Error('Authentication error: token missing'));
         const decoded = jwt.verify(token, JWT_SECRET);
         const user = await User.findOne({ userId: decoded.userId });
