@@ -1,4 +1,4 @@
-// =========================================================
+ // =========================================================
 // NAWI-EMPIRE MASTER SYSTEM ENGINE v7.5 - UNIFIED PRODUCTION BUILD
 // SYSTEMS: 7 Pillars, Aurora-231 Handshake, Sovereign P2P Escrow, WebSocket Stream Core
 // AUTHORITY WATERMARK: PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001
@@ -39,7 +39,9 @@ const NODE_ENV = process.env.NODE_ENV || 'production';
 
 const SOVEREIGN_ID = 'NAWI-EMPIRE001';
 const SYSTEM_WATERMARK = 'PROTECTED_BY_DIAMONDBACK231_AUTHORITY_NAWI-EMPIRE001';
-const MONGO_URI = process.env.MONGO_URI;
+
+// MATCHED WITH MONGODB ATLAS RENDER CONNECTION CONFIGURATIONS
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGO_URI;
 
 // =========================================================
 // CREATE REQUIRED DIRECTORIES
@@ -116,7 +118,7 @@ const upload = multer({
 });
 
 // =========================================================
-// DATABASE SCHEMAS & UTILITIES
+// UNIFIED DATABASE SCHEMA ARCHITECTURE (NO DUPLICATIONS)
 // =========================================================
 const UserSchema = new mongoose.Schema({
     userId: { type: String, default: () => crypto.randomUUID(), unique: true },
@@ -211,6 +213,7 @@ const DailyLedgerSchema = new mongoose.Schema({
     maxLimitCapUsd: { type: Number, default: 35000000 }
 });
 
+// Consolidated Safe Registration Blocks
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
 const Post = mongoose.models.Post || mongoose.model('Post', PostSchema);
@@ -779,14 +782,15 @@ const seedEmpire = async () => {
     } catch (e) { console.error("Seed execution fault:", e.message); }
 };
 
-if (!MONGO_URI) {
-    console.error('[CRITICAL]: Execution halted. MONGO_URI configuration missing.');
+// CRITICAL ATLAS STRING VALIDATION CHECK UPGRADE
+if (!MONGODB_URI) {
+    console.error('[CRITICAL]: Execution halted. MONGODB_URI environment variable configuration is missing from Render configuration tabs.');
     process.exit(1);
 }
 
 mongoose.set('strictQuery', false);
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGODB_URI)
 .then(async () => {
     await seedEmpire();
     server.listen(PORT, '0.0.0.0', () => {
@@ -825,3 +829,4 @@ mongoose.connect(MONGO_URI)
     });
 })
 .catch((err) => { console.error('Database connection sync failed:', err && err.message); process.exit(1); });
+ 
